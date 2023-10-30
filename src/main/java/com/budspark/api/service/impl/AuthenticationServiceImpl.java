@@ -33,12 +33,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
 
-
+    @Transactional
     @Override
     public AuthenticationResponse registerUser(RegisterRequest request) {
         return register(request, Role.USER);
     }
 
+    @Transactional
     @Override
     public AuthenticationResponse registerAdmin(RegisterRequest request) {
         return register(request, Role.ADMIN);

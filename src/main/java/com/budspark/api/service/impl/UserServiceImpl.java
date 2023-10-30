@@ -20,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final String USER_WITH_ID_NOT_EXISTS = "User with id:%s not found";
+    private static final String USER_WITH_LOGIN_NOT_EXISTS = "User with login:%s not found";
+
     private final UserRepository userRepository;
     @Lazy
     private final AuthenticationService authenticationService;
@@ -29,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserById(String id) {
         return userRepository.findById(id).orElseThrow(() ->
-                new EntityNotExistsException("User with id: " + id + " not found"));
+                new EntityNotExistsException(String.format(USER_WITH_ID_NOT_EXISTS, id)));
     }
 
     @Transactional
@@ -52,6 +55,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserByLogin(String login) {
         return userRepository.findUserByLogin(login).orElseThrow(() ->
-                new EntityNotExistsException("User with login: " + login + " not found"));
+                new EntityNotExistsException(String.format(USER_WITH_LOGIN_NOT_EXISTS, login)));
     }
 }

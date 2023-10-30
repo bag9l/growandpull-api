@@ -3,10 +3,7 @@ package com.budspark.api.model;
 import com.budspark.api.token.Token;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -28,19 +26,19 @@ public class User implements UserDetails {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @Column(name = "`login`", unique = true)
+    @Column(name = "`login`", nullable = false,unique = true)
     private String login;
 
-    @Column(name = "`email`", unique = true)
+    @Column(name = "`email`", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "`password`")
+    @Column(name = "`password`", nullable = false)
     private String password;
 
-    @Column(name = "`fullName`")
+    @Column(name = "`fullName`", nullable = false)
     private String fullName;
 
-    @Column(name = "`role`")
+    @Column(name = "`role`", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -48,6 +46,15 @@ public class User implements UserDetails {
     @JoinColumn(name = "avatar_id", referencedColumnName = "id", nullable = true)
     @JsonManagedReference
     private Avatar avatar;
+
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @ToString.Exclude
+    @JsonManagedReference
+    private Set<Startup> startups;
 
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
@@ -75,6 +82,21 @@ public class User implements UserDetails {
         this.fullName = fullName;
         this.role = role;
         this.avatar = avatar;
+        this.tokens = tokens;
+        this.isExpired = false;
+        this.isLocked = false;
+        this.isCredentialsExpired = false;
+        this.isEnabled = true;
+    }
+
+    public User(String login, String email, String password, String fullName, Role role, Avatar avatar, Set<Startup> startups, List<Token> tokens) {
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.role = role;
+        this.avatar = avatar;
+        this.startups = startups;
         this.tokens = tokens;
         this.isExpired = false;
         this.isLocked = false;

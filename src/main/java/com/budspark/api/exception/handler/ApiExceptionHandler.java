@@ -1,7 +1,7 @@
 package com.budspark.api.exception.handler;
 
-import com.eatandbeat.api.exception.EntityNotExistsException;
-import com.eatandbeat.api.exception.PermissionException;
+import com.budspark.api.exception.EntityNotExistsException;
+import com.budspark.api.exception.PermissionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
