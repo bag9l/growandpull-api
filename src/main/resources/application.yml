@@ -1,9 +1,9 @@
 
 spring:
   datasource:
-#    username:
-#    password:
-#    url:
+    username: root
+    password: 123456789
+    url: jdbc:mysql://localhost:3306/budspark
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
@@ -17,3 +17,9 @@ spring:
         globally_quoted_identifiers: true
 server:
   port: 8000
+#  forward-headers-strategy: framework
+#springdoc:
+#  api-docs:
+#    path: /docs
+#  swagger-ui:
+#    path: /docs.html
