@@ -1,14 +1,14 @@
 package com.budspark.api.controller;
 
+import com.budspark.api.dto.NewStartup;
 import com.budspark.api.dto.StartupView;
 import com.budspark.api.service.StartupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,5 +21,13 @@ public class StartupController {
     public ResponseEntity<StartupView> getStartupById(@PathVariable("id") String id) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 startupService.getStartupById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<StartupView> createStartup(@RequestPart("startup") NewStartup newStartup,
+                                                     @AuthenticationPrincipal UserDetails user){
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                startupService.createStartup(newStartup, user.getUsername())
+        );
     }
 }
