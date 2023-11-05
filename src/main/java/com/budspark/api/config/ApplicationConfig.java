@@ -1,6 +1,10 @@
 package com.budspark.api.config;
 
-import com.budspark.api.model.User;
+import com.budspark.api.model.*;
+import com.budspark.api.repository.CategoryRepository;
+import com.budspark.api.repository.FinanceRepository;
+import com.budspark.api.repository.StartupRepository;
+import com.budspark.api.repository.UserRepository;
 import com.budspark.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,11 +17,57 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Configuration
 public class ApplicationConfig {
 
     private final UserService userService;
+    private final StartupRepository startupRepository;
+    private final CategoryRepository categoryRepository;
+    private final FinanceRepository financeRepository;
+    private final UserRepository userRepository;
+
+
+//    @Bean
+//    public void generate() {
+//        User user = new User(
+//                "testUser",
+//                "test@example.com",
+//                "$2a$10$t8yAayensKAbhdpDOCNchuPNWXE.17fyL1EysiiZedVaDgKzi0q7y",
+//                "Test User",
+//                Role.USER,
+//                null,
+//                null,
+//                null
+//        );
+//        Category category = new Category("category");
+//        Finance finance = new Finance(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
+//
+//        user = userRepository.save(user);
+//        category = categoryRepository.save(category);
+//        finance = financeRepository.save(finance);
+//
+//        List<Startup> startups = new ArrayList<>();
+//        for (int i = 0; i < 50; i++) {
+//            startups.add(new Startup(
+//                    "title",
+//                    user,
+//                    "description" + i,
+//                    StartupStatus.IDEA,
+//                    category,
+//                    finance,
+//                    AdStatus.ENABLED,
+//                    null,
+//                    LocalDateTime.now()
+//            ));
+//        }
+//        startupRepository.saveAll(startups);
+//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
