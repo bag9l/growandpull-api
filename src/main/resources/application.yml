@@ -1,9 +1,9 @@
 
 spring:
   datasource:
-    username: root
-    password: 123456789
-    url: jdbc:mysql://localhost:3306/budspark
+    username: growandpull
+    password: Gkd73lisbfl9
+    url: jdbc:mysql://growandpull.ctegro5wnfvo.us-east-1.rds.amazonaws.com:3306/growandpull
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
