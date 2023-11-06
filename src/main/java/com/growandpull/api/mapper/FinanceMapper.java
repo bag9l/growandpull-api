@@ -9,4 +9,5 @@ import org.mapstruct.MappingConstants;
 public abstract class FinanceMapper {
 
     public abstract FinanceDto financeToDto(Finance finance);
+    public abstract Finance dtoToFinance(FinanceDto financeDto);
 }
