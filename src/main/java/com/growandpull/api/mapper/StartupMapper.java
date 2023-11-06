@@ -43,12 +43,12 @@ public abstract class StartupMapper {
     }
 
     @Autowired
-    public StartupMapper(UserMapper userMapper) {
+    public void setUserMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
 
     @Autowired
-    public FinanceMapper getFinanceMapper() {
-        return financeMapper;
+    public void setFinanceMapper(FinanceMapper financeMapper) {
+        this.financeMapper = financeMapper;
     }
 }
