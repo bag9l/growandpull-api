@@ -1,20 +1,23 @@
 package com.growandpull.api.mapper;
 
-import com.growandpull.api.dto.FinanceDto;
-import com.growandpull.api.dto.StartupCard;
-import com.growandpull.api.dto.StartupView;
-import com.growandpull.api.dto.UserCard;
+import com.growandpull.api.dto.*;
 import com.growandpull.api.model.*;
+import com.growandpull.api.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 class StartupMapperTest {
 
@@ -22,6 +25,8 @@ class StartupMapperTest {
     private UserMapper userMapper;
     @Mock
     private FinanceMapper financeMapper;
+    @Mock
+    private CategoryRepository categoryRepository;
 
     @InjectMocks
     private StartupMapperImpl underTest;
@@ -33,7 +38,7 @@ class StartupMapperTest {
 
 
     @Test
-    void testStartupToCard(){
+    void shouldMapStartupToCard() {
         // Arrange
         Category category = new Category("category");
 
@@ -61,7 +66,7 @@ class StartupMapperTest {
     }
 
     @Test
-    void testStartupToView(){
+    void shouldMapStartupToView() {
         // Arrange
         User user = new User(
                 "testUser",
@@ -101,6 +106,36 @@ class StartupMapperTest {
         assertEquals(startup.getDescription(), view.description());
         assertEquals(startup.getStatus(), view.status());
         assertEquals(financeDto, view.finance());
+    }
+
+    @Test
+    void shouldMapNewToStartup() throws IOException {
+        // Arrange
+        MultipartFile image = new MockMultipartFile(
+                "image", "image.png", "image/png", "some bytes".getBytes());
+        FinanceDto financeDto = new FinanceDto(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
+        String categoryId = "categoryId";
+        NewStartup newStartup = new NewStartup(
+                "Title",
+                image,
+                "Description",
+                StartupStatus.IDEA,
+                categoryId,
+                financeDto);
+        Finance finance = financeMapper.dtoToFinance(financeDto);
+        Category category = new Category("name");
+
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+
+        // Act
+        Startup startup = underTest.newToStartup(newStartup);
+
+        // Assert
+        assertEquals(startup.getTitle(), newStartup.title());
+        assertEquals(startup.getDescription(), newStartup.description());
+        assertEquals(startup.getCategory(), category);
+        assertEquals(startup.getStatus(), newStartup.status());
+        assertEquals(startup.getFinance(), finance);
     }
 
 }
