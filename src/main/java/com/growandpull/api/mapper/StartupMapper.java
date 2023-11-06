@@ -13,6 +13,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+
 @RequiredArgsConstructor
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {UserMapper.class, FinanceMapper.class, CategoryRepository.class})
 public abstract class StartupMapper {
@@ -24,7 +26,7 @@ public abstract class StartupMapper {
     //    @Mapping(target = "existenceTime", expression = "java(startup.getExistenceTime())")
     @Mapping(target = "category", expression = "java(startup.getCategory().getName())")
     @Mapping(target = "image", expression = "java((startup.getImage() != null) ? " +
-            "com.budspark.api.util.ImageUtil.decompressImage(startup.getImage().getImageData()) : null)")
+            "com.growandpull.api.util.ImageUtil.decompressImage(startup.getImage().getImageData()) : null)")
     public abstract StartupCard startupToCard(Startup startup);
 
     public StartupView startupToView(Startup startup) {
@@ -45,7 +47,7 @@ public abstract class StartupMapper {
                 startup.getCreatedAt());
     }
 
-    public Startup newToStartup(NewStartup newStartup) {
+    public Startup newToStartup(NewStartup newStartup) throws IOException {
         Startup startup = new Startup();
         Category category = categoryRepository.findById(newStartup.categoryId()).orElseThrow(() ->
                 new EntityNotExistsException(String.format("Category with id:%s not found", newStartup.categoryId())));
@@ -62,7 +64,9 @@ public abstract class StartupMapper {
         startup.setStatus(newStartup.status());
         startup.setCategory(category);
         startup.setFinance(financeMapper.dtoToFinance(newStartup.finance()));
-        startup.setImage();
+        startup.setImage(image);
+
+        return startup;
     }
 
     @Autowired

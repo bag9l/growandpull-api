@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,14 @@ public class ApiExceptionHandler {
     protected ResponseEntity<Object> handlePermissionException(
             PermissionException exception) {
         ApiError apiError = new ApiError(HttpStatus.FORBIDDEN);
+        apiError.setMessage(exception.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(IOException.class)
+    protected ResponseEntity<Object> handleIOException(
+            IOException exception) {
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
         apiError.setMessage(exception.getMessage());
         return buildResponseEntity(apiError);
     }
