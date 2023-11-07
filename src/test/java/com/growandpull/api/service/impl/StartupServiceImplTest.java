@@ -1,7 +1,7 @@
 package com.growandpull.api.service.impl;
 
 import com.growandpull.api.dto.FinanceDto;
-import com.growandpull.api.dto.NewStartup;
+import com.growandpull.api.dto.StartupCreationRequest;
 import com.growandpull.api.dto.StartupCard;
 import com.growandpull.api.dto.StartupView;
 import com.growandpull.api.exception.EntityNotExistsException;
@@ -93,7 +93,7 @@ class StartupServiceImplTest {
     }
 
     @Test
-    void shouldReturnPageOfStartups_WhenFindAllStartups(){
+    void shouldReturnPageOfStartups_WhenFindAllStartups() {
         // Arrange
         Startup startup = new Startup(
                 "id",
@@ -134,16 +134,16 @@ class StartupServiceImplTest {
                 "image", "image.png", "image/png", "some bytes".getBytes());
         FinanceDto financeDto = new FinanceDto(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
         String categoryId = "categoryId";
-        NewStartup newStartup = new NewStartup(
+        StartupCreationRequest newStartup = new StartupCreationRequest(
                 "Title",
-                image,
                 "Description",
                 StartupStatus.IDEA,
                 categoryId,
-                financeDto);
+                financeDto,
+                image);
         String ownerLogin = "testUserLogin";
 
-        User user =  new User(
+        User user = new User(
                 "testUser",
                 "password",
                 "Test User",
@@ -189,7 +189,7 @@ class StartupServiceImplTest {
         String login = "login";
 
         when(userRepository.findById(login)).thenReturn(Optional.empty());
-        when(startupMapper.newToStartup(any(NewStartup.class))).thenReturn(null);
+        when(startupMapper.newToStartup(any(StartupCreationRequest.class))).thenReturn(null);
 
         // Assertions
         assertThrows(EntityNotExistsException.class, () -> underTest.createStartup(null, login));

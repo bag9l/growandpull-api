@@ -115,13 +115,13 @@ class StartupMapperTest {
                 "image", "image.png", "image/png", "some bytes".getBytes());
         FinanceDto financeDto = new FinanceDto(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
         String categoryId = "categoryId";
-        NewStartup newStartup = new NewStartup(
+        StartupCreationRequest newStartup = new StartupCreationRequest(
                 "Title",
-                image,
                 "Description",
                 StartupStatus.IDEA,
                 categoryId,
-                financeDto);
+                financeDto,
+                image);
         Finance finance = financeMapper.dtoToFinance(financeDto);
         Category category = new Category("name");
 
@@ -131,10 +131,10 @@ class StartupMapperTest {
         Startup startup = underTest.newToStartup(newStartup);
 
         // Assert
-        assertEquals(startup.getTitle(), newStartup.title());
-        assertEquals(startup.getDescription(), newStartup.description());
+        assertEquals(startup.getTitle(), newStartup.getTitle());
+        assertEquals(startup.getDescription(), newStartup.getDescription());
         assertEquals(startup.getCategory(), category);
-        assertEquals(startup.getStatus(), newStartup.status());
+        assertEquals(startup.getStatus(), newStartup.getStatus());
         assertEquals(startup.getFinance(), finance);
     }
 
