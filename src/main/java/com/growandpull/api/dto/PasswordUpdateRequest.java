@@ -1,6 +1,6 @@
 package com.growandpull.api.dto;
 
-public record PasswordUpdate(
+public record PasswordUpdateRequest(
         String oldPassword,
         String newPassword
 ) {
