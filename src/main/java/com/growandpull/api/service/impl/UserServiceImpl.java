@@ -1,6 +1,6 @@
 package com.growandpull.api.service.impl;
 
-import com.growandpull.api.dto.PasswordUpdate;
+import com.growandpull.api.dto.PasswordUpdateRequest;
 import com.growandpull.api.dto.auth.AuthenticationRequest;
 import com.growandpull.api.dto.auth.AuthenticationResponse;
 import com.growandpull.api.exception.EntityNotExistsException;
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public AuthenticationResponse updatePassword(UserDetails userDetails, PasswordUpdate passwordUpdate) {
+    public AuthenticationResponse updatePassword(UserDetails userDetails, PasswordUpdateRequest passwordUpdate) {
         User user = findUserByLogin(userDetails.getUsername());
 
         if (!passwordEncoder.matches(passwordUpdate.oldPassword(), user.getPassword())) {

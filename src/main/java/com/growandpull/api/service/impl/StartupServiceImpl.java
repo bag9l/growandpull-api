@@ -1,21 +1,23 @@
 package com.growandpull.api.service.impl;
 
-import com.growandpull.api.dto.NewStartup;
+import com.growandpull.api.dto.StartupCreationRequest;
 import com.growandpull.api.dto.StartupCard;
+import com.growandpull.api.dto.StartupUpdateRequest;
 import com.growandpull.api.dto.StartupView;
 import com.growandpull.api.exception.EntityNotExistsException;
+import com.growandpull.api.exception.PermissionException;
+import com.growandpull.api.mapper.FinanceMapper;
+import com.growandpull.api.mapper.ImageMapper;
 import com.growandpull.api.mapper.StartupMapper;
-import com.growandpull.api.model.AdStatus;
-import com.growandpull.api.model.Startup;
-import com.growandpull.api.model.User;
-import com.growandpull.api.repository.StartupRepository;
-import com.growandpull.api.repository.UserRepository;
+import com.growandpull.api.model.*;
+import com.growandpull.api.repository.*;
 import com.growandpull.api.service.StartupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -29,15 +31,17 @@ public class StartupServiceImpl implements StartupService {
 
     private final StartupRepository startupRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
+    private final FinanceRepository financeRepository;
     private final StartupMapper startupMapper;
+    private final FinanceMapper financeMapper;
+    private final ImageMapper imageMapper;
 
 
     @Override
     public StartupView getStartupById(String id) {
-        Startup startup = startupRepository.findById(id).orElseThrow(() ->
-                new EntityNotExistsException(String.format(STARTUP_NOT_FOUND, id)));
-
-        return startupMapper.startupToView(startup);
+        return startupMapper.startupToView(findStartupById(id));
     }
 
     @Override
@@ -50,10 +54,9 @@ public class StartupServiceImpl implements StartupService {
     }
 
     @Override
-    public StartupView createStartup(NewStartup newStartup, String ownerLogin) throws IOException {
+    public StartupView createStartup(StartupCreationRequest newStartup, String ownerLogin) throws IOException {
         Startup startup = startupMapper.newToStartup(newStartup);
-        User user = userRepository.findUserByLogin(ownerLogin).orElseThrow(() ->
-                new EntityNotExistsException(String.format(USER_WITH_LOGIN_NOT_FOUND, ownerLogin)));
+        User user = findUserByLogin(ownerLogin);
 
         startup.setOwner(user);
         startup.setAdStatus(AdStatus.ENABLED);
@@ -61,5 +64,52 @@ public class StartupServiceImpl implements StartupService {
 
         startup = startupRepository.save(startup);
         return startupMapper.startupToView(startup);
+    }
+
+    //    TODO: try loading
+    @Transactional
+    @Override
+    public StartupView updateStartup(String startupId, StartupUpdateRequest startupUpdateRequest, String userLogin) throws IOException {
+        Startup startup = findStartupById(startupId);
+        User user = findUserByLogin(userLogin);
+
+        if (!user.getLogin().equals(startup.getOwner().getLogin())) {
+            throw new PermissionException("Only the owner can edit the startup");
+        }
+        copyUpdateFieldsToStartup(startupUpdateRequest, startup);
+
+        startup = startupRepository.save(startup);
+
+        return startupMapper.startupToView(startup);
+    }
+
+    private void copyUpdateFieldsToStartup(StartupUpdateRequest startupUpdateRequest, Startup startup) throws IOException {
+        Category category = categoryRepository.findById(startupUpdateRequest.getCategoryId()).orElseThrow(() ->
+                new EntityNotExistsException(String.format("Category with id:%s not found", startupUpdateRequest.getCategoryId())));
+        Image image = (startupUpdateRequest.getImage() != null) ?
+                imageMapper.multiPartFileToImage(startupUpdateRequest.getImage()) : null;
+        Finance finance = financeMapper.updateToFinance(startupUpdateRequest.getFinance());
+
+        if (image != null) {
+            image = imageRepository.save(image);
+        }
+        finance = financeRepository.save(finance);
+
+        startup.setTitle(startupUpdateRequest.getTitle());
+        startup.setDescription(startupUpdateRequest.getDescription());
+        startup.setImage(image);
+        startup.setStatus(startupUpdateRequest.getStatus());
+        startup.setCategory(category);
+        startup.setFinance(finance);
+    }
+
+    private Startup findStartupById(String id) {
+        return startupRepository.findById(id).orElseThrow(() ->
+                new EntityNotExistsException(String.format(STARTUP_NOT_FOUND, id)));
+    }
+
+    private User findUserByLogin(String ownerLogin) {
+        return userRepository.findUserByLogin(ownerLogin).orElseThrow(() ->
+                new EntityNotExistsException(String.format(USER_WITH_LOGIN_NOT_FOUND, ownerLogin)));
     }
 }

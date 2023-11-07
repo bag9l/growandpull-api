@@ -16,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {UserMapper.class, FinanceMapper.class, CategoryRepository.class})
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
+        uses = {UserMapper.class, FinanceMapper.class, CategoryRepository.class, ImageMapper.class})
 public abstract class StartupMapper {
 
     protected UserMapper userMapper;
     protected FinanceMapper financeMapper;
+    protected ImageMapper imageMapper;
     protected CategoryRepository categoryRepository;
 
     //    @Mapping(target = "existenceTime", expression = "java(startup.getExistenceTime())")
@@ -47,23 +49,18 @@ public abstract class StartupMapper {
                 startup.getCreatedAt());
     }
 
-    public Startup newToStartup(NewStartup newStartup) throws IOException {
+    public Startup newToStartup(StartupCreationRequest newStartup) throws IOException {
         Startup startup = new Startup();
-        Category category = categoryRepository.findById(newStartup.categoryId()).orElseThrow(() ->
-                new EntityNotExistsException(String.format("Category with id:%s not found", newStartup.categoryId())));
-        Image image = null;
-        if (newStartup.image() != null) {
-            image = new Image(newStartup.image().getOriginalFilename(),
-                    newStartup.image().getContentType(),
-                    ImageUtil.compressImage(newStartup.image().getBytes()));
-        }
+        Category category = categoryRepository.findById(newStartup.getCategoryId()).orElseThrow(() ->
+                new EntityNotExistsException(String.format("Category with id:%s not found", newStartup.getCategoryId())));
 
+        Image image = (newStartup.getImage() != null) ? imageMapper.multiPartFileToImage(newStartup.getImage()) : null;
 
-        startup.setTitle(newStartup.title());
-        startup.setDescription(newStartup.description());
-        startup.setStatus(newStartup.status());
+        startup.setTitle(newStartup.getTitle());
+        startup.setDescription(newStartup.getDescription());
+        startup.setStatus(newStartup.getStatus());
         startup.setCategory(category);
-        startup.setFinance(financeMapper.dtoToFinance(newStartup.finance()));
+        startup.setFinance(financeMapper.dtoToFinance(newStartup.getFinance()));
         startup.setImage(image);
 
         return startup;
@@ -77,6 +74,11 @@ public abstract class StartupMapper {
     @Autowired
     public void setFinanceMapper(FinanceMapper financeMapper) {
         this.financeMapper = financeMapper;
+    }
+
+    @Autowired
+    public void setImageMapper(ImageMapper imageMapper) {
+        this.imageMapper = imageMapper;
     }
 
     @Autowired
