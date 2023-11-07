@@ -1,7 +1,8 @@
 package com.growandpull.api.controller;
 
-import com.growandpull.api.dto.NewStartup;
+import com.growandpull.api.dto.StartupCreationRequest;
 import com.growandpull.api.dto.StartupCard;
+import com.growandpull.api.dto.StartupUpdateRequest;
 import com.growandpull.api.dto.StartupView;
 import com.growandpull.api.service.StartupService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -36,10 +38,23 @@ public class StartupController {
     }
 
     @PostMapping()
-    public ResponseEntity<StartupView> createStartup(@RequestPart("startup") NewStartup startup,
+    public ResponseEntity<StartupView> createStartup(@RequestPart("startup") StartupCreationRequest startup,
+                                                     @RequestPart("image") MultipartFile image,
                                                      @AuthenticationPrincipal UserDetails user) throws IOException {
+        startup.setImage(image);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 startupService.createStartup(startup, user.getUsername())
+        );
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<StartupView> updateStartup(@PathVariable("id") String id,
+                                                     @RequestPart("updateRequest") StartupUpdateRequest startupUpdateRequest,
+                                                     @RequestPart("image") MultipartFile image,
+                                                     @AuthenticationPrincipal UserDetails user) throws IOException {
+        startupUpdateRequest.setImage(image);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                startupService.updateStartup(id, startupUpdateRequest, user.getUsername())
         );
     }
 }
