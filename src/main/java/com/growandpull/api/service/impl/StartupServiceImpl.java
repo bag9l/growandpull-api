@@ -1,9 +1,6 @@
 package com.growandpull.api.service.impl;
 
-import com.growandpull.api.dto.StartupCreationRequest;
-import com.growandpull.api.dto.StartupCard;
-import com.growandpull.api.dto.StartupUpdateRequest;
-import com.growandpull.api.dto.StartupView;
+import com.growandpull.api.dto.*;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.mapper.FinanceMapper;
@@ -21,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -64,6 +62,13 @@ public class StartupServiceImpl implements StartupService {
 
         startup = startupRepository.save(startup);
         return startupMapper.startupToView(startup);
+    }
+
+    @Override
+    public StartupCreateData getCreationData() {
+        List<StartupStatus> statuses = List.of(StartupStatus.values());
+        List<Category> categories = categoryRepository.findAll();
+        return new StartupCreateData(statuses, categories);
     }
 
     //    TODO: try loading
