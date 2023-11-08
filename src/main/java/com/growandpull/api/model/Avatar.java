@@ -32,6 +32,9 @@ public class Avatar {
     @OneToOne(mappedBy = "avatar")
     @JsonBackReference
     private User user;
+    @OneToOne(mappedBy = "avatar")
+    @JsonBackReference
+    private Profile profile;
 
     public Avatar(String name, String type, byte[] imageData, User user) {
         this.name = name;

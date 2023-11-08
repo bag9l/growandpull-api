@@ -1,9 +1,6 @@
 package com.growandpull.api.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -21,15 +18,20 @@ public class Profile {
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String gender;
+    private String login;
     private String email;
     private String phoneNumber;
     private LocalDate birth;
     private String description;
     private String password;
 
-
+    @OneToOne
+    @JoinColumn(name = "avatar_id")
+    private Avatar avatar;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
