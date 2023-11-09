@@ -99,6 +99,7 @@ class StartupServiceImplTest {
                 "id",
                 "title",
                 null,
+                null,
                 "description",
                 StartupStatus.IDEA,
                 new Category("category"),
@@ -132,7 +133,7 @@ class StartupServiceImplTest {
         // Arrange
         MultipartFile image = new MockMultipartFile(
                 "image", "image.png", "image/png", "some bytes".getBytes());
-        FinanceDto financeDto = new FinanceDto(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
+        FinanceDto financeDto = new FinanceDto(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.ONE, Currency.EUR, InvestmentType.MULTI_INVESTOR);
         String categoryId = "categoryId";
         StartupCreationRequest newStartup = new StartupCreationRequest(
                 "Title",

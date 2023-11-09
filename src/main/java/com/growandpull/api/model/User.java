@@ -49,12 +49,21 @@ public class User implements UserDetails {
 
     @OneToMany(
             mappedBy = "owner",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             orphanRemoval = true
     )
     @ToString.Exclude
     @JsonManagedReference
     private Set<Startup> startups;
+
+    @OneToMany(
+            mappedBy = "investor",
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            orphanRemoval = true
+    )
+    @ToString.Exclude
+    @JsonManagedReference
+    private List<Investment> investments;
 
     @OneToMany(mappedBy = "user")
     @JsonManagedReference

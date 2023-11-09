@@ -27,6 +27,8 @@ class StartupMapperTest {
     private FinanceMapper financeMapper;
     @Mock
     private CategoryRepository categoryRepository;
+    @Mock
+    private ImageMapper imageMapper;
 
     @InjectMocks
     private StartupMapperImpl underTest;
@@ -45,6 +47,7 @@ class StartupMapperTest {
         Startup startup = new Startup(
                 "id",
                 "title",
+                null,
                 null,
                 "description",
                 StartupStatus.IDEA,
@@ -79,12 +82,13 @@ class StartupMapperTest {
                 null
         );
         Category category = new Category("category");
-        Finance finance = new Finance(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
+        Finance finance = new Finance(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR, InvestmentType.MULTI_INVESTOR);
 
         Startup startup = new Startup(
                 "id",
                 "title",
                 user,
+                null,
                 "description",
                 StartupStatus.IDEA,
                 category,
@@ -113,7 +117,7 @@ class StartupMapperTest {
         // Arrange
         MultipartFile image = new MockMultipartFile(
                 "image", "image.png", "image/png", "some bytes".getBytes());
-        FinanceDto financeDto = new FinanceDto(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
+        FinanceDto financeDto = new FinanceDto(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.ONE, Currency.EUR, InvestmentType.MULTI_INVESTOR);
         String categoryId = "categoryId";
         StartupCreationRequest newStartup = new StartupCreationRequest(
                 "Title",
