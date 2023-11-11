@@ -60,9 +60,7 @@ public class User implements UserDetails {
     @JsonManagedReference
     private List<Token> tokens;
 
-    @OneToOne(mappedBy = "user")
-    @JoinColumn(name = "profile_id") // Задайте правильне ім'я стовпця
-    private Profile profile;
+
 
     private Boolean isExpired;
 

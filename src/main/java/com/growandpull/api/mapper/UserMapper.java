@@ -19,4 +19,9 @@ public abstract class UserMapper {
     @Mapping(target = "avatar", expression = "java((user.getAvatar() != null) ? " +
             "com.growandpull.api.util.ImageUtil.decompressImage(user.getAvatar().getImageData()) : null)")
     public abstract UserCard userToCard(User user);
+
+    public abstract User userToPublicProfile(User user);
+
+    public abstract User userToPrivateProfile(User user);
+
 }

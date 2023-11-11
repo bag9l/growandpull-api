@@ -5,6 +5,8 @@ import com.growandpull.api.dto.auth.AuthenticationRequest;
 import com.growandpull.api.dto.auth.AuthenticationResponse;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
+import com.growandpull.api.mapper.ImageMapper;
+import com.growandpull.api.mapper.UserMapper;
 import com.growandpull.api.model.User;
 import com.growandpull.api.repository.UserRepository;
 import com.growandpull.api.service.AuthenticationService;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @Service
@@ -27,6 +30,8 @@ public class UserServiceImpl implements UserService {
     @Lazy
     private final AuthenticationService authenticationService;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+    private final ImageMapper imageMapper;
 
 
     @Override
@@ -57,4 +62,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserByLogin(login).orElseThrow(() ->
                 new EntityNotExistsException(String.format(USER_WITH_LOGIN_NOT_EXISTS, login)));
     }
+
+    @Override
+    public User updateUser(String userId, User updatedUser) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        existingUser.setLogin(updatedUser.getLogin());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setFullName(updatedUser.getFullName());
+        return userRepository.save(existingUser);
+
+    }
+
+
+
+
 }
