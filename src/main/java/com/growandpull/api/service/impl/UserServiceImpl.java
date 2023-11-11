@@ -1,13 +1,16 @@
 package com.growandpull.api.service.impl;
 
 import com.growandpull.api.dto.PasswordUpdateRequest;
+import com.growandpull.api.dto.UserUpdateRequest;
+import com.growandpull.api.dto.ProfileView;
 import com.growandpull.api.dto.auth.AuthenticationRequest;
 import com.growandpull.api.dto.auth.AuthenticationResponse;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.mapper.ImageMapper;
 import com.growandpull.api.mapper.UserMapper;
-import com.growandpull.api.model.User;
+import com.growandpull.api.model.*;
+import com.growandpull.api.repository.AvatarRepository;
 import com.growandpull.api.repository.UserRepository;
 import com.growandpull.api.service.AuthenticationService;
 import com.growandpull.api.service.UserService;
@@ -17,7 +20,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @Service
@@ -27,6 +31,8 @@ public class UserServiceImpl implements UserService {
     private static final String USER_WITH_LOGIN_NOT_EXISTS = "User with login:%s not found";
 
     private final UserRepository userRepository;
+    private final AvatarRepository avatarRepository;
+
     @Lazy
     private final AuthenticationService authenticationService;
     private final PasswordEncoder passwordEncoder;
@@ -64,18 +70,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(String userId, User updatedUser) {
-        User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+    public ProfileView updateUser(String userId, UserUpdateRequest userUpdateRequest) throws IOException {
+        User user = findUserById(userId);
 
-        existingUser.setLogin(updatedUser.getLogin());
-        existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setFullName(updatedUser.getFullName());
-        return userRepository.save(existingUser);
+        copyUpdateFieldsToUser(userUpdateRequest, user);
+
+        user = userRepository.save(user);
+
+        return userMapper.userToProfileView(user);
+
 
     }
 
+    public void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {
+//        Avatar updatedAvatar = userUpdateRequest.getAvatar();
+//        if (updatedAvatar != null) {
+//            byte[] avatarImageData = updatedAvatar.getImageData();
+//
+//            user.setAvatar(new Avatar(avatarImageData));
+//        }
 
+        user.setLogin(userUpdateRequest.getLogin());
+        user.setDescription(userUpdateRequest.getDescription());
+        user.setEmail(userUpdateRequest.getEmail());
+        user.setFullName(userUpdateRequest.getFullName());
+    }
 
 
 }

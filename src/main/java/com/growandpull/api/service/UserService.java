@@ -1,10 +1,11 @@
 package com.growandpull.api.service;
 
-import com.growandpull.api.dto.PasswordUpdateRequest;
+import com.growandpull.api.dto.*;
 import com.growandpull.api.dto.auth.AuthenticationResponse;
 import com.growandpull.api.model.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface UserService {
     User findUserById(String id);
@@ -13,7 +14,6 @@ public interface UserService {
 
     User findUserByLogin(String login);
 
-    User updateUser(String userId, User updatedUser);
-
-
+    ProfileView updateUser(String userId, UserUpdateRequest userUpdateRequest) throws IOException;
 }
+

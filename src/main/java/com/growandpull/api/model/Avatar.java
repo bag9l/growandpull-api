@@ -40,4 +40,7 @@ public class Avatar {
         this.imageData = imageData;
         this.user = user;
     }
+
+    public Avatar(byte[] avatarImageData) {
+    }
 }

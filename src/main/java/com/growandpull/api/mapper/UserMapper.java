@@ -1,8 +1,12 @@
 package com.growandpull.api.mapper;
 
+import com.growandpull.api.dto.PrivateProfile;
+import com.growandpull.api.dto.ProfileView;
+import com.growandpull.api.dto.PublicProfile;
 import com.growandpull.api.dto.UserCard;
 import com.growandpull.api.dto.auth.AuthenticatedUser;
 import com.growandpull.api.model.User;
+import com.growandpull.api.util.ImageUtil;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -20,8 +24,37 @@ public abstract class UserMapper {
             "com.growandpull.api.util.ImageUtil.decompressImage(user.getAvatar().getImageData()) : null)")
     public abstract UserCard userToCard(User user);
 
-    public abstract User userToPublicProfile(User user);
+    public PrivateProfile userToPrivateProfile(User user) {
+        return new PrivateProfile(
+                user.getFullName(),
+                user.getBirth(),
+                user.getDescription(),
+                user.getAvatar()
+        );
+    }
 
-    public abstract User userToPrivateProfile(User user);
+    public PublicProfile userToPublicProfile(User user) {
+        return new PublicProfile(
+                user.getFullName(),
+                user.getBirth(),
+                user.getDescription(),
+                user.getAvatar()
+        );
+    }
+
+    public ProfileView userToProfileView(User user) {
+        byte[] avatar = (user.getAvatar() != null) ?
+                user.getAvatar().getImageData()
+                : null;
+
+        return new ProfileView(
+                user.getFullName(),
+                user.getBirth(),
+                user.getLogin(),
+                user.getEmail(),
+                user.getDescription(),
+                avatar
+        );
+    }
 
 }

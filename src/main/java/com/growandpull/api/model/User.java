@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,12 @@ public class User implements UserDetails {
 
     @Column(name = "`login`", nullable = false, unique = true)
     private String login;
+
+    @Column(name = "`description`", nullable = false)
+    private String description;
+
+    @Column(name = "`birth`", nullable = false)
+    private LocalDate birth;
 
     @Column(name = "`email`", nullable = false, unique = true)
     private String email;
@@ -59,7 +66,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Token> tokens;
-
 
 
     private Boolean isExpired;
