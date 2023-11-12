@@ -9,6 +9,6 @@ public record PublicProfile
         (String fullName,
          LocalDate birth,
          String description,
-         Avatar avatar) {
+         byte[] avatar) {
 
 }

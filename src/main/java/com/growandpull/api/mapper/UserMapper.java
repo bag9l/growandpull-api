@@ -24,21 +24,23 @@ public abstract class UserMapper {
             "com.growandpull.api.util.ImageUtil.decompressImage(user.getAvatar().getImageData()) : null)")
     public abstract UserCard userToCard(User user);
 
-    public PrivateProfile userToPrivateProfile(User user) {
+    public  PrivateProfile userToPrivateProfile(User user)
+    {
         return new PrivateProfile(
                 user.getFullName(),
                 user.getBirth(),
                 user.getDescription(),
-                user.getAvatar()
+                user.getAvatar().getImageData()
         );
     }
 
-    public PublicProfile userToPublicProfile(User user) {
+    public  PublicProfile userToPublicProfile(User user)
+    {
         return new PublicProfile(
                 user.getFullName(),
                 user.getBirth(),
                 user.getDescription(),
-                user.getAvatar()
+                user.getAvatar().getImageData()
         );
     }
 

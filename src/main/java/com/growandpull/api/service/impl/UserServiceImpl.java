@@ -11,6 +11,7 @@ import com.growandpull.api.mapper.ImageMapper;
 import com.growandpull.api.mapper.UserMapper;
 import com.growandpull.api.model.*;
 import com.growandpull.api.repository.AvatarRepository;
+import com.growandpull.api.repository.ImageRepository;
 import com.growandpull.api.repository.UserRepository;
 import com.growandpull.api.service.AuthenticationService;
 import com.growandpull.api.service.UserService;
@@ -38,6 +39,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final ImageMapper imageMapper;
+    private final ImageRepository imageRepository;
 
 
     @Override
@@ -82,13 +84,13 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {
-//        Avatar updatedAvatar = userUpdateRequest.getAvatar();
-//        if (updatedAvatar != null) {
-//            byte[] avatarImageData = updatedAvatar.getImageData();
-//
-//            user.setAvatar(new Avatar(avatarImageData));
-//        }
+    private void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {
+        Image image = (userUpdateRequest.getAvatar() != null) ?
+                imageMapper.multiPartFileToImage(userUpdateRequest.getAvatar()) : null;
+
+        if (image != null) {
+            image = imageRepository.save(image);
+        }
 
         user.setLogin(userUpdateRequest.getLogin());
         user.setDescription(userUpdateRequest.getDescription());
