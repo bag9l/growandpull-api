@@ -62,25 +62,20 @@ public class AuthenticationController {
         );
     }
 
-    @PutMapping("/updateUser/{userId}")
-    public ResponseEntity<ProfileView> updateUser(
-            @PathVariable String userId,
-            @Valid @RequestBody UserUpdateRequest userUpdateRequest
-    ) throws java.io.IOException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String authenticatedUserId = authentication.getName();
-
-        if (!authenticatedUserId.equals(userId)) {
-            throw new PermissionException("You do not have permission to update this profile");
-        }
-
+    @PutMapping("updateUser/{userId}")
+    public ResponseEntity<ProfileView> updateUser(@PathVariable String userId,
+                                                  @Valid @RequestBody UserUpdateRequest userUpdateRequest,
+                                                  @AuthenticationPrincipal UserDetails userDetails) throws java.io.IOException {
         try {
+            if (!userId.equals(userDetails.getUsername())) {
+                throw new PermissionException("You do not have permission to update this profile");
+            }
+
             ProfileView updatedProfile = userService.updateUser(userId, userUpdateRequest);
             return ResponseEntity.ok(updatedProfile);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
 }
