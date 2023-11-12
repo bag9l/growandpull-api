@@ -1,15 +1,16 @@
 package com.growandpull.api.service.impl;
 
 import com.growandpull.api.dto.PasswordUpdateRequest;
-import com.growandpull.api.dto.UserUpdateRequest;
 import com.growandpull.api.dto.ProfileView;
+import com.growandpull.api.dto.UserUpdateRequest;
 import com.growandpull.api.dto.auth.AuthenticationRequest;
 import com.growandpull.api.dto.auth.AuthenticationResponse;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.mapper.ImageMapper;
 import com.growandpull.api.mapper.UserMapper;
-import com.growandpull.api.model.*;
+import com.growandpull.api.model.Image;
+import com.growandpull.api.model.User;
 import com.growandpull.api.repository.AvatarRepository;
 import com.growandpull.api.repository.ImageRepository;
 import com.growandpull.api.repository.UserRepository;

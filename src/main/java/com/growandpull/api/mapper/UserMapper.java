@@ -24,39 +24,17 @@ public abstract class UserMapper {
             "com.growandpull.api.util.ImageUtil.decompressImage(user.getAvatar().getImageData()) : null)")
     public abstract UserCard userToCard(User user);
 
-    public  PrivateProfile userToPrivateProfile(User user)
-    {
-        return new PrivateProfile(
-                user.getFullName(),
-                user.getBirth(),
-                user.getDescription(),
-                user.getAvatar().getImageData()
-        );
-    }
 
-    public  PublicProfile userToPublicProfile(User user)
-    {
-        return new PublicProfile(
-                user.getFullName(),
-                user.getBirth(),
-                user.getDescription(),
-                user.getAvatar().getImageData()
-        );
-    }
+    @Mapping(target = "avatar", expression = "java((user.getAvatar() != null) ? " +
+            "com.growandpull.api.util.ImageUtil.decompressImage(user.getAvatar().getImageData()) : null)")
+    public abstract PrivateProfile userToPrivateProfile(User user);
 
-    public ProfileView userToProfileView(User user) {
-        byte[] avatar = (user.getAvatar() != null) ?
-                user.getAvatar().getImageData()
-                : null;
+    @Mapping(target = "avatar", expression = "java((user.getAvatar() != null) ? " +
+            "com.growandpull.api.util.ImageUtil.decompressImage(user.getAvatar().getImageData()) : null)")
+    public abstract PublicProfile userToPublicProfile(User user);
 
-        return new ProfileView(
-                user.getFullName(),
-                user.getBirth(),
-                user.getLogin(),
-                user.getEmail(),
-                user.getDescription(),
-                avatar
-        );
-    }
+    @Mapping(target = "avatar", expression = "java((user.getAvatar() != null) ? " +
+            "com.growandpull.api.util.ImageUtil.decompressImage(user.getAvatar().getImageData()) : null)")
+    public abstract ProfileView userToProfileView(User user);
 
 }
