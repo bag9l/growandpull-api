@@ -27,6 +27,8 @@ class StartupMapperTest {
     private FinanceMapper financeMapper;
     @Mock
     private CategoryRepository categoryRepository;
+    @Mock
+    private ImageMapper imageMapper;
 
     @InjectMocks
     private StartupMapperImpl underTest;
@@ -69,17 +71,17 @@ class StartupMapperTest {
     void shouldMapStartupToView() {
         // Arrange
         User user = new User(
-                "testUser",
-                "password",
-                "Test User",
                 "test@example.com",
+                "password",
+                "Test",
+                "User",
                 Role.USER,
                 null,
                 null,
                 null
         );
         Category category = new Category("category");
-        Finance finance = new Finance(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
+        Finance finance = new Finance(BigDecimal.TEN, Currency.EUR);
 
         Startup startup = new Startup(
                 "id",
@@ -113,7 +115,7 @@ class StartupMapperTest {
         // Arrange
         MultipartFile image = new MockMultipartFile(
                 "image", "image.png", "image/png", "some bytes".getBytes());
-        FinanceDto financeDto = new FinanceDto(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
+        FinanceDto financeDto = new FinanceDto(BigDecimal.TEN, Currency.EUR);
         String categoryId = "categoryId";
         StartupCreationRequest newStartup = new StartupCreationRequest(
                 "Title",

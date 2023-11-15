@@ -1,9 +1,9 @@
 package com.growandpull.api.dto.auth;
 
 public record AuthenticatedUser(
-        String login,
-        String fullName,
         String email,
+        String firstName,
+        String lastName,
         String role,
         byte[] avatar
 ) {

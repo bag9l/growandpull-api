@@ -17,10 +17,10 @@ class UserMapperTest {
     void testUserToAuthenticatedUser() {
         // Arrange
         User user = new User(
-                "testUser",
-                "password",
-                "Test User",
                 "test@example.com",
+                "password",
+                "Test",
+                "User",
                 Role.USER,
                 null,
                 null,
@@ -31,8 +31,9 @@ class UserMapperTest {
         AuthenticatedUser authenticatedUser = underTest.userToAuthenticatedUser(user);
 
         // Assert
-        assertEquals(user.getLogin(), authenticatedUser.login());
-        assertEquals(user.getFullName(), authenticatedUser.fullName());
+        assertEquals(user.getUsername(), authenticatedUser.email());
+        assertEquals(user.getFirstName(), authenticatedUser.firstName());
+        assertEquals(user.getLastName(), authenticatedUser.lastName());
         assertEquals(user.getEmail(), authenticatedUser.email());
         assertEquals(user.getRole().getValue(), authenticatedUser.role());
     }
@@ -41,9 +42,9 @@ class UserMapperTest {
     void testUserToUserCard() {
         // Arrange
         User user = new User(
-                "testUser",
                 "password",
-                "Test User",
+                "Test",
+                "User",
                 "test@example.com",
                 Role.USER,
                 null,
@@ -56,6 +57,7 @@ class UserMapperTest {
 
         // Assert
         assertEquals(user.getId(), userCard.id());
-        assertEquals(user.getFullName(), userCard.fullName());
+        assertEquals(user.getFirstName(), userCard.firstName());
+        assertEquals(user.getLastName(), userCard.lastName());
     }
 }

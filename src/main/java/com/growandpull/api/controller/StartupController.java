@@ -1,9 +1,6 @@
 package com.growandpull.api.controller;
 
-import com.growandpull.api.dto.StartupCreationRequest;
-import com.growandpull.api.dto.StartupCard;
-import com.growandpull.api.dto.StartupUpdateRequest;
-import com.growandpull.api.dto.StartupView;
+import com.growandpull.api.dto.*;
 import com.growandpull.api.service.StartupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,6 +32,12 @@ public class StartupController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 startupService.findAllStartups(pageNumber)
         );
+    }
+
+    @GetMapping("creation-data")
+    public ResponseEntity<StartupCreateData> getCreationData(){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                startupService.getCreationData());
     }
 
     @PostMapping()

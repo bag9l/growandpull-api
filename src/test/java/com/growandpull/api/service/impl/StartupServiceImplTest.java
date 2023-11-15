@@ -132,7 +132,7 @@ class StartupServiceImplTest {
         // Arrange
         MultipartFile image = new MockMultipartFile(
                 "image", "image.png", "image/png", "some bytes".getBytes());
-        FinanceDto financeDto = new FinanceDto(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
+        FinanceDto financeDto = new FinanceDto(BigDecimal.TEN, Currency.EUR);
         String categoryId = "categoryId";
         StartupCreationRequest newStartup = new StartupCreationRequest(
                 "Title",
@@ -144,10 +144,10 @@ class StartupServiceImplTest {
         String ownerLogin = "testUserLogin";
 
         User user = new User(
-                "testUser",
-                "password",
-                "Test User",
                 "test@example.com",
+                "password",
+                "Test",
+                "User",
                 Role.USER,
                 null,
                 null,
@@ -168,7 +168,7 @@ class StartupServiceImplTest {
         );
 
         when(startupMapper.newToStartup(newStartup)).thenReturn(startup);
-        when(userRepository.findUserByLogin(ownerLogin)).thenReturn(Optional.of(user));
+        when(userRepository.findUserByEmail(ownerLogin)).thenReturn(Optional.of(user));
         when(startupRepository.save(any(Startup.class))).thenReturn(startup);
         when(startupMapper.startupToView(startup)).thenReturn(startupView);
 
@@ -180,13 +180,13 @@ class StartupServiceImplTest {
 
         verify(startupRepository).save(startup);
         verify(startupMapper).newToStartup(newStartup);
-        verify(userRepository).findUserByLogin(ownerLogin);
+        verify(userRepository).findUserByEmail(ownerLogin);
     }
 
     @Test
     void shouldThrowEntityNotExistsException_IfIncorrectLogin_WhenCreateStartup() throws IOException {
         // Arrange
-        String login = "login";
+        String login = "email";
 
         when(userRepository.findById(login)).thenReturn(Optional.empty());
         when(startupMapper.newToStartup(any(StartupCreationRequest.class))).thenReturn(null);
