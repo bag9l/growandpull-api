@@ -1,9 +1,8 @@
 package com.growandpull.api.dto.auth;
 
 public record RegisterRequest(
-        String login,
+        String email,
         String password,
-        String fullName,
-        String email
+        String fullName
 ) {
 }

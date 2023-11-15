@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private static final String USER_WITH_ID_NOT_EXISTS = "User with id:%s not found";
-    private static final String USER_WITH_LOGIN_NOT_EXISTS = "User with login:%s not found";
+    private static final String USER_WITH_LOGIN_NOT_EXISTS = "User with email:%s not found";
 
     private final UserRepository userRepository;
     @Lazy
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public AuthenticationResponse updatePassword(UserDetails userDetails, PasswordUpdateRequest passwordUpdate) {
-        User user = findUserByLogin(userDetails.getUsername());
+        User user = findUserByEmail(userDetails.getUsername());
 
         if (!passwordEncoder.matches(passwordUpdate.oldPassword(), user.getPassword())) {
             throw new PermissionException("Password is not valid!");
@@ -48,13 +48,13 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest(user.getLogin(), passwordUpdate.newPassword());
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest(user.getUsername(), passwordUpdate.newPassword());
         return authenticationService.authenticate(authenticationRequest);
     }
 
     @Override
-    public User findUserByLogin(String login) {
-        return userRepository.findUserByLogin(login).orElseThrow(() ->
-                new EntityNotExistsException(String.format(USER_WITH_LOGIN_NOT_EXISTS, login)));
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email).orElseThrow(() ->
+                new EntityNotExistsException(String.format(USER_WITH_LOGIN_NOT_EXISTS, email)));
     }
 }
