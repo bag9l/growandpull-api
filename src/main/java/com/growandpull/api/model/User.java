@@ -3,7 +3,10 @@ package com.growandpull.api.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.growandpull.api.token.Token;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,8 +34,11 @@ public class User implements UserDetails {
     @Column(name = "`password`", nullable = false)
     private String password;
 
-    @Column(name = "`fullName`", nullable = false)
-    private String fullName;
+    @Column(name = "`firstName`", nullable = false)
+    private String firstName;
+
+    @Column(name = "`lastName`", nullable = false)
+    private String lastName;
 
     @Column(name = "`role`", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -64,10 +70,11 @@ public class User implements UserDetails {
 
     private Boolean isEnabled;
 
-    public User(String email, String password, String fullName, Role role, Avatar avatar, Set<Startup> startups, List<Token> tokens) {
+    public User(String email, String password, String firstName, String lastName, Role role, Avatar avatar, Set<Startup> startups, List<Token> tokens) {
         this.email = email;
         this.password = password;
-        this.fullName = fullName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.role = role;
         this.avatar = avatar;
         this.startups = startups;
@@ -110,16 +117,20 @@ public class User implements UserDetails {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "email = " + email + ", " +
-                "password = " + password + ", " +
-                "fullName = " + fullName + ", " +
-                "role = " + role + ", " +
-                "avatar = " + avatar + ", " +
-                "isExpired = " + isExpired + ", " +
-                "isLocked = " + isLocked + ", " +
-                "isCredentialsExpired = " + isCredentialsExpired + ", " +
-                "isEnabled = " + isEnabled + ")";
+        return "User{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", role=" + role +
+                ", avatar=" + avatar +
+                ", startups=" + startups +
+                ", tokens=" + tokens +
+                ", isExpired=" + isExpired +
+                ", isLocked=" + isLocked +
+                ", isCredentialsExpired=" + isCredentialsExpired +
+                ", isEnabled=" + isEnabled +
+                '}';
     }
 }

@@ -73,7 +73,8 @@ class StartupMapperTest {
         User user = new User(
                 "test@example.com",
                 "password",
-                "Test User",
+                "Test",
+                "User",
                 Role.USER,
                 null,
                 null,

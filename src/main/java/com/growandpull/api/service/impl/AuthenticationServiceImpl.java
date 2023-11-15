@@ -75,7 +75,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         User user = new User(
                 passwordEncoder.encode(request.password()),
-                request.fullName(),
+                request.firstName(),
+                request.lastName(),
                 request.email(),
                 role,
                 null,
