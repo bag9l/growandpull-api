@@ -74,10 +74,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request, Role role) {
 
         User user = new User(
+                request.email(),
                 passwordEncoder.encode(request.password()),
                 request.firstName(),
                 request.lastName(),
-                request.email(),
                 role,
                 null,
                 null,

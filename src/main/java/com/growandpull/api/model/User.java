@@ -85,6 +85,18 @@ public class User implements UserDetails {
         this.isEnabled = true;
     }
 
+    public User(String email, String password, String firstName, String lastName, Role role) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.isExpired = false;
+        this.isLocked = false;
+        this.isCredentialsExpired = false;
+        this.isEnabled = true;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
