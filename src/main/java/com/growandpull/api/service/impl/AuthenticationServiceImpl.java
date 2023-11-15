@@ -78,8 +78,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 request.firstName(),
                 request.lastName(),
                 request.email(),
-                request.birth(),
-                request.aboutUser(),
                 role,
                 null,
                 null,

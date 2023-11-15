@@ -13,15 +13,12 @@ public interface UserService {
 
     AuthenticationResponse updatePassword(UserDetails userDetails, PasswordUpdateRequest passwordUpdate);
 
-<<<<<<< HEAD
-    User findUserByLogin(String login);
+//    User findUserByLogin(String login);
 
     ProfileView updateUser(String userId, UserUpdateRequest userUpdateRequest, String userLogin) throws IOException;
     Profile getProfile(String currentUserLogin, String userLogin);
 
 
-=======
     User findUserByEmail(String login);
->>>>>>> master
 }
 

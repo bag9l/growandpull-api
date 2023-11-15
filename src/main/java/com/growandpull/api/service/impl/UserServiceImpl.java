@@ -73,8 +73,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileView updateUser(String userId, UserUpdateRequest userUpdateRequest, String userLogin) throws IOException {
-        User user = findUserByLogin(userLogin);
+    public ProfileView updateUser(String userId, UserUpdateRequest userUpdateRequest, String email) throws IOException {
+        User user = findUserByEmail(email);
         if (!user.getId().equals(userId)) {
             throw new PermissionException("Only the owner can edit the profile");
 
@@ -98,28 +98,31 @@ public class UserServiceImpl implements UserService {
             image = imageRepository.save(image);
         }
 
-        user.setLogin(userUpdateRequest.getLogin());
-        user.setAboutUser(userUpdateRequest.getAboutUser());
         user.setEmail(userUpdateRequest.getEmail());
-        user.setFullName(userUpdateRequest.getFullName());
+        user.setFirstName(userUpdateRequest.getFirstName());
+        user.setLastName(userUpdateRequest.getLastName());
+        user.setBirth(userUpdateRequest.getBirth());
     }
 
     @Override
-    public Profile getProfile(String currentUserLogin, String userLogin) {//currentUserLogin - логін залогованого корисувача, userLogin- логін користувача  сторінки
+    public Profile getProfile(String currentUserEmail, String email) {//currentUserEmail - логін залогованого корисувача, email- логін користувача  сторінки
 
-        if (Objects.equals(currentUserLogin, userLogin)) {
-            User user = findUserByLogin(currentUserLogin);
+        if (Objects.equals(currentUserEmail, email)) {
+            User user = findUserByEmail(currentUserEmail);
             return new PrivateProfile(
-                    user.getFullName(),
+                    user.getFirstName(),
+                    user.getLastName(),
                     user.getBirth(),
                     user.getAboutUser(),
+                    user.getEmail(),
                     user.getAvatar().getImageData()
             );
 
         } else {
-            User user = findUserByLogin(userLogin);
+            User user = findUserByEmail(email);
             return new PublicProfile(
-                    user.getFullName(),
+                    user.getFirstName(),
+                    user.getLastName(),
                     user.getBirth(),
                     user.getAboutUser(),
                     user.getAvatar().getImageData()

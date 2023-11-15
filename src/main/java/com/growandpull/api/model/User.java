@@ -33,22 +33,17 @@ public class User implements UserDetails {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-<<<<<<< HEAD
-    @Column(name = "`login`", nullable = false, unique = true)
-    private String login;
 
-    @Column(name = "`description`", nullable = true)
-    private String description;
+    @Column(name = "`aboutUser`")
+    private String aboutUser;
 
-    @Column(name = "`birth`", nullable = false)
+    @Column(name = "`birth`")
     private LocalDate birth;
 
-=======
->>>>>>> master
     @Column(name = "`email`", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "`password`", nullable = false)
+    @Column(name = "`password`", nullable = false, unique = true)
     private String password;
 
     @Column(name = "`firstName`", nullable = false)
