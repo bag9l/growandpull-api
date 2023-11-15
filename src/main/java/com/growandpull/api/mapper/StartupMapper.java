@@ -25,7 +25,6 @@ public abstract class StartupMapper {
     protected ImageMapper imageMapper;
     protected CategoryRepository categoryRepository;
 
-    //    @Mapping(target = "existenceTime", expression = "java(startup.getExistenceTime())")
     @Mapping(target = "category", expression = "java(startup.getCategory().getName())")
     @Mapping(target = "image", expression = "java((startup.getImage() != null) ? " +
             "com.growandpull.api.util.ImageUtil.decompressImage(startup.getImage().getImageData()) : null)")

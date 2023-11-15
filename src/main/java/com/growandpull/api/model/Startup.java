@@ -7,7 +7,6 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -31,15 +30,6 @@ public class Startup {
     @ToString.Exclude
     @JsonBackReference
     private User owner;
-
-    @OneToMany(
-            mappedBy = "startup",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @ToString.Exclude
-    @JsonManagedReference
-    private List<Investment> investments;
 
     @Column(name = "`description`", nullable = false)
     private String description;
@@ -78,7 +68,6 @@ public class Startup {
     public Startup(String id,
                    String title,
                    User owner,
-                   List<Investment> investments,
                    String description,
                    StartupStatus status,
                    Category category,
@@ -89,7 +78,6 @@ public class Startup {
         this.id = id;
         this.title = title;
         this.owner = owner;
-        this.investments = investments;
         this.description = description;
         this.status = status;
         this.category = category;
@@ -101,7 +89,6 @@ public class Startup {
 
     public Startup(String title,
                    User owner,
-                   List<Investment> investments,
                    String description,
                    StartupStatus status,
                    Category category,
@@ -111,7 +98,6 @@ public class Startup {
                    LocalDateTime createdAt) {
         this.title = title;
         this.owner = owner;
-        this.investments = investments;
         this.description = description;
         this.status = status;
         this.category = category;

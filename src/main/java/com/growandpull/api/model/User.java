@@ -16,7 +16,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "usr")
 public class User implements UserDetails {
@@ -25,9 +24,6 @@ public class User implements UserDetails {
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
-
-    @Column(name = "`login`", nullable = false, unique = true)
-    private String login;
 
     @Column(name = "`email`", nullable = false, unique = true)
     private String email;
@@ -56,15 +52,6 @@ public class User implements UserDetails {
     @JsonManagedReference
     private Set<Startup> startups;
 
-    @OneToMany(
-            mappedBy = "investor",
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            orphanRemoval = true
-    )
-    @ToString.Exclude
-    @JsonManagedReference
-    private List<Investment> investments;
-
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Token> tokens;
@@ -77,29 +64,7 @@ public class User implements UserDetails {
 
     private Boolean isEnabled;
 
-
-    public User(String login,
-                String password,
-                String fullName,
-                String email,
-                Role role,
-                Avatar avatar,
-                List<Token> tokens) {
-        this.login = login;
-        this.email = email;
-        this.password = password;
-        this.fullName = fullName;
-        this.role = role;
-        this.avatar = avatar;
-        this.tokens = tokens;
-        this.isExpired = false;
-        this.isLocked = false;
-        this.isCredentialsExpired = false;
-        this.isEnabled = true;
-    }
-
-    public User(String login, String email, String password, String fullName, Role role, Avatar avatar, Set<Startup> startups, List<Token> tokens) {
-        this.login = login;
+    public User(String email, String password, String fullName, Role role, Avatar avatar, Set<Startup> startups, List<Token> tokens) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
@@ -120,7 +85,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return email;
     }
 
     @Override
@@ -147,7 +112,6 @@ public class User implements UserDetails {
     public String toString() {
         return getClass().getSimpleName() + "(" +
                 "id = " + id + ", " +
-                "login = " + login + ", " +
                 "email = " + email + ", " +
                 "password = " + password + ", " +
                 "fullName = " + fullName + ", " +

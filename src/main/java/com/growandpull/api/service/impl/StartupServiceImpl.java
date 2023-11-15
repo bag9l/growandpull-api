@@ -25,7 +25,7 @@ import java.util.List;
 public class StartupServiceImpl implements StartupService {
 
     private static final String STARTUP_NOT_FOUND = "Startup with id:%s not found";
-    private static final String USER_WITH_LOGIN_NOT_FOUND = "User with login:%s not found";
+    private static final String USER_WITH_LOGIN_NOT_FOUND = "User with email:%s not found";
 
     private final StartupRepository startupRepository;
     private final UserRepository userRepository;
@@ -78,7 +78,7 @@ public class StartupServiceImpl implements StartupService {
         Startup startup = findStartupById(startupId);
         User user = findUserByLogin(userLogin);
 
-        if (!user.getLogin().equals(startup.getOwner().getLogin())) {
+        if (!user.getUsername().equals(startup.getOwner().getUsername())) {
             throw new PermissionException("Only the owner can edit the startup");
         }
         copyUpdateFieldsToStartup(startupUpdateRequest, startup);
@@ -93,7 +93,7 @@ public class StartupServiceImpl implements StartupService {
                 new EntityNotExistsException(String.format("Category with id:%s not found", startupUpdateRequest.getCategoryId())));
         Image image = (startupUpdateRequest.getImage() != null) ?
                 imageMapper.multiPartFileToImage(startupUpdateRequest.getImage()) : null;
-        Finance finance = financeMapper.updateToFinance(startupUpdateRequest.getFinance());
+        Finance finance = financeMapper.dtoToFinance(startupUpdateRequest.getFinance());
 
         if (image != null) {
             image = imageRepository.save(image);
@@ -114,7 +114,7 @@ public class StartupServiceImpl implements StartupService {
     }
 
     private User findUserByLogin(String ownerLogin) {
-        return userRepository.findUserByLogin(ownerLogin).orElseThrow(() ->
+        return userRepository.findUserByEmail(ownerLogin).orElseThrow(() ->
                 new EntityNotExistsException(String.format(USER_WITH_LOGIN_NOT_FOUND, ownerLogin)));
     }
 }

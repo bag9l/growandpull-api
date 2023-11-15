@@ -21,53 +21,29 @@ public class Finance {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @Column(name = "`collected_amount`", nullable = false)
-    private BigDecimal collectedAmount = BigDecimal.ZERO;
-
-    @Column(name = "`required_amount`", nullable = false)
-    private BigDecimal requiredAmount;
-
-    @Column(name = "`minimum_investment_amount`", nullable = false)
-    private BigDecimal minimumInvestmentAmount;
+    @Column(name = "`amount`", nullable = false)
+    private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "`currency`", nullable = false)
     private Currency currency;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "`investment_type`", nullable = false)
-    private InvestmentType investmentType;
 
-
-    public Finance(BigDecimal requiredAmount,
-                   BigDecimal minimumInvestmentAmount,
-                   Currency currency,
-                   InvestmentType investmentType) {
-        this.requiredAmount = requiredAmount;
-        this.minimumInvestmentAmount = minimumInvestmentAmount;
+    public Finance(BigDecimal amount,
+                   Currency currency) {
+        this.amount = amount;
         this.currency = currency;
-        this.investmentType = investmentType;
-    }
-
-    @PrePersist
-    void preInsert() {
-        if (this.collectedAmount == null) {
-            this.collectedAmount = BigDecimal.ZERO;
-        }
-        if (this.investmentType.equals(InvestmentType.SOLE_INVESTOR)) {
-            this.minimumInvestmentAmount = this.requiredAmount;
-        }
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Finance finance)) return false;
-        return id.equals(finance.id) && collectedAmount.equals(finance.collectedAmount) && requiredAmount.equals(finance.requiredAmount) && minimumInvestmentAmount.equals(finance.minimumInvestmentAmount) && currency == finance.currency && investmentType == finance.investmentType;
+        return id.equals(finance.id) && amount.equals(finance.amount) && currency == finance.currency;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, collectedAmount, requiredAmount, minimumInvestmentAmount, currency, investmentType);
+        return Objects.hash(id, amount, currency);
     }
 }

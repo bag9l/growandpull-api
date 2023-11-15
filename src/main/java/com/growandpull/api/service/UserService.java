@@ -10,5 +10,5 @@ public interface UserService {
 
     AuthenticationResponse updatePassword(UserDetails userDetails, PasswordUpdateRequest passwordUpdate);
 
-    User findUserByLogin(String login);
+    User findUserByEmail(String login);
 }

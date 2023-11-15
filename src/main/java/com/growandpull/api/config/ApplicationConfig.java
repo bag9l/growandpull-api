@@ -33,41 +33,40 @@ public class ApplicationConfig {
     private final UserRepository userRepository;
 
 
-//    @Bean
-//    public void generate() {
-//        User user = new User(
-//                "testUser",
-//                "test@example.com",
-//                "$2a$10$t8yAayensKAbhdpDOCNchuPNWXE.17fyL1EysiiZedVaDgKzi0q7y",
-//                "Test User",
-//                Role.USER,
-//                null,
-//                null,
-//                null
-//        );
-//        Category category = new Category("category");
-//        Finance finance = new Finance(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
-//
-//        user = userRepository.save(user);
-//        category = categoryRepository.save(category);
-//        finance = financeRepository.save(finance);
-//
-//        List<Startup> startups = new ArrayList<>();
-//        for (int i = 0; i < 50; i++) {
-//            startups.add(new Startup(
-//                    "title",
-//                    user,
-//                    "description" + i,
-//                    StartupStatus.IDEA,
-//                    category,
-//                    finance,
-//                    AdStatus.ENABLED,
-//                    null,
-//                    LocalDateTime.now()
-//            ));
-//        }
-//        startupRepository.saveAll(startups);
-//    }
+    @Bean
+    public void generate() {
+        User user = new User(
+                "test@example.com",
+                "$2a$10$t8yAayensKAbhdpDOCNchuPNWXE.17fyL1EysiiZedVaDgKzi0q7y",
+                "Test User",
+                Role.USER,
+                null,
+                null,
+                null
+        );
+        Category category = new Category("category");
+        Finance finance = new Finance(BigDecimal.TEN, Currency.EUR);
+
+        user = userRepository.save(user);
+        category = categoryRepository.save(category);
+        finance = financeRepository.save(finance);
+
+        List<Startup> startups = new ArrayList<>();
+        for (int i = 0; i < 50; i++) {
+            startups.add(new Startup(
+                    "title",
+                    user,
+                    "description" + i,
+                    StartupStatus.IDEA,
+                    category,
+                    finance,
+                    AdStatus.ENABLED,
+                    null,
+                    LocalDateTime.now()
+            ));
+        }
+        startupRepository.saveAll(startups);
+    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -90,10 +89,10 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            User user = userService.findUserByLogin(username);
+            User user = userService.findUserByEmail(username);
             System.out.println("USER:");
             System.out.println(user);
-            return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(), user.getAuthorities());
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
         };
     }
 }

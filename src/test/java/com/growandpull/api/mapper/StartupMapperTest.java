@@ -48,7 +48,6 @@ class StartupMapperTest {
                 "id",
                 "title",
                 null,
-                null,
                 "description",
                 StartupStatus.IDEA,
                 category,
@@ -72,23 +71,21 @@ class StartupMapperTest {
     void shouldMapStartupToView() {
         // Arrange
         User user = new User(
-                "testUser",
+                "test@example.com",
                 "password",
                 "Test User",
-                "test@example.com",
                 Role.USER,
                 null,
                 null,
                 null
         );
         Category category = new Category("category");
-        Finance finance = new Finance(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR, InvestmentType.MULTI_INVESTOR);
+        Finance finance = new Finance(BigDecimal.TEN, Currency.EUR);
 
         Startup startup = new Startup(
                 "id",
                 "title",
                 user,
-                null,
                 "description",
                 StartupStatus.IDEA,
                 category,
@@ -117,7 +114,7 @@ class StartupMapperTest {
         // Arrange
         MultipartFile image = new MockMultipartFile(
                 "image", "image.png", "image/png", "some bytes".getBytes());
-        FinanceDto financeDto = new FinanceDto(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.ONE, Currency.EUR, InvestmentType.MULTI_INVESTOR);
+        FinanceDto financeDto = new FinanceDto(BigDecimal.TEN, Currency.EUR);
         String categoryId = "categoryId";
         StartupCreationRequest newStartup = new StartupCreationRequest(
                 "Title",
