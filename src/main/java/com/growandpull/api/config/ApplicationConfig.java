@@ -33,40 +33,41 @@ public class ApplicationConfig {
     private final UserRepository userRepository;
 
 
-    @Bean
-    public void generate() {
-        User user = new User(
-                "test@example.com",
-                "$2a$10$t8yAayensKAbhdpDOCNchuPNWXE.17fyL1EysiiZedVaDgKzi0q7y",
-                "Test User",
-                Role.USER,
-                null,
-                null,
-                null
-        );
-        Category category = new Category("category");
-        Finance finance = new Finance(BigDecimal.TEN, Currency.EUR);
-
-        user = userRepository.save(user);
-        category = categoryRepository.save(category);
-        finance = financeRepository.save(finance);
-
-        List<Startup> startups = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            startups.add(new Startup(
-                    "title",
-                    user,
-                    "description" + i,
-                    StartupStatus.IDEA,
-                    category,
-                    finance,
-                    AdStatus.ENABLED,
-                    null,
-                    LocalDateTime.now()
-            ));
-        }
-        startupRepository.saveAll(startups);
-    }
+//    @Bean
+//    public void generate() {
+//        User user = new User(
+//                "test@example.com",
+//                "$2a$10$t8yAayensKAbhdpDOCNchuPNWXE.17fyL1EysiiZedVaDgKzi0q7y",
+//                "Test",
+//                "User",
+//                Role.USER,
+//                null,
+//                null,
+//                null
+//        );
+//        Category category = new Category("category");
+//        Finance finance = new Finance(BigDecimal.TEN, Currency.EUR);
+//
+//        user = userRepository.save(user);
+//        category = categoryRepository.save(category);
+//        finance = financeRepository.save(finance);
+//
+//        List<Startup> startups = new ArrayList<>();
+//        for (int i = 0; i < 50; i++) {
+//            startups.add(new Startup(
+//                    "title",
+//                    user,
+//                    "description" + i,
+//                    StartupStatus.IDEA,
+//                    category,
+//                    finance,
+//                    AdStatus.ENABLED,
+//                    null,
+//                    LocalDateTime.now()
+//            ));
+//        }
+//        startupRepository.saveAll(startups);
+//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

@@ -31,7 +31,7 @@ class UserMapperTest {
 
         // Assert
         assertEquals(user.getUsername(), authenticatedUser.email());
-        assertEquals(user.getFullName(), authenticatedUser.fullName());
+        assertEquals(user.getFirstName(), authenticatedUser.fullName());
         assertEquals(user.getEmail(), authenticatedUser.email());
         assertEquals(user.getRole().getValue(), authenticatedUser.role());
     }
@@ -54,6 +54,6 @@ class UserMapperTest {
 
         // Assert
         assertEquals(user.getId(), userCard.id());
-        assertEquals(user.getFullName(), userCard.fullName());
+        assertEquals(user.getFirstName(), userCard.fullName());
     }
 }
