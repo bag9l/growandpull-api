@@ -78,6 +78,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 passwordEncoder.encode(request.password()),
                 request.fullName(),
                 request.email(),
+                request.birth(),
+                request.aboutUser(),
                 role,
                 null,
                 null

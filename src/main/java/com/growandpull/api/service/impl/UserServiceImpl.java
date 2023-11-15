@@ -1,8 +1,6 @@
 package com.growandpull.api.service.impl;
 
-import com.growandpull.api.dto.PasswordUpdateRequest;
-import com.growandpull.api.dto.ProfileView;
-import com.growandpull.api.dto.UserUpdateRequest;
+import com.growandpull.api.dto.*;
 import com.growandpull.api.dto.auth.AuthenticationRequest;
 import com.growandpull.api.dto.auth.AuthenticationResponse;
 import com.growandpull.api.exception.EntityNotExistsException;
@@ -24,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.Objects;
 
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @Service
@@ -73,8 +73,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileView updateUser(String userId, UserUpdateRequest userUpdateRequest) throws IOException {
-        User user = findUserById(userId);
+    public ProfileView updateUser(String userId, UserUpdateRequest userUpdateRequest, String userLogin) throws IOException {
+        User user = findUserByLogin(userLogin);
+        if (!user.getId().equals(userId)) {
+            throw new PermissionException("Only the owner can edit the profile");
+
+        }
 
         copyUpdateFieldsToUser(userUpdateRequest, user);
 
@@ -85,6 +89,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+
     private void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {
         Image image = (userUpdateRequest.getAvatar() != null) ?
                 imageMapper.multiPartFileToImage(userUpdateRequest.getAvatar()) : null;
@@ -94,10 +99,32 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setLogin(userUpdateRequest.getLogin());
-        user.setDescription(userUpdateRequest.getDescription());
+        user.setAboutUser(userUpdateRequest.getAboutUser());
         user.setEmail(userUpdateRequest.getEmail());
         user.setFullName(userUpdateRequest.getFullName());
     }
 
+    @Override
+    public Profile getProfile(String currentUserLogin, String userLogin) {//currentUserLogin - логін залогованого корисувача, userLogin- логін користувача  сторінки
 
+        if (Objects.equals(currentUserLogin, userLogin)) {
+            User user = findUserByLogin(currentUserLogin);
+            return new PrivateProfile(
+                    user.getFullName(),
+                    user.getBirth(),
+                    user.getAboutUser(),
+                    user.getAvatar().getImageData()
+            );
+
+        } else {
+            User user = findUserByLogin(userLogin);
+            return new PublicProfile(
+                    user.getFullName(),
+                    user.getBirth(),
+                    user.getAboutUser(),
+                    user.getAvatar().getImageData()
+            );
+
+        }
+    }
 }

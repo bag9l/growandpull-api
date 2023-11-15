@@ -61,50 +61,5 @@ public class AuthenticationController {
         );
     }
 
-    @PutMapping("updateUser/{userId}")
-    public ResponseEntity<ProfileView> updateUser(@PathVariable String userId,
-                                                  @Valid @RequestBody UserUpdateRequest userUpdateRequest,
-                                                  @AuthenticationPrincipal UserDetails userDetails) throws java.io.IOException {
-        try {
-            if (!userId.equals(userDetails.getUsername())) {
-                throw new PermissionException("You do not have permission to update this profile");
-            }
-
-            ProfileView updatedProfile = userService.updateUser(userId, userUpdateRequest);
-            return ResponseEntity.ok(updatedProfile);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @PutMapping("updatePassword/{userId}")
-    public ResponseEntity<AuthenticationResponse> updatePassword(
-            @Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest,
-            @AuthenticationPrincipal UserDetails userDetails, @PathVariable String userId) throws java.io.IOException {
-        try {
-            if (!userId.equals(userDetails.getUsername())) {
-                throw new PermissionException("You do not have permission to update this password");
-            }
-            AuthenticationResponse updatedAuthentication = userService.updatePassword(userDetails, passwordUpdateRequest);
-            return ResponseEntity.ok(updatedAuthentication);
-        } catch (PermissionException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @GetMapping("profile/{userId}")
-    public ResponseEntity<?> getProfile(@PathVariable String userId,
-                                        @AuthenticationPrincipal UserDetails userDetails,
-                                        PublicProfile publicProfile,
-                                        PrivateProfile privateProfile) {
-        if (Objects.equals(userId, userDetails.getUsername())) {
-            return ResponseEntity.ok(privateProfile);
-        } else {
-            return ResponseEntity.ok(publicProfile);
-        }
-    }
-
 
 }

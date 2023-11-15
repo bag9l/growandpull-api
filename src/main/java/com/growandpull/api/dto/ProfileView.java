@@ -6,6 +6,6 @@ public record ProfileView(String fullName,
                           LocalDate birth,
                           String login,
                           String email,
-                          String description,
+                          String aboutUser,
                           byte[] avatar) {
 }

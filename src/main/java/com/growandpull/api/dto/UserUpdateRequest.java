@@ -16,7 +16,7 @@ public class UserUpdateRequest {
     private final String fullName;
     private final String login;
     private final String email;
-    private final String description;
+    private final String aboutUser;
     private MultipartFile avatar;
 
     @JsonCreator
@@ -24,11 +24,11 @@ public class UserUpdateRequest {
             @JsonProperty("fullName") String fullName,
             @JsonProperty("login") String login,
             @JsonProperty("email") String email,
-            @JsonProperty("description") String description) {
+            @JsonProperty("about") String aboutUser) {
         this.fullName = fullName;
         this.login = login;
         this.email = email;
-        this.description = description;
+        this.aboutUser = getAboutUser();
 
     }
     public void setAvatar(MultipartFile avatar) {

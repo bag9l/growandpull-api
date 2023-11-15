@@ -1,6 +1,9 @@
 package com.growandpull.api.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.growandpull.api.token.Token;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +34,7 @@ public class User implements UserDetails {
     @Column(name = "`login`", nullable = false, unique = true)
     private String login;
 
-    @Column(name = "`description`", nullable = false)
+    @Column(name = "`description`", nullable = true)
     private String description;
 
     @Column(name = "`birth`", nullable = false)
