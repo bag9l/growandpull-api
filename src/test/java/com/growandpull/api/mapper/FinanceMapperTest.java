@@ -17,12 +17,11 @@ class FinanceMapperTest {
     @Test
     void testFinanceToDto(){
         // Arrange
-        Finance finance = new Finance(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
+        Finance finance = new Finance(BigDecimal.TEN, Currency.EUR);
         // Act
         FinanceDto financeDto = underTest.financeToDto(finance);
         // Assert
-        assertEquals(finance.getRequiredAmount(), financeDto.requiredAmount());
-        assertEquals(finance.getMinimumInvestmentAmount(), financeDto.minimumInvestmentAmount());
+        assertEquals(finance.getAmount(), financeDto.amount());
         assertEquals(finance.getCurrency(), financeDto.currency());
 
     }

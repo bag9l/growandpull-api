@@ -21,18 +21,17 @@ public class Finance {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @Column(name = "`required_amount`", nullable = false)
-    private BigDecimal requiredAmount;
+    @Column(name = "`amount`", nullable = false)
+    private BigDecimal amount;
 
-    @Column(name = "`minimum_investment_amount`", nullable = false)
-    private BigDecimal minimumInvestmentAmount;
-
+    @Enumerated(EnumType.STRING)
     @Column(name = "`currency`", nullable = false)
     private Currency currency;
 
-    public Finance(BigDecimal requiredAmount, BigDecimal minimumInvestmentAmount, Currency currency) {
-        this.requiredAmount = requiredAmount;
-        this.minimumInvestmentAmount = minimumInvestmentAmount;
+
+    public Finance(BigDecimal amount,
+                   Currency currency) {
+        this.amount = amount;
         this.currency = currency;
     }
 
@@ -40,14 +39,11 @@ public class Finance {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Finance finance)) return false;
-        return id.equals(finance.id)
-                && requiredAmount.equals(finance.requiredAmount)
-                && minimumInvestmentAmount.equals(finance.minimumInvestmentAmount)
-                && currency == finance.currency;
+        return id.equals(finance.id) && amount.equals(finance.amount) && currency == finance.currency;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, requiredAmount, minimumInvestmentAmount, currency);
+        return Objects.hash(id, amount, currency);
     }
 }

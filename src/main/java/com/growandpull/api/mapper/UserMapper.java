@@ -19,7 +19,6 @@ public abstract class UserMapper {
             "com.growandpull.api.util.ImageUtil.decompressImage(user.getAvatar().getImageData()) : null)")
     public abstract AuthenticatedUser userToAuthenticatedUser(User user);
 
-    @Mapping(target = "fullName", source = "user.fullName")
     @Mapping(target = "avatar", expression = "java((user.getAvatar() != null) ? " +
             "com.growandpull.api.util.ImageUtil.decompressImage(user.getAvatar().getImageData()) : null)")
     public abstract UserCard userToCard(User user);
@@ -36,5 +35,7 @@ public abstract class UserMapper {
     @Mapping(target = "avatar", expression = "java((user.getAvatar() != null) ? " +
             "com.growandpull.api.util.ImageUtil.decompressImage(user.getAvatar().getImageData()) : null)")
     public abstract ProfileView userToProfileView(User user);
+
+
 
 }

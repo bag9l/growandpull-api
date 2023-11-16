@@ -1,13 +1,11 @@
 package com.growandpull.api.controller;
 
-import com.growandpull.api.dto.ProfileView;
-import com.growandpull.api.dto.StartupUpdateRequest;
-import com.growandpull.api.dto.StartupView;
-import com.growandpull.api.dto.UserUpdateRequest;
+import com.growandpull.api.dto.*;
 import com.growandpull.api.dto.auth.AuthenticatedUser;
 import com.growandpull.api.dto.auth.AuthenticationRequest;
 import com.growandpull.api.dto.auth.AuthenticationResponse;
 import com.growandpull.api.dto.auth.RegisterRequest;
+import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.service.AuthenticationService;
 import com.growandpull.api.service.UserService;
 import io.jsonwebtoken.io.IOException;
@@ -16,10 +14,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @RestController
@@ -57,17 +59,6 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 authenticationService.registerAdmin(request)
         );
-    }
-
-    @PutMapping("updateUser/{userId}")
-    public ResponseEntity<ProfileView> updateUser(@PathVariable String userId,
-                                                  @Valid @RequestBody UserUpdateRequest userUpdateRequest) throws java.io.IOException {
-        try {
-            ProfileView updatedProfile = userService.updateUser(userId, userUpdateRequest);
-            return ResponseEntity.ok(updatedProfile);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
 

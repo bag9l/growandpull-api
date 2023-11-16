@@ -1,9 +1,6 @@
 package com.growandpull.api.service.impl;
 
-import com.growandpull.api.dto.StartupCreationRequest;
-import com.growandpull.api.dto.StartupCard;
-import com.growandpull.api.dto.StartupUpdateRequest;
-import com.growandpull.api.dto.StartupView;
+import com.growandpull.api.dto.*;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.mapper.FinanceMapper;
@@ -21,13 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class StartupServiceImpl implements StartupService {
 
     private static final String STARTUP_NOT_FOUND = "Startup with id:%s not found";
-    private static final String USER_WITH_LOGIN_NOT_FOUND = "User with login:%s not found";
+    private static final String USER_WITH_LOGIN_NOT_FOUND = "User with email:%s not found";
 
     private final StartupRepository startupRepository;
     private final UserRepository userRepository;
@@ -66,14 +64,20 @@ public class StartupServiceImpl implements StartupService {
         return startupMapper.startupToView(startup);
     }
 
+    @Override
+    public StartupCreateData getCreationData() {
+        List<StartupStatus> statuses = List.of(StartupStatus.values());
+        List<Category> categories = categoryRepository.findAll();
+        return new StartupCreateData(statuses, categories);
+    }
+
     //    TODO: try loading
-    @Transactional
     @Override
     public StartupView updateStartup(String startupId, StartupUpdateRequest startupUpdateRequest, String userLogin) throws IOException {
         Startup startup = findStartupById(startupId);
         User user = findUserByLogin(userLogin);
 
-        if (!user.getLogin().equals(startup.getOwner().getLogin())) {
+        if (!user.getUsername().equals(startup.getOwner().getUsername())) {
             throw new PermissionException("Only the owner can edit the startup");
         }
         copyUpdateFieldsToStartup(startupUpdateRequest, startup);
@@ -88,7 +92,7 @@ public class StartupServiceImpl implements StartupService {
                 new EntityNotExistsException(String.format("Category with id:%s not found", startupUpdateRequest.getCategoryId())));
         Image image = (startupUpdateRequest.getImage() != null) ?
                 imageMapper.multiPartFileToImage(startupUpdateRequest.getImage()) : null;
-        Finance finance = financeMapper.updateToFinance(startupUpdateRequest.getFinance());
+        Finance finance = financeMapper.dtoToFinance(startupUpdateRequest.getFinance());
 
         if (image != null) {
             image = imageRepository.save(image);
@@ -109,7 +113,7 @@ public class StartupServiceImpl implements StartupService {
     }
 
     private User findUserByLogin(String ownerLogin) {
-        return userRepository.findUserByLogin(ownerLogin).orElseThrow(() ->
+        return userRepository.findUserByEmail(ownerLogin).orElseThrow(() ->
                 new EntityNotExistsException(String.format(USER_WITH_LOGIN_NOT_FOUND, ownerLogin)));
     }
 }

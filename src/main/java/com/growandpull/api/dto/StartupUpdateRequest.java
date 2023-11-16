@@ -16,7 +16,7 @@ public class StartupUpdateRequest {
     private final String description;
     private final StartupStatus status;
     private final String categoryId;
-    private final FinanceUpdate finance;
+    private final FinanceDto finance;
     private MultipartFile image;
 
     @JsonCreator
@@ -25,7 +25,7 @@ public class StartupUpdateRequest {
             @JsonProperty("description") String description,
             @JsonProperty("status") StartupStatus status,
             @JsonProperty("categoryId") String categoryId,
-            @JsonProperty("finance") FinanceUpdate finance) {
+            @JsonProperty("finance") FinanceDto finance) {
         this.title = title;
         this.description = description;
         this.status = status;

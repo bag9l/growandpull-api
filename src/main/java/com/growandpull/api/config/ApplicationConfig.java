@@ -36,17 +36,17 @@ public class ApplicationConfig {
 //    @Bean
 //    public void generate() {
 //        User user = new User(
-//                "testUser",
 //                "test@example.com",
 //                "$2a$10$t8yAayensKAbhdpDOCNchuPNWXE.17fyL1EysiiZedVaDgKzi0q7y",
-//                "Test User",
+//                "Test",
+//                "User",
 //                Role.USER,
 //                null,
 //                null,
 //                null
 //        );
 //        Category category = new Category("category");
-//        Finance finance = new Finance(BigDecimal.TEN, BigDecimal.ONE, Currency.EUR);
+//        Finance finance = new Finance(BigDecimal.TEN, Currency.EUR);
 //
 //        user = userRepository.save(user);
 //        category = categoryRepository.save(category);
@@ -90,10 +90,10 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            User user = userService.findUserByLogin(username);
+            User user = userService.findUserByEmail(username);
             System.out.println("USER:");
             System.out.println(user);
-            return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(), user.getAuthorities());
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
         };
     }
 }

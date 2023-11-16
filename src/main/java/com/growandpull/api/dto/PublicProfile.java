@@ -1,14 +1,13 @@
 package com.growandpull.api.dto;
 
-import com.growandpull.api.model.Avatar;
-
 import java.time.LocalDate;
 
 
 public record PublicProfile
-        (String fullName,
+        (String firstName,
+         String lastName,
          LocalDate birth,
-         String description,
-         byte[] avatar) {
+         String aboutUser,
+         byte[] avatar) implements Profile{
 
 }

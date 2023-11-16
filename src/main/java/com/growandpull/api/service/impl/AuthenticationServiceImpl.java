@@ -50,12 +50,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.login(),
+                        request.email(),
                         request.password()
                 )
         );
 
-        User user = userService.findUserByLogin(request.login());
+        User user = userService.findUserByEmail(request.email());
 
         String jwt = jwtService.generateToken(user);
 
@@ -67,18 +67,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticatedUser getAuthenticatedUser(String login) {
-        User user = userService.findUserByLogin(login);
+        User user = userService.findUserByEmail(login);
         return userMapper.userToAuthenticatedUser(user);
     }
 
     public AuthenticationResponse register(RegisterRequest request, Role role) {
 
         User user = new User(
-                request.login(),
-                passwordEncoder.encode(request.password()),
-                request.fullName(),
                 request.email(),
+                passwordEncoder.encode(request.password()),
+                request.firstName(),
+                request.lastName(),
                 role,
+                null,
                 null,
                 null
         );
@@ -98,7 +99,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokensForUser(user.getLogin());
+        var validUserTokens = tokenRepository.findAllValidTokensForUser(user.getUsername());
         if (validUserTokens.isEmpty())
             return;
         validUserTokens.forEach(token -> {

@@ -8,29 +8,35 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+
 
 @Getter
 @ToString
 @AllArgsConstructor
 public class UserUpdateRequest {
-    private final String fullName;
-    private final String login;
+    private final String firstName;
+    private final String lastName;
     private final String email;
-    private final String description;
+    private final String aboutUser;
+    private final LocalDate birth;
     private MultipartFile avatar;
 
     @JsonCreator
     public UserUpdateRequest(
-            @JsonProperty("fullName") String fullName,
-            @JsonProperty("login") String login,
+            @JsonProperty("firstName") String firstName,
+            @JsonProperty("lastName") String lastName,
             @JsonProperty("email") String email,
-            @JsonProperty("description") String description) {
-        this.fullName = fullName;
-        this.login = login;
+            @JsonProperty("aboutUser") String aboutUser,
+            @JsonProperty("birth") LocalDate birth) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
-        this.description = description;
+        this.aboutUser = aboutUser;
+        this.birth = birth;
 
     }
+
     public void setAvatar(MultipartFile avatar) {
         this.avatar = avatar;
     }

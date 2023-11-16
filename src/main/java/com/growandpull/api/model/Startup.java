@@ -34,6 +34,7 @@ public class Startup {
     @Column(name = "`description`", nullable = false)
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "`status`", nullable = false)
     private StartupStatus status;
 
@@ -49,6 +50,7 @@ public class Startup {
     @JsonBackReference
     private Finance finance;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "`ad_status`", nullable = false)
     private AdStatus adStatus;
 
@@ -63,7 +65,17 @@ public class Startup {
     @Transient
     private ExistenceTime existenceTime;
 
-    public Startup(String title, User owner, String description, StartupStatus status, Category category, Finance finance, AdStatus adStatus, Image image, LocalDateTime createdAt) {
+    public Startup(String id,
+                   String title,
+                   User owner,
+                   String description,
+                   StartupStatus status,
+                   Category category,
+                   Finance finance,
+                   AdStatus adStatus,
+                   Image image,
+                   LocalDateTime createdAt) {
+        this.id = id;
         this.title = title;
         this.owner = owner;
         this.description = description;
@@ -75,8 +87,15 @@ public class Startup {
         this.createdAt = createdAt;
     }
 
-    public Startup(String id, String title, User owner, String description, StartupStatus status, Category category, Finance finance, AdStatus adStatus, Image image, LocalDateTime createdAt) {
-        this.id = id;
+    public Startup(String title,
+                   User owner,
+                   String description,
+                   StartupStatus status,
+                   Category category,
+                   Finance finance,
+                   AdStatus adStatus,
+                   Image image,
+                   LocalDateTime createdAt) {
         this.title = title;
         this.owner = owner;
         this.description = description;
