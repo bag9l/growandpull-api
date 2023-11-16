@@ -37,7 +37,7 @@ public class ApplicationConfig {
 //    public void generate() {
 //        User user = new User(
 //                "test@example.com",
-//                "$2a$10$t8yAayensKAbhdpDOCNchuPNWXE.17fyL1EysiiZedVaDgKzi0q7y",
+//                "$2a$10$4aTcbOJn.LwWmu3wv6AxaOyD4QFtrimJrXzpuLyXI2fMNCT/Ee.FG",
 //                "Test",
 //                "User",
 //                Role.USER,
