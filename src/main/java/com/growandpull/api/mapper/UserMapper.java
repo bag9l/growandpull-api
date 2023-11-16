@@ -36,4 +36,6 @@ public abstract class UserMapper {
             "com.growandpull.api.util.ImageUtil.decompressImage(user.getAvatar().getImageData()) : null)")
     public abstract ProfileView userToProfileView(User user);
 
+
+
 }

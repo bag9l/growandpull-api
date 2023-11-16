@@ -112,23 +112,11 @@ public class UserServiceImpl implements UserService {
         User user = findUserById(userId);
 
         if (Objects.equals(currentUserEmail, user.getEmail())) {
-            return new PrivateProfile(
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getBirth(),
-                    user.getAboutUser(),
-                    user.getEmail(),
-                    (user.getAvatar() != null) ? ImageUtil.decompressImage(user.getAvatar().getImageData()) : null
-            );
+            return userMapper.userToPrivateProfile(user);
 
         } else {
-            return new PublicProfile(
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getBirth(),
-                    user.getAboutUser(),
-                    (user.getAvatar() != null) ? ImageUtil.decompressImage(user.getAvatar().getImageData()) : null
-            );
+            return userMapper.userToPublicProfile(user);
+
 
         }
     }
