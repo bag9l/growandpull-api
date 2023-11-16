@@ -7,6 +7,7 @@ import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.mapper.ImageMapper;
 import com.growandpull.api.mapper.UserMapper;
+import com.growandpull.api.model.Avatar;
 import com.growandpull.api.model.Image;
 import com.growandpull.api.model.User;
 import com.growandpull.api.repository.AvatarRepository;
@@ -48,6 +49,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).orElseThrow(() ->
                 new EntityNotExistsException(String.format(USER_WITH_ID_NOT_EXISTS, id)));
     }
+
 
     @Transactional
     @Override
@@ -102,32 +104,56 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(userUpdateRequest.getFirstName());
         user.setLastName(userUpdateRequest.getLastName());
         user.setBirth(userUpdateRequest.getBirth());
+        user.setAboutUser(userUpdateRequest.getAboutUser());
     }
 
     @Override
-    public Profile getProfile(String currentUserEmail, String email) {//currentUserEmail - логін залогованого корисувача, email- логін користувача  сторінки
+    public Profile getProfile(String currentUserEmail, String email) {
 
         if (Objects.equals(currentUserEmail, email)) {
             User user = findUserByEmail(currentUserEmail);
-            return new PrivateProfile(
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getBirth(),
-                    user.getAboutUser(),
-                    user.getEmail(),
-                    user.getAvatar().getImageData()
-            );
+            Avatar avatar = user.getAvatar();
 
+            if (avatar != null) {
+                return new PrivateProfile(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getBirth(),
+                        user.getAboutUser(),
+                        user.getEmail(),
+                        avatar.getImageData()
+                );
+            } else {
+                return new PrivateProfile(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getBirth(),
+                        user.getAboutUser(),
+                        user.getEmail(),
+                        null
+                );
+            }
         } else {
             User user = findUserByEmail(email);
-            return new PublicProfile(
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getBirth(),
-                    user.getAboutUser(),
-                    user.getAvatar().getImageData()
-            );
+            Avatar avatar = user.getAvatar();
 
+            if (avatar != null) {
+                return new PublicProfile(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getBirth(),
+                        user.getAboutUser(),
+                        avatar.getImageData()
+                );
+            } else {
+                return new PublicProfile(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getBirth(),
+                        user.getAboutUser(),
+                        null
+                );
+            }
         }
     }
 }

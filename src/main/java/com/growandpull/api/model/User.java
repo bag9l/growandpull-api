@@ -64,13 +64,14 @@ public class User implements UserDetails {
     @OneToMany(
             mappedBy = "owner",
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
     )
     @ToString.Exclude
     @JsonManagedReference
     private Set<Startup> startups;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Token> tokens;
 
