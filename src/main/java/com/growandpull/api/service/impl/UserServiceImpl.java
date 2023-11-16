@@ -75,7 +75,6 @@ public class UserServiceImpl implements UserService {
                 new EntityNotExistsException(String.format(USER_WITH_LOGIN_NOT_EXISTS, email)));
     }
 
-    @Transactional
     @Override
     public ProfileView updateUser(String userId, UserUpdateRequest userUpdateRequest, String email) throws IOException {
         User user = findUserByEmail(email);
@@ -93,8 +92,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Transactional
-    public void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {
+    private void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {
         Image image = (userUpdateRequest.getAvatar() != null) ?
                 imageMapper.multiPartFileToImage(userUpdateRequest.getAvatar()) : null;
 
@@ -111,10 +109,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Profile getProfile(String userId, String currentUserEmail) {
-        User current = findUserById(userId);
+        User user = findUserById(userId);
 
-        if (Objects.equals(currentUserEmail, current.getEmail())) {
-            User user = findUserByEmail(currentUserEmail);
+        if (Objects.equals(currentUserEmail, user.getEmail())) {
             return new PrivateProfile(
                     user.getFirstName(),
                     user.getLastName(),
@@ -125,7 +122,6 @@ public class UserServiceImpl implements UserService {
             );
 
         } else {
-            User user = findUserByEmail(current.getEmail());
             return new PublicProfile(
                     user.getFirstName(),
                     user.getLastName(),
