@@ -1,3 +1,3 @@
 # Grow&Pull
 __________________
-api: [click here](http://localhost:8000/swagger-ui/index.html)
+api: [click here](https://growandpull.pp.ua/swagger-ui/index.html)
