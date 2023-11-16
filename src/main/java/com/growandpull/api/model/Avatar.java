@@ -33,10 +33,13 @@ public class Avatar {
     @JsonBackReference
     private User user;
 
+
     public Avatar(String name, String type, byte[] imageData, User user) {
         this.name = name;
         this.type = type;
         this.imageData = imageData;
         this.user = user;
     }
+
+
 }

@@ -1,8 +1,12 @@
 package com.growandpull.api.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.growandpull.api.token.Token;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +16,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +33,13 @@ public class User implements UserDetails {
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
+
+
+    @Column(name = "`aboutUser`")
+    private String aboutUser;
+
+    @Column(name = "`birth`")
+    private LocalDate birth;
 
     @Column(name = "`email`", nullable = false, unique = true)
     private String email;
@@ -57,10 +70,10 @@ public class User implements UserDetails {
     @ToString.Exclude
     @JsonManagedReference
     private Set<Startup> startups;
-
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Token> tokens;
+
 
     private Boolean isExpired;
 
@@ -137,8 +150,6 @@ public class User implements UserDetails {
                 ", lastName='" + lastName + '\'' +
                 ", role=" + role +
                 ", avatar=" + avatar +
-                ", startups=" + startups +
-                ", tokens=" + tokens +
                 ", isExpired=" + isExpired +
                 ", isLocked=" + isLocked +
                 ", isCredentialsExpired=" + isCredentialsExpired +
