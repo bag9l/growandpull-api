@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.growandpull.api.token.Token;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,7 +44,7 @@ public class User implements UserDetails {
     @Column(name = "`email`", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "`password`", nullable = false, unique = true)
+    @Column(name = "`password`", nullable = false)
     private String password;
 
     @Column(name = "`firstName`", nullable = false)
@@ -64,14 +65,12 @@ public class User implements UserDetails {
     @OneToMany(
             mappedBy = "owner",
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            orphanRemoval = true,
-            fetch = FetchType.EAGER
+            orphanRemoval = true
     )
     @ToString.Exclude
     @JsonManagedReference
     private Set<Startup> startups;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Token> tokens;
 
@@ -151,8 +150,6 @@ public class User implements UserDetails {
                 ", lastName='" + lastName + '\'' +
                 ", role=" + role +
                 ", avatar=" + avatar +
-                ", startups=" + startups +
-                ", tokens=" + tokens +
                 ", isExpired=" + isExpired +
                 ", isLocked=" + isLocked +
                 ", isCredentialsExpired=" + isCredentialsExpired +

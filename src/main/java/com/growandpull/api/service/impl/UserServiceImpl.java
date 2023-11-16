@@ -15,6 +15,7 @@ import com.growandpull.api.repository.ImageRepository;
 import com.growandpull.api.repository.UserRepository;
 import com.growandpull.api.service.AuthenticationService;
 import com.growandpull.api.service.UserService;
+import com.growandpull.api.util.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -74,6 +75,7 @@ public class UserServiceImpl implements UserService {
                 new EntityNotExistsException(String.format(USER_WITH_LOGIN_NOT_EXISTS, email)));
     }
 
+    @Transactional
     @Override
     public ProfileView updateUser(String userId, UserUpdateRequest userUpdateRequest, String email) throws IOException {
         User user = findUserByEmail(email);
@@ -91,8 +93,8 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
-    private void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {
+    @Transactional
+    public void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {
         Image image = (userUpdateRequest.getAvatar() != null) ?
                 imageMapper.multiPartFileToImage(userUpdateRequest.getAvatar()) : null;
 
@@ -108,52 +110,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Profile getProfile(String currentUserEmail, String email) {
+    public Profile getProfile(String userId, String currentUserEmail) {
+        User current = findUserById(userId);
 
-        if (Objects.equals(currentUserEmail, email)) {
+        if (Objects.equals(currentUserEmail, current.getEmail())) {
             User user = findUserByEmail(currentUserEmail);
-            Avatar avatar = user.getAvatar();
+            return new PrivateProfile(
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getBirth(),
+                    user.getAboutUser(),
+                    user.getEmail(),
+                    (user.getAvatar() != null) ? ImageUtil.decompressImage(user.getAvatar().getImageData()) : null
+            );
 
-            if (avatar != null) {
-                return new PrivateProfile(
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getBirth(),
-                        user.getAboutUser(),
-                        user.getEmail(),
-                        avatar.getImageData()
-                );
-            } else {
-                return new PrivateProfile(
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getBirth(),
-                        user.getAboutUser(),
-                        user.getEmail(),
-                        null
-                );
-            }
         } else {
-            User user = findUserByEmail(email);
-            Avatar avatar = user.getAvatar();
+            User user = findUserByEmail(current.getEmail());
+            return new PublicProfile(
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getBirth(),
+                    user.getAboutUser(),
+                    (user.getAvatar() != null) ? ImageUtil.decompressImage(user.getAvatar().getImageData()) : null
+            );
 
-            if (avatar != null) {
-                return new PublicProfile(
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getBirth(),
-                        user.getAboutUser(),
-                        avatar.getImageData()
-                );
-            } else {
-                return new PublicProfile(
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getBirth(),
-                        user.getAboutUser(),
-                        null
-                );
-            }
         }
     }
 }

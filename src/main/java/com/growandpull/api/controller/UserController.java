@@ -23,7 +23,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PutMapping("updateUser/{userId}")
+    @PutMapping("{userId}")
     public ResponseEntity<ProfileView> updateUser(@PathVariable("userId") String userId,
                                                   @Valid @RequestBody UserUpdateRequest userUpdateRequest,
                                                   @AuthenticationPrincipal UserDetails user) throws java.io.IOException {
@@ -33,9 +33,8 @@ public class UserController {
 
     }
 
-    @PutMapping("updatePassword")
-    public ResponseEntity<AuthenticationResponse> updatePassword(
-                                                                 @Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest,
+    @PutMapping("/updatePassword")
+    public ResponseEntity<AuthenticationResponse> updatePassword(@Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest,
                                                                  @AuthenticationPrincipal UserDetails userDetails) throws java.io.IOException {
 
 
@@ -44,11 +43,10 @@ public class UserController {
 
     }
 
-    @GetMapping("getProfile/{userId}")
+    @GetMapping("{userId}")
     public ResponseEntity<Profile> getProfile(@PathVariable("userId") String userId,
                                               @AuthenticationPrincipal UserDetails userDetails) {
-        User user = userService.findUserById(userId);
-        Profile profile = userService.getProfile(userDetails.getUsername(), user.getUsername());
+        Profile profile = userService.getProfile(userId, userDetails.getUsername());
         return ResponseEntity.ok(profile);
 
     }

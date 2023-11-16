@@ -1,8 +1,8 @@
 spring:
   datasource:
-    username: growandpull
-    password: Gkd73lisbfl9
-    url: jdbc:mysql://growandpull.ctegro5wnfvo.us-east-1.rds.amazonaws.com:3306/growandpull
+    username: root
+    password: 35440
+    url: jdbc:mysql://localhost:3306/grow_and_pull?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect

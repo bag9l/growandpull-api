@@ -72,7 +72,6 @@ public class StartupServiceImpl implements StartupService {
     }
 
     //    TODO: try loading
-    @Transactional
     @Override
     public StartupView updateStartup(String startupId, StartupUpdateRequest startupUpdateRequest, String userLogin) throws IOException {
         Startup startup = findStartupById(startupId);

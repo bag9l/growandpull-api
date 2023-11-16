@@ -13,10 +13,9 @@ public interface UserService {
 
     AuthenticationResponse updatePassword(UserDetails userDetails, PasswordUpdateRequest passwordUpdate);
 
-//    User findUserByLogin(String login);
-
     ProfileView updateUser(String userId, UserUpdateRequest userUpdateRequest, String userLogin) throws IOException;
-    Profile getProfile(String currentUserLogin, String userLogin);
+
+    Profile getProfile(String userId, String currentUserEmail);
 
 
     User findUserByEmail(String login);
