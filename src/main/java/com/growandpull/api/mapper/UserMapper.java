@@ -1,12 +1,11 @@
 package com.growandpull.api.mapper;
 
-import com.growandpull.api.dto.PrivateProfile;
-import com.growandpull.api.dto.ProfileView;
-import com.growandpull.api.dto.PublicProfile;
-import com.growandpull.api.dto.UserCard;
+import com.growandpull.api.dto.profile.PrivateProfile;
+import com.growandpull.api.dto.profile.ProfileView;
+import com.growandpull.api.dto.profile.PublicProfile;
+import com.growandpull.api.dto.user.UserCard;
 import com.growandpull.api.dto.auth.AuthenticatedUser;
 import com.growandpull.api.model.User;
-import com.growandpull.api.util.ImageUtil;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

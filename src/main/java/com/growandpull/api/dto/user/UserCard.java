@@ -1,4 +1,4 @@
-package com.growandpull.api.dto;
+package com.growandpull.api.dto.user;
 
 public record UserCard(
         String id,

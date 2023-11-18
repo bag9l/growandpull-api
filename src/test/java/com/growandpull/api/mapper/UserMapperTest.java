@@ -1,6 +1,6 @@
 package com.growandpull.api.mapper;
 
-import com.growandpull.api.dto.UserCard;
+import com.growandpull.api.dto.user.UserCard;
 import com.growandpull.api.dto.auth.AuthenticatedUser;
 import com.growandpull.api.model.Role;
 import com.growandpull.api.model.User;

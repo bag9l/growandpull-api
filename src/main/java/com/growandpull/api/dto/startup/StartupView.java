@@ -1,5 +1,7 @@
-package com.growandpull.api.dto;
+package com.growandpull.api.dto.startup;
 
+import com.growandpull.api.dto.finance.FinanceDto;
+import com.growandpull.api.dto.user.UserCard;
 import com.growandpull.api.model.StartupStatus;
 
 import java.time.LocalDateTime;
