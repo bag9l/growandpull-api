@@ -1,6 +1,7 @@
 package com.growandpull.api.exception.handler;
 
 import com.growandpull.api.exception.EntityNotExistsException;
+import com.growandpull.api.exception.InvalidTokenException;
 import com.growandpull.api.exception.PermissionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,14 @@ public class ApiExceptionHandler {
     protected ResponseEntity<Object> handleIOException(
             IOException exception) {
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+        apiError.setMessage(exception.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    protected ResponseEntity<Object> handleInvalidTokenException(
+            InvalidTokenException exception) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(exception.getMessage());
         return buildResponseEntity(apiError);
     }

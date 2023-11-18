@@ -1,50 +1,68 @@
 package com.growandpull.api.service.impl;
 
+import com.growandpull.api.exception.InvalidTokenException;
 import com.growandpull.api.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtServiceImpl implements JwtService {
-    private final String SECRET_KEY = "7538782F413F4428472B4B6250655368566D5971337336763979244226452948";
+    @Value(value = "${jwt.secret}")
+    private String secretKey;
+
+    @Value(value = "${jwt.access_expiration}")
+    private int defaultTokenExpiration;
 
     @Override
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+    public Optional<String> extractUsername(String token) {
+        return Optional.of(extractClaim(token, Claims::getSubject));
     }
 
     @Override
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        return generateToken(userDetails, defaultTokenExpiration);
+    }
+
+    @Override
+    public String generateToken(UserDetails userDetails, int period) {
+        Map<String, Object> claims = new HashMap<>();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        claims.put("roles", roles);
+        return generateToken(claims, userDetails, period);
     }
 
     @Override
     public String generateToken(Map<String, Object> extraClaims,
-                                UserDetails userDetails) {
+                                UserDetails userDetails,
+                                int period) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + period))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
+        String username = extractUsername(token).orElseThrow(InvalidTokenException::new);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
@@ -71,7 +89,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
