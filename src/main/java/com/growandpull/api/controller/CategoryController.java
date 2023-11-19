@@ -1,6 +1,6 @@
 package com.growandpull.api.controller;
 
-import com.growandpull.api.dto.category.CategoryCreationRequest;
+import com.growandpull.api.dto.category.CategoryDto;
 import com.growandpull.api.model.Category;
 import com.growandpull.api.service.CategoryService;
 import jakarta.validation.Valid;
@@ -21,7 +21,7 @@ public class CategoryController {
 
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryCreationRequest request) throws Exception {
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryDto request) throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 categoryService.createCategory(request));
     }
@@ -43,7 +43,7 @@ public class CategoryController {
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PutMapping("/{categoryId}")
     public ResponseEntity<Category> updateCategory(@PathVariable("categoryId") String categoryId,
-                                                   @RequestBody CategoryCreationRequest categoryRequest) {
+                                                   @RequestBody CategoryDto categoryRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 categoryService.updateCategory(categoryId, categoryRequest));
 
