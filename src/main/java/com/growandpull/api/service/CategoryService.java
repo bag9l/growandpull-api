@@ -10,7 +10,7 @@ public interface CategoryService {
 
     Category updateCategory(String categoryId, CategoryRequest request);
 
-    Category save(CategoryRequest category) throws Exception;
+    Category createCategory(CategoryRequest category) throws Exception;
 
     void delete(String categoryId);
 }

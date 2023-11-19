@@ -23,7 +23,7 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryRequest request) throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                categoryService.save(request));
+                categoryService.createCategory(request));
     }
 
     @PreAuthorize(value = "hasAuthority('ADMIN')")
