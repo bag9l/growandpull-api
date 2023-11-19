@@ -1,18 +1,15 @@
 package com.growandpull.api.controller;
 
-import com.growandpull.api.dto.auth.AuthenticatedUser;
 import com.growandpull.api.dto.auth.AuthenticationRequest;
 import com.growandpull.api.dto.auth.AuthenticationResponse;
+import com.growandpull.api.dto.auth.RefreshAuthenticationRequest;
 import com.growandpull.api.dto.auth.RegisterRequest;
 import com.growandpull.api.service.AuthenticationService;
-import com.growandpull.api.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,23 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
-    private final UserService userService;
 
     private final AuthenticationService authenticationService;
 
 
-    @PostMapping(path = "login")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    @PostMapping("login")
+    public ResponseEntity<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 authenticationService.authenticate(request)
         );
-    }
-
-
-    @PostMapping("success")
-    public ResponseEntity<AuthenticatedUser> getAuthenticatedUser(@AuthenticationPrincipal UserDetails user) {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                authenticationService.getAuthenticatedUser(user.getUsername()));
     }
 
     @PostMapping("register/user")
@@ -53,6 +42,13 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> registerAdmin(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 authenticationService.registerAdmin(request)
+        );
+    }
+
+    @PostMapping("refresh-token")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshAuthenticationRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                authenticationService.refreshToken(request)
         );
     }
 

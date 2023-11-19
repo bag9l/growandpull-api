@@ -18,6 +18,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @RequiredArgsConstructor
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -32,12 +34,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        if (request.getServletPath().contains("/email")) {
+        if (request.getServletPath().contains("api/v1/auth/login")
+                || request.getServletPath().contains("api/v1/auth/refresh-token")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        final String authenticationHeader = request.getHeader("Authorization");
+        final String authenticationHeader = request.getHeader(AUTHORIZATION);
         System.out.println("header");
         System.out.println(authenticationHeader);
 
@@ -48,10 +51,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        jwt = authenticationHeader.substring(7);
-        username = jwtService.extractUsername(jwt);
+
+        jwt = authenticationHeader.substring("Bearer ".length());
+        username = jwtService.extractUsername(jwt).orElse(null);
+
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             Boolean isTokenValid = tokenRepository.findByToken(jwt)
                     .map(token -> !token.getIsExpired() && !token.getIsRevoked())
                     .orElse(false);

@@ -1,7 +1,7 @@
 package com.growandpull.api.service.impl;
 
-import com.growandpull.api.dto.category.CategoryRequest;
-import com.growandpull.api.exception.NotFoundException;
+import com.growandpull.api.dto.category.CategoryCreationRequest;
+import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.mapper.CategoryMapper;
 import com.growandpull.api.model.Category;
 import com.growandpull.api.repository.CategoryRepository;
@@ -23,9 +23,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(String categoryId, CategoryRequest request) {
+    public Category updateCategory(String categoryId, CategoryCreationRequest request) {
         Category existingCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException("Category not found"));
+                .orElseThrow(() -> new EntityNotExistsException("Category not found"));
         categoryMapper.updateCategoryFromRequest(request, existingCategory);
         return categoryRepository.save(existingCategory);
 
@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public Category createCategory(CategoryRequest categoryRequest) throws Exception {
+    public Category createCategory(CategoryCreationRequest categoryRequest) {
         Category category = categoryMapper.categoryToCategoryRequest(categoryRequest);
         return categoryRepository.save(category);
     }

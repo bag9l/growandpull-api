@@ -1,9 +1,6 @@
 package com.growandpull.api.service;
 
-import com.growandpull.api.dto.auth.AuthenticatedUser;
-import com.growandpull.api.dto.auth.AuthenticationRequest;
-import com.growandpull.api.dto.auth.AuthenticationResponse;
-import com.growandpull.api.dto.auth.RegisterRequest;
+import com.growandpull.api.dto.auth.*;
 
 public interface AuthenticationService {
     AuthenticationResponse registerUser(RegisterRequest request);
@@ -13,4 +10,6 @@ public interface AuthenticationService {
     AuthenticationResponse authenticate(AuthenticationRequest request);
 
     AuthenticatedUser getAuthenticatedUser(String login);
+
+    AuthenticationResponse refreshToken(RefreshAuthenticationRequest request);
 }
