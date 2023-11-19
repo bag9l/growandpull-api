@@ -1,4 +1,4 @@
-package com.growandpull.api.dto;
+package com.growandpull.api.dto.startup;
 
 import com.growandpull.api.model.ExistenceTime;
 

@@ -1,6 +1,10 @@
 package com.growandpull.api.mapper;
 
-import com.growandpull.api.dto.*;
+import com.growandpull.api.dto.finance.FinanceDto;
+import com.growandpull.api.dto.startup.StartupCard;
+import com.growandpull.api.dto.startup.StartupCreationRequest;
+import com.growandpull.api.dto.startup.StartupView;
+import com.growandpull.api.dto.user.UserCard;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.model.Category;
 import com.growandpull.api.model.Image;

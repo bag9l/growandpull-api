@@ -1,18 +1,15 @@
 package com.growandpull.api.controller;
 
-import com.growandpull.api.dto.PasswordUpdateRequest;
-import com.growandpull.api.dto.Profile;
-import com.growandpull.api.dto.ProfileView;
-import com.growandpull.api.dto.UserUpdateRequest;
+import com.growandpull.api.dto.user.PasswordUpdateRequest;
+import com.growandpull.api.dto.profile.Profile;
+import com.growandpull.api.dto.profile.ProfileView;
+import com.growandpull.api.dto.user.UserUpdateRequest;
 import com.growandpull.api.dto.auth.AuthenticationResponse;
-import com.growandpull.api.model.User;
 import com.growandpull.api.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 

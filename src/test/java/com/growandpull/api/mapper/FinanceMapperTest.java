@@ -1,6 +1,6 @@
 package com.growandpull.api.mapper;
 
-import com.growandpull.api.dto.FinanceDto;
+import com.growandpull.api.dto.finance.FinanceDto;
 import com.growandpull.api.model.Currency;
 import com.growandpull.api.model.Finance;
 import org.junit.jupiter.api.Test;
