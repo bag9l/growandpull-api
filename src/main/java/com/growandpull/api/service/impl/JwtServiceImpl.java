@@ -23,7 +23,7 @@ public class JwtServiceImpl implements JwtService {
     private String secretKey;
 
     @Value(value = "${jwt.access_expiration}")
-    private int defaultTokenExpiration;
+    private long defaultTokenExpiration;
 
     @Override
     public Optional<String> extractUsername(String token) {
@@ -36,7 +36,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String generateToken(UserDetails userDetails, int period) {
+    public String generateToken(UserDetails userDetails, long period) {
         Map<String, Object> claims = new HashMap<>();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -49,7 +49,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String generateToken(Map<String, Object> extraClaims,
                                 UserDetails userDetails,
-                                int period) {
+                                long period) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

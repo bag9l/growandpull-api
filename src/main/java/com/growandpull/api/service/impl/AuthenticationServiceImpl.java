@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
     @Value(value = "${jwt.access_expiration}")
-    private int accessExpiration;
+    private long accessExpiration;
     @Value(value = "${jwt.refresh_expiration}")
     private int refreshExpiration;
     private final UserRepository userRepository;

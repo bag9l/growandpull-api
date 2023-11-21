@@ -10,11 +10,11 @@ public interface JwtService {
 
     String generateToken(UserDetails userDetails);
 
-    String generateToken(UserDetails userDetails, int period);
+    String generateToken(UserDetails userDetails, long period);
 
     String generateToken(Map<String, Object> extraClaims,
                          UserDetails userDetails,
-                         int period);
+                         long period);
 
     boolean isTokenValid(String token, UserDetails userDetails);
 }
