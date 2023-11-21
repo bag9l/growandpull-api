@@ -1,13 +1,15 @@
 package com.growandpull.api.service.impl;
 
-import com.growandpull.api.dto.*;
 import com.growandpull.api.dto.auth.AuthenticationRequest;
 import com.growandpull.api.dto.auth.AuthenticationResponse;
+import com.growandpull.api.dto.profile.Profile;
+import com.growandpull.api.dto.profile.ProfileView;
+import com.growandpull.api.dto.user.PasswordUpdateRequest;
+import com.growandpull.api.dto.user.UserUpdateRequest;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.mapper.ImageMapper;
 import com.growandpull.api.mapper.UserMapper;
-import com.growandpull.api.model.Avatar;
 import com.growandpull.api.model.Image;
 import com.growandpull.api.model.User;
 import com.growandpull.api.repository.AvatarRepository;
@@ -15,7 +17,6 @@ import com.growandpull.api.repository.ImageRepository;
 import com.growandpull.api.repository.UserRepository;
 import com.growandpull.api.service.AuthenticationService;
 import com.growandpull.api.service.UserService;
-import com.growandpull.api.util.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.Objects;
 
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))

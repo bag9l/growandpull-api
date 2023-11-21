@@ -1,4 +1,4 @@
-package com.growandpull.api.dto;
+package com.growandpull.api.dto.finance;
 
 import com.growandpull.api.model.Currency;
 

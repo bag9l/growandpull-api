@@ -1,6 +1,6 @@
 package com.growandpull.api.controller;
 
-import com.growandpull.api.dto.*;
+import com.growandpull.api.dto.startup.*;
 import com.growandpull.api.service.StartupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

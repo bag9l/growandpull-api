@@ -1,7 +1,8 @@
-package com.growandpull.api.dto;
+package com.growandpull.api.dto.startup;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.growandpull.api.dto.finance.FinanceDto;
 import com.growandpull.api.model.StartupStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @ToString
 @AllArgsConstructor
-public class StartupUpdateRequest {
+public class StartupCreationRequest {
     private final String title;
     private final String description;
     private final StartupStatus status;
@@ -20,7 +21,7 @@ public class StartupUpdateRequest {
     private MultipartFile image;
 
     @JsonCreator
-    public StartupUpdateRequest(
+    public StartupCreationRequest(
             @JsonProperty("title") String title,
             @JsonProperty("description") String description,
             @JsonProperty("status") StartupStatus status,

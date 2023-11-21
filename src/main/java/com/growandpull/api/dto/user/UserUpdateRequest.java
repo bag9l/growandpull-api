@@ -1,4 +1,4 @@
-package com.growandpull.api.dto;
+package com.growandpull.api.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
