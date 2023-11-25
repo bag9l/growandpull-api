@@ -30,8 +30,8 @@ public class Startup {
     @ToString.Exclude
     @JsonBackReference
     private User owner;
-
-    @Column(name = "`description`", nullable = false)
+    @Lob
+    @Column(name = "`description`", length = 5000, nullable = false)
     private String description;
 
     @Enumerated(EnumType.STRING)
