@@ -29,6 +29,7 @@ public abstract class StartupMapper {
     protected ImageMapper imageMapper;
     protected CategoryRepository categoryRepository;
 
+    @Mapping(target = "finance", expression = "java(financeMapper.financeToDto(startup.getFinance()))")
     @Mapping(target = "category", expression = "java(startup.getCategory().getName())")
     @Mapping(target = "image", expression = "java((startup.getImage() != null) ? " +
             "com.growandpull.api.util.ImageUtil.decompressImage(startup.getImage().getImageData()) : null)")

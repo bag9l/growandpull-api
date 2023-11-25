@@ -44,7 +44,7 @@ public class Startup {
     @JsonBackReference
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "finance_id", referencedColumnName = "id", nullable = false)
     @ToString.Exclude
     @JsonBackReference
