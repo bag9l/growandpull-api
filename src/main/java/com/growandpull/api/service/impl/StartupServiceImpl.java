@@ -55,6 +55,9 @@ public class StartupServiceImpl implements StartupService {
         Startup startup = startupMapper.newToStartup(newStartup);
         User user = findUserByLogin(ownerLogin);
 
+        financeRepository.save(startup.getFinance());
+        imageRepository.save(startup.getImage());
+
         startup.setOwner(user);
         startup.setAdStatus(AdStatus.ENABLED);
         startup.setCreatedAt(LocalDateTime.now());

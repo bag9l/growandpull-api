@@ -26,7 +26,7 @@ public class Image {
     private String type;
 
     @Lob
-    @Column(name = "image_data", length = 1000, nullable = false)
+    @Column(name = "image_data", length = 100000, nullable = false)
     private byte[] imageData;
 
     @OneToOne(mappedBy = "image")
