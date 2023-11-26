@@ -1,5 +1,6 @@
 package com.growandpull.api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -17,10 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -62,14 +60,14 @@ public class User implements UserDetails {
     @JsonManagedReference
     private Avatar avatar;
 
-    @OneToMany(
-            mappedBy = "owner",
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            orphanRemoval = true
-    )
-    @ToString.Exclude
-    @JsonManagedReference
-    private Set<Startup> startups;
+    @ManyToMany
+    @JoinTable(
+            name = "favorite",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "startup_id"))
+    @JsonBackReference
+    private Set<Startup> favoriteStartups;
+
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Token> tokens;
@@ -83,14 +81,14 @@ public class User implements UserDetails {
 
     private Boolean isEnabled;
 
-    public User(String email, String password, String firstName, String lastName, Role role, Avatar avatar, Set<Startup> startups, List<Token> tokens) {
+    public User(String email, String password, String firstName, String lastName, Role role, Avatar avatar, Set<Startup> favoriteStartups, List<Token> tokens) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
         this.avatar = avatar;
-        this.startups = startups;
+        this.favoriteStartups = favoriteStartups;
         this.tokens = tokens;
         this.isExpired = false;
         this.isLocked = false;
@@ -156,4 +154,5 @@ public class User implements UserDetails {
                 ", isEnabled=" + isEnabled +
                 '}';
     }
+
 }

@@ -54,12 +54,16 @@ public class StartupServiceImpl implements StartupService {
     public StartupView createStartup(StartupCreationRequest newStartup, String ownerLogin) throws IOException {
         Startup startup = startupMapper.newToStartup(newStartup);
         User user = findUserByLogin(ownerLogin);
+        Finance finance = financeMapper.dtoToFinance(newStartup.getFinance());
+        finance = financeRepository.save(finance);
 
+        startup.setFinance(finance);
         startup.setOwner(user);
         startup.setAdStatus(AdStatus.ENABLED);
         startup.setCreatedAt(LocalDateTime.now());
-
         startup = startupRepository.save(startup);
+
+
         return startupMapper.startupToView(startup);
     }
 
