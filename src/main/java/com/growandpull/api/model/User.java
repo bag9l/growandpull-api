@@ -60,6 +60,15 @@ public class User implements UserDetails {
     @JsonManagedReference
     private Avatar avatar;
 
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            orphanRemoval = true
+    )
+    @ToString.Exclude
+    @JsonManagedReference
+    private Set<Startup> startups;
+
     @ManyToMany
     @JoinTable(
             name = "favorite",
@@ -81,7 +90,7 @@ public class User implements UserDetails {
 
     private Boolean isEnabled;
 
-    public User(String email, String password, String firstName, String lastName, Role role, Avatar avatar, Set<Startup> favoriteStartups, List<Token> tokens) {
+    public User(String email, String password, String firstName, String lastName, Role role, Avatar avatar, Set<Startup> startups, Set<Startup> favoriteStartups, List<Token> tokens) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -89,6 +98,7 @@ public class User implements UserDetails {
         this.role = role;
         this.avatar = avatar;
         this.favoriteStartups = favoriteStartups;
+        this.startups = startups;
         this.tokens = tokens;
         this.isExpired = false;
         this.isLocked = false;
