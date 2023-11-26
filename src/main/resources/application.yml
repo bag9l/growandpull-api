@@ -19,8 +19,8 @@ server:
   port: 8000
 jwt:
   secret: 7538782F413F4428472B4B6250655368566D5971337336763979244226452948
-#  access_expiration: 10000
-#  access_expiration: 3600000
+  #  access_expiration: 10000
+  #  access_expiration: 3600000
   access_expiration: 2629743000
   refresh_expiration: 86400000
 
