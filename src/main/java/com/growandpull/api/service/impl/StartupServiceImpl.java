@@ -57,7 +57,8 @@ public class StartupServiceImpl implements StartupService {
         Finance finance = financeMapper.dtoToFinance(newStartup.getFinance());
         finance = financeRepository.save(finance);
 
-        startup.setFinance(finance);
+        financeRepository.save(startup.getFinance());
+        imageRepository.save(startup.getImage());
         startup.setOwner(user);
         startup.setAdStatus(AdStatus.ENABLED);
         startup.setCreatedAt(LocalDateTime.now());

@@ -24,18 +24,18 @@ public class FavoriteStartupsServiceImpl implements FavoriteStartupsService {
     private final StartupMapper startupMapper;
 
     @Override
-    public void addStartupToFavorite(String username, String startupId) {
+    public void addStartupToFavorite(String email, String startupId) {
         Startup startup = startupRepository.findById(startupId)
                 .orElseThrow(() -> new EntityNotExistsException("Startup not found"));
-        User user = userRepository.findUserByEmail(username)
+        User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new EntityNotExistsException("User not found"));
         user.getFavoriteStartups().add(startup);
         userRepository.save(user);
     }
 
     @Override
-    public Set<StartupCard> findFavoriteByUser(String login) {
-        User user = userRepository.findUserByEmail(login)
+    public Set<StartupCard> findFavoriteStartupsByUsername(String email) {
+        User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new EntityNotExistsException("User not found"));
         return user.getFavoriteStartups().stream()
                 .map(startupMapper::startupToCard)
@@ -44,10 +44,10 @@ public class FavoriteStartupsServiceImpl implements FavoriteStartupsService {
 
 
     @Override
-    public void deleteFromFavorite(String username, String startupId) {
+    public void deleteFromFavorite(String email, String startupId) {
         Startup startup = startupRepository.findById(startupId)
                 .orElseThrow(() -> new EntityNotExistsException("Startup not found"));
-        User user = userRepository.findUserByEmail(username)
+        User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new EntityNotExistsException("User not found"));
         user.getFavoriteStartups().remove(startup);
         userRepository.save(user);

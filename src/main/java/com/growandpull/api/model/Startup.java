@@ -30,8 +30,8 @@ public class Startup {
     @ToString.Exclude
     @JsonBackReference
     private User owner;
-
-    @Column(name = "`description`", nullable = false)
+    @Lob
+    @Column(name = "`description`", length = 5000, nullable = false)
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -44,7 +44,7 @@ public class Startup {
     @JsonBackReference
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "finance_id", referencedColumnName = "id", nullable = false)
     @ToString.Exclude
     @JsonBackReference

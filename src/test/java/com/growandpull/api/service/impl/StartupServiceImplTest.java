@@ -7,6 +7,8 @@ import com.growandpull.api.dto.startup.StartupView;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.mapper.StartupMapper;
 import com.growandpull.api.model.*;
+import com.growandpull.api.repository.FinanceRepository;
+import com.growandpull.api.repository.ImageRepository;
 import com.growandpull.api.repository.StartupRepository;
 import com.growandpull.api.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +41,10 @@ class StartupServiceImplTest {
     private StartupRepository startupRepository;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private FinanceRepository financeRepository;
+    @Mock
+    private ImageRepository imageRepository;
     @Mock
     private StartupMapper startupMapper;
 

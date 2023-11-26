@@ -26,7 +26,7 @@ public class FavoriteStartupsController {
     @GetMapping()
     public ResponseEntity<Set<StartupCard>> getStartups(@AuthenticationPrincipal UserDetails user) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                favoriteStartupsService.findFavoriteByUser(user.getUsername())
+                favoriteStartupsService.findFavoriteStartupsByUsername(user.getUsername())
         );
     }
 
