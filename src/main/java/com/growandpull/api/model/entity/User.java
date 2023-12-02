@@ -74,6 +74,10 @@ public class User implements UserDetails {
     @JsonBackReference
     private Set<Startup> favoriteStartups;
 
+    @OneToMany()
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private List<Subscription> subscriptions;
+
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Token> tokens;
