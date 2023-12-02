@@ -8,14 +8,16 @@ import com.growandpull.api.dto.user.PasswordUpdateRequest;
 import com.growandpull.api.dto.user.UserUpdateRequest;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
-import com.growandpull.api.mapper.ImageMapper;
+import com.growandpull.api.mapper.FileMapper;
 import com.growandpull.api.mapper.UserMapper;
-import com.growandpull.api.model.entity.Image;
+import com.growandpull.api.model.entity.Avatar;
+import com.growandpull.api.model.entity.Subscription;
 import com.growandpull.api.model.entity.User;
 import com.growandpull.api.repository.AvatarRepository;
 import com.growandpull.api.repository.ImageRepository;
 import com.growandpull.api.repository.UserRepository;
 import com.growandpull.api.service.AuthenticationService;
+import com.growandpull.api.service.SubscriptionService;
 import com.growandpull.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
@@ -39,10 +42,11 @@ public class UserServiceImpl implements UserService {
 
     @Lazy
     private final AuthenticationService authenticationService;
+    @Lazy
+    private final SubscriptionService subscriptionService;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final ImageMapper imageMapper;
-    private final ImageRepository imageRepository;
+    private final FileMapper fileMapper;
 
 
     @Override
@@ -92,12 +96,27 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {
-        Image image = (userUpdateRequest.getAvatar() != null) ?
-                imageMapper.multiPartFileToImage(userUpdateRequest.getAvatar()) : null;
+    @Override
+    public Profile getProfile(String userId, String currentUserEmail) {
+        User user = findUserById(userId);
 
-        if (image != null) {
-            image = imageRepository.save(image);
+        if (Objects.equals(currentUserEmail, user.getEmail())) {
+            return userMapper.userToPrivateProfile(user);
+        } else {
+            return userMapper.userToPublicProfile(user);
+        }
+    }
+
+    public List<Subscription> getUnExpiredUserSubscriptions(String email){
+        return subscriptionService.findUnexpiredSubscriptionsForUserByEmail(email);
+    }
+
+    private void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {
+        Avatar avatar = (userUpdateRequest.getAvatar() != null) ?
+                fileMapper.multiPartFileToAvatar(userUpdateRequest.getAvatar()) : null;
+
+        if (avatar != null) {
+            avatar = avatarRepository.save(avatar);
         }
 
         user.setEmail(userUpdateRequest.getEmail());
@@ -105,19 +124,6 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userUpdateRequest.getLastName());
         user.setBirth(userUpdateRequest.getBirth());
         user.setAboutUser(userUpdateRequest.getAboutUser());
-    }
-
-    @Override
-    public Profile getProfile(String userId, String currentUserEmail) {
-        User user = findUserById(userId);
-
-        if (Objects.equals(currentUserEmail, user.getEmail())) {
-            return userMapper.userToPrivateProfile(user);
-
-        } else {
-            return userMapper.userToPublicProfile(user);
-
-
-        }
+        user.setAvatar(avatar);
     }
 }

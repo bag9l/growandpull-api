@@ -3,8 +3,8 @@ package com.growandpull.api.service.impl;
 import com.growandpull.api.dto.startup.*;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
+import com.growandpull.api.mapper.FileMapper;
 import com.growandpull.api.mapper.FinanceMapper;
-import com.growandpull.api.mapper.ImageMapper;
 import com.growandpull.api.mapper.StartupMapper;
 import com.growandpull.api.model.entity.*;
 import com.growandpull.api.model.enums.AdStatus;
@@ -35,7 +35,7 @@ public class StartupServiceImpl implements StartupService {
     private final FinanceRepository financeRepository;
     private final StartupMapper startupMapper;
     private final FinanceMapper financeMapper;
-    private final ImageMapper imageMapper;
+    private final FileMapper fileMapper;
 
 
     @Override
@@ -97,7 +97,7 @@ public class StartupServiceImpl implements StartupService {
         Category category = categoryRepository.findById(startupUpdateRequest.getCategoryId()).orElseThrow(() ->
                 new EntityNotExistsException(String.format("Category with id:%s not found", startupUpdateRequest.getCategoryId())));
         Image image = (startupUpdateRequest.getImage() != null) ?
-                imageMapper.multiPartFileToImage(startupUpdateRequest.getImage()) : null;
+                fileMapper.multiPartFileToImage(startupUpdateRequest.getImage()) : null;
         Finance finance = financeMapper.dtoToFinance(startupUpdateRequest.getFinance());
 
         if (image != null) {

@@ -1,6 +1,7 @@
 package com.growandpull.api.model.entity;
 
 import com.growandpull.api.converter.PeriodConverter;
+import com.growandpull.api.model.enums.SubscriptionTypeIdentifier;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,9 @@ public class SubscriptionType {
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
+
+    @Enumerated(EnumType.STRING)
+    private SubscriptionTypeIdentifier appIdentifier;
 
     private String name;
 

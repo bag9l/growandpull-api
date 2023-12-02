@@ -39,7 +39,7 @@ class StartupMapperTest {
     @Mock
     private CategoryRepository categoryRepository;
     @Mock
-    private ImageMapper imageMapper;
+    private FileMapper fileMapper;
 
     @InjectMocks
     private StartupMapperImpl underTest;

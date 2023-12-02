@@ -21,12 +21,12 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
-        uses = {UserMapper.class, FinanceMapper.class, CategoryRepository.class, ImageMapper.class})
+        uses = {UserMapper.class, FinanceMapper.class, CategoryRepository.class, FileMapper.class})
 public abstract class StartupMapper {
 
     protected UserMapper userMapper;
     protected FinanceMapper financeMapper;
-    protected ImageMapper imageMapper;
+    protected FileMapper fileMapper;
     protected CategoryRepository categoryRepository;
 
     @Mapping(target = "finance", expression = "java(financeMapper.financeToDto(startup.getFinance()))")
@@ -58,7 +58,7 @@ public abstract class StartupMapper {
         Category category = categoryRepository.findById(newStartup.getCategoryId()).orElseThrow(() ->
                 new EntityNotExistsException(String.format("Category with id:%s not found", newStartup.getCategoryId())));
 
-        Image image = (newStartup.getImage() != null) ? imageMapper.multiPartFileToImage(newStartup.getImage()) : null;
+        Image image = (newStartup.getImage() != null) ? fileMapper.multiPartFileToImage(newStartup.getImage()) : null;
 
         startup.setTitle(newStartup.getTitle());
         startup.setDescription(newStartup.getDescription());
@@ -81,8 +81,8 @@ public abstract class StartupMapper {
     }
 
     @Autowired
-    public void setImageMapper(ImageMapper imageMapper) {
-        this.imageMapper = imageMapper;
+    public void setFileMapper(FileMapper fileMapper) {
+        this.fileMapper = fileMapper;
     }
 
     @Autowired
