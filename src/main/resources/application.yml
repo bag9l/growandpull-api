@@ -23,6 +23,13 @@ jwt:
   #  access_expiration: 3600000
   access_expiration: 2629743000
   refresh_expiration: 86400000
+paypal:
+  client:
+    id: AYHyuPYGWqDVXIWrXymJ8qqOzzNw-qs8AXMMjpU__zArxYDfWItT5ErSvBpx3YxQhza3Ztp1K8bOuGVj
+    secret: EH4ridPPanq4ePYTrtVFG-qPDctdKXSWv951g6tFsMpAlfdJunlcFXpWP_JQR4gmAmPs-4oLksIuANjK
+  url:
+    return: http://localhost:3000/capture
+    cancel: http://localhost:3000/cancel
 
 #  forward-headers-strategy: framework
 #springdoc:
