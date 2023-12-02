@@ -1,6 +1,6 @@
 package com.growandpull.api.repository;
 
-import com.growandpull.api.model.User;
+import com.growandpull.api.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package com.growandpull.api.mapper;
 
-import com.growandpull.api.model.Image;
+import com.growandpull.api.model.entity.Image;
 import com.growandpull.api.util.ImageUtil;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

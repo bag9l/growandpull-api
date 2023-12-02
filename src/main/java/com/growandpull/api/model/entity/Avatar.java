@@ -1,4 +1,4 @@
-package com.growandpull.api.model;
+package com.growandpull.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -10,9 +10,9 @@ import org.hibernate.annotations.GenericGenerator;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString()
-@Table(name = "`image`")
+@Table(name = "`avatar`")
 @Entity
-public class Image {
+public class Avatar {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -26,23 +26,20 @@ public class Image {
     private String type;
 
     @Lob
-    @Column(name = "image_data", length = 100000, nullable = false)
+    @Column(name = "image_data", nullable = false, length = 1000)
     private byte[] imageData;
 
-    @OneToOne(mappedBy = "image")
+    @OneToOne(mappedBy = "avatar")
     @JsonBackReference
-    private Startup startup;
+    private User user;
 
-    public Image(String name, String type, byte[] imageData, Startup startup) {
+
+    public Avatar(String name, String type, byte[] imageData, User user) {
         this.name = name;
         this.type = type;
         this.imageData = imageData;
-        this.startup = startup;
+        this.user = user;
     }
 
-    public Image(String name, String type, byte[] imageData) {
-        this.name = name;
-        this.type = type;
-        this.imageData = imageData;
-    }
+
 }

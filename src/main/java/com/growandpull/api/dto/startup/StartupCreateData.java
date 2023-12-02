@@ -1,7 +1,7 @@
 package com.growandpull.api.dto.startup;
 
-import com.growandpull.api.model.Category;
-import com.growandpull.api.model.StartupStatus;
+import com.growandpull.api.model.entity.Category;
+import com.growandpull.api.model.enums.StartupStatus;
 
 import java.util.List;
 
