@@ -5,6 +5,7 @@ import com.growandpull.api.dto.startup.StartupCreationRequest;
 import com.growandpull.api.dto.startup.StartupCard;
 import com.growandpull.api.dto.startup.StartupView;
 import com.growandpull.api.exception.EntityNotExistsException;
+import com.growandpull.api.mapper.FinanceMapper;
 import com.growandpull.api.mapper.StartupMapper;
 import com.growandpull.api.model.*;
 import com.growandpull.api.repository.FinanceRepository;
@@ -47,6 +48,8 @@ class StartupServiceImplTest {
     private ImageRepository imageRepository;
     @Mock
     private StartupMapper startupMapper;
+    @Mock
+    private FinanceMapper financeMapper;
 
     @InjectMocks
     private StartupServiceImpl underTest;
