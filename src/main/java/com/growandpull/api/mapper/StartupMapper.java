@@ -57,9 +57,10 @@ public abstract class StartupMapper {
                 startup.getStatus(),
                 startup.getCategory().getName(),
                 finance,
-                startupDetailsDto,
+                startupDetailsMapper.startupDetailsToDto(startup.getStartupDetails()),
                 startup.getCreatedAt(),
                 startup.getCollaborators());
+
     }
 
     public Startup newToStartup(StartupCreationRequest newStartup) throws IOException {
@@ -104,4 +105,6 @@ public abstract class StartupMapper {
     public void setCategoryRepository(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
+
+
 }

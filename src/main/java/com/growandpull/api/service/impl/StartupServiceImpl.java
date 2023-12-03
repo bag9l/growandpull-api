@@ -71,10 +71,10 @@ public class StartupServiceImpl implements StartupService {
     }
 
     @Override
-    public StartupCreateData getCreationData() {
+    public StartupCreationData getCreationData() {
         List<StartupStatus> statuses = List.of(StartupStatus.values());
         List<Category> categories = categoryRepository.findAll();
-        return new StartupCreateData(statuses, categories);
+        return new StartupCreationData(statuses, categories);
     }
 
     //    TODO: try loading
@@ -118,7 +118,7 @@ public class StartupServiceImpl implements StartupService {
         startup.setStatus(startupUpdateRequest.getStatus());
         startup.setCategory(category);
         startup.setFinance(finance);
-        startup.setStartupDetails(startupDetails);
+        startup.setStartupDetails(startupDetailsMapper.dtoToStartupDetails(startupUpdateRequest.getStartupDetails()));
     }
 
     private Startup findStartupById(String id) {

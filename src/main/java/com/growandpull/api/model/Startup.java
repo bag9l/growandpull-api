@@ -26,11 +26,6 @@ public class Startup {
     @Column(name = "`title`")
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "owner_id", referencedColumnName = "id", nullable = false)
-    @ToString.Exclude
-    @JsonBackReference
-    private User owner;
     @Lob
     @Column(name = "`description`", length = 5000, nullable = false)
     private String description;
@@ -44,6 +39,12 @@ public class Startup {
     @ToString.Exclude
     @JsonBackReference
     private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id", nullable = false)
+    @ToString.Exclude
+    @JsonBackReference
+    private User owner;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "finance_id", referencedColumnName = "id", nullable = false)

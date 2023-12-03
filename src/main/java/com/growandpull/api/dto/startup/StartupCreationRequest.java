@@ -29,12 +29,14 @@ public class StartupCreationRequest {
             @JsonProperty("categoryId") String categoryId,
             @JsonProperty("finance") FinanceDto finance,
             @JsonProperty("startupDetails") StartupDetailsDto startupDetails) {
+
         this.title = title;
         this.description = description;
         this.status = status;
         this.categoryId = categoryId;
         this.finance = finance;
         this.startupDetails = startupDetails;
+
     }
 
     public void setImage(MultipartFile image) {

@@ -3,7 +3,6 @@ package com.growandpull.api.controller;
 import com.growandpull.api.dto.startup.*;
 import com.growandpull.api.service.InvitationService;
 import com.growandpull.api.service.StartupService;
-import com.growandpull.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -38,7 +37,7 @@ public class StartupController {
     }
 
     @GetMapping("creation-data")
-    public ResponseEntity<StartupCreateData> getCreationData() {
+    public ResponseEntity<StartupCreationData> getCreationData() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 startupService.getCreationData());
     }

@@ -3,8 +3,10 @@ package com.growandpull.api.service.impl;
 import com.growandpull.api.dto.finance.FinanceDto;
 import com.growandpull.api.dto.startup.StartupCreationRequest;
 import com.growandpull.api.dto.startup.StartupCard;
+import com.growandpull.api.dto.startup.StartupDetailsDto;
 import com.growandpull.api.dto.startup.StartupView;
 import com.growandpull.api.exception.EntityNotExistsException;
+import com.growandpull.api.mapper.FinanceMapper;
 import com.growandpull.api.mapper.StartupMapper;
 import com.growandpull.api.model.*;
 import com.growandpull.api.repository.FinanceRepository;
@@ -47,6 +49,8 @@ class StartupServiceImplTest {
     private ImageRepository imageRepository;
     @Mock
     private StartupMapper startupMapper;
+    @Mock
+    private FinanceMapper financeMapper;
 
     @InjectMocks
     private StartupServiceImpl underTest;
@@ -71,6 +75,17 @@ class StartupServiceImplTest {
                 StartupStatus.IDEA,
                 "category",
                 null,
+                new StartupDetailsDto("id",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla"),
                 LocalDateTime.now()
         );
 
@@ -146,6 +161,17 @@ class StartupServiceImplTest {
                 StartupStatus.IDEA,
                 categoryId,
                 financeDto,
+                new StartupDetailsDto("id",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla"),
                 image);
         String ownerLogin = "testUserLogin";
 
@@ -170,6 +196,17 @@ class StartupServiceImplTest {
                 StartupStatus.IDEA,
                 categoryId,
                 financeDto,
+                new StartupDetailsDto("id",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla"),
                 LocalDateTime.now()
         );
 

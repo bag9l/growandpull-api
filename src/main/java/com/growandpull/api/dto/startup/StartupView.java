@@ -20,6 +20,8 @@ public record StartupView(
         StartupDetailsDto startupDetails,
 
         LocalDateTime createdAt,
+
         Set<User> collaborators
+
 ) {
 }
