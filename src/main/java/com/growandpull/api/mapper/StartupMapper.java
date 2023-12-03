@@ -21,13 +21,14 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
-        uses = {UserMapper.class, FinanceMapper.class, CategoryRepository.class, FileMapper.class})
+        uses = {UserMapper.class, FinanceMapper.class, CategoryRepository.class, FileMapper.class, StartupDetailsMapper.class})
 public abstract class StartupMapper {
 
     protected UserMapper userMapper;
     protected FinanceMapper financeMapper;
     protected FileMapper fileMapper;
     protected CategoryRepository categoryRepository;
+    protected StartupDetailsMapper startupDetailsMapper;
 
     @Mapping(target = "finance", expression = "java(financeMapper.financeToDto(startup.getFinance()))")
     @Mapping(target = "category", expression = "java(startup.getCategory().getName())")
@@ -50,6 +51,7 @@ public abstract class StartupMapper {
                 startup.getStatus(),
                 startup.getCategory().getName(),
                 finance,
+                startupDetailsMapper.detailsToDto(startup.getDetails()),
                 startup.getCreatedAt());
     }
 
@@ -66,6 +68,7 @@ public abstract class StartupMapper {
         startup.setCategory(category);
         startup.setFinance(financeMapper.dtoToFinance(newStartup.getFinance()));
         startup.setImage(image);
+        startup.setDetails(startupDetailsMapper.dtoToDetails(newStartup.getDetails()));
 
         return startup;
     }
@@ -88,5 +91,10 @@ public abstract class StartupMapper {
     @Autowired
     public void setCategoryRepository(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
+    }
+
+    @Autowired
+    public void setStartupDetailsMapper(StartupDetailsMapper startupDetailsMapper) {
+        this.startupDetailsMapper = startupDetailsMapper;
     }
 }

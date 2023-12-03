@@ -5,6 +5,7 @@ import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.mapper.FileMapper;
 import com.growandpull.api.mapper.FinanceMapper;
+import com.growandpull.api.mapper.StartupDetailsMapper;
 import com.growandpull.api.mapper.StartupMapper;
 import com.growandpull.api.model.entity.*;
 import com.growandpull.api.model.enums.AdStatus;
@@ -37,6 +38,8 @@ public class StartupServiceImpl implements StartupService {
     private final FinanceMapper financeMapper;
     private final FileMapper fileMapper;
 
+    private final StartupDetailsMapper startupDetailsMapper;
+
 
     @Override
     public StartupView getStartupById(String id) {
@@ -56,8 +59,6 @@ public class StartupServiceImpl implements StartupService {
     public StartupView createStartup(StartupCreationRequest newStartup, String ownerLogin) throws IOException {
         Startup startup = startupMapper.newToStartup(newStartup);
         User user = findUserByLogin(ownerLogin);
-        Finance finance = financeMapper.dtoToFinance(newStartup.getFinance());
-        finance = financeRepository.save(finance);
 
         financeRepository.save(startup.getFinance());
         imageRepository.save(startup.getImage());
@@ -66,15 +67,14 @@ public class StartupServiceImpl implements StartupService {
         startup.setCreatedAt(LocalDateTime.now());
         startup = startupRepository.save(startup);
 
-
         return startupMapper.startupToView(startup);
     }
 
     @Override
-    public StartupCreateData getCreationData() {
+    public StartupCreationData getCreationData() {
         List<StartupStatus> statuses = List.of(StartupStatus.values());
         List<Category> categories = categoryRepository.findAll();
-        return new StartupCreateData(statuses, categories);
+        return new StartupCreationData(statuses, categories);
     }
 
     //    TODO: try loading
@@ -111,6 +111,7 @@ public class StartupServiceImpl implements StartupService {
         startup.setStatus(startupUpdateRequest.getStatus());
         startup.setCategory(category);
         startup.setFinance(finance);
+        startup.setDetails(startupDetailsMapper.dtoToDetails(startupUpdateRequest.getDetails()));
     }
 
     private Startup findStartupById(String id) {
