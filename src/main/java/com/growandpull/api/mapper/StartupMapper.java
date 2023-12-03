@@ -3,6 +3,7 @@ package com.growandpull.api.mapper;
 import com.growandpull.api.dto.finance.FinanceDto;
 import com.growandpull.api.dto.startup.StartupCard;
 import com.growandpull.api.dto.startup.StartupCreationRequest;
+import com.growandpull.api.dto.startup.StartupDetailsDto;
 import com.growandpull.api.dto.startup.StartupView;
 import com.growandpull.api.dto.user.UserCard;
 import com.growandpull.api.exception.EntityNotExistsException;
@@ -21,13 +22,16 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
-        uses = {UserMapper.class, FinanceMapper.class, CategoryRepository.class, ImageMapper.class})
+        uses = {UserMapper.class, FinanceMapper.class, CategoryRepository.class, ImageMapper.class, StartupDetailsMapper.class})
 public abstract class StartupMapper {
 
     protected UserMapper userMapper;
     protected FinanceMapper financeMapper;
     protected ImageMapper imageMapper;
+
+    protected StartupDetailsMapper startupDetailsMapper;
     protected CategoryRepository categoryRepository;
+
 
     @Mapping(target = "finance", expression = "java(financeMapper.financeToDto(startup.getFinance()))")
     @Mapping(target = "category", expression = "java(startup.getCategory().getName())")
@@ -35,12 +39,15 @@ public abstract class StartupMapper {
             "com.growandpull.api.util.ImageUtil.decompressImage(startup.getImage().getImageData()) : null)")
     public abstract StartupCard startupToCard(Startup startup);
 
+
     public StartupView startupToView(Startup startup) {
         UserCard userCard = userMapper.userToCard(startup.getOwner());
         byte[] image = (startup.getImage() != null) ?
                 ImageUtil.decompressImage(startup.getImage().getImageData())
                 : null;
         FinanceDto finance = financeMapper.financeToDto(startup.getFinance());
+        StartupDetailsDto startupDetailsDto = startupDetailsMapper.startupDetailsToDto(startup.getStartupDetails());
+
 
         return new StartupView(
                 startup.getTitle(),
@@ -50,7 +57,9 @@ public abstract class StartupMapper {
                 startup.getStatus(),
                 startup.getCategory().getName(),
                 finance,
-                startup.getCreatedAt());
+                startupDetailsDto,
+                startup.getCreatedAt(),
+                startup.getCollaborators());
     }
 
     public Startup newToStartup(StartupCreationRequest newStartup) throws IOException {
@@ -65,6 +74,7 @@ public abstract class StartupMapper {
         startup.setStatus(newStartup.getStatus());
         startup.setCategory(category);
         startup.setFinance(financeMapper.dtoToFinance(newStartup.getFinance()));
+        startup.setStartupDetails(startupDetailsMapper.dtoToStartupDetails(newStartup.getStartupDetails()));
         startup.setImage(image);
 
         return startup;
@@ -78,6 +88,11 @@ public abstract class StartupMapper {
     @Autowired
     public void setFinanceMapper(FinanceMapper financeMapper) {
         this.financeMapper = financeMapper;
+    }
+
+    @Autowired
+    public void setStartupDetailsMapper(StartupDetailsMapper startupDetailsMapper) {
+        this.startupDetailsMapper = startupDetailsMapper;
     }
 
     @Autowired

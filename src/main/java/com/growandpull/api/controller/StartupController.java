@@ -1,7 +1,9 @@
 package com.growandpull.api.controller;
 
 import com.growandpull.api.dto.startup.*;
+import com.growandpull.api.service.InvitationService;
 import com.growandpull.api.service.StartupService;
+import com.growandpull.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/startups")
 public class StartupController {
+    private final InvitationService invitationService;
 
     private final StartupService startupService;
 
@@ -35,7 +38,7 @@ public class StartupController {
     }
 
     @GetMapping("creation-data")
-    public ResponseEntity<StartupCreateData> getCreationData(){
+    public ResponseEntity<StartupCreateData> getCreationData() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 startupService.getCreationData());
     }
@@ -59,5 +62,21 @@ public class StartupController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 startupService.updateStartup(id, startupUpdateRequest, user.getUsername())
         );
+    }
+
+
+    @PostMapping("{startupId}/sendInvite")
+    public ResponseEntity<String> sendInvitation(@AuthenticationPrincipal UserDetails userDetails,
+                                                 @RequestParam("recipientEmail") String recipientEmail,
+                                                 @PathVariable("startupId") String startupId) {
+        invitationService.sendInvitation(userDetails.getUsername(), recipientEmail, startupId);
+        return ResponseEntity.ok("Invitation sent successfully!");
+    }
+
+    @PostMapping("/accept/{invitationId}")
+    public ResponseEntity<String> acceptInvitation(@AuthenticationPrincipal UserDetails userDetails,
+                                                   @PathVariable("invitationId") String invitationId) {
+        invitationService.acceptInvitation(invitationId, userDetails.getUsername());
+        return ResponseEntity.ok("Invitation accepted successfully!");
     }
 }

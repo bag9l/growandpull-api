@@ -5,6 +5,7 @@ import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.mapper.FinanceMapper;
 import com.growandpull.api.mapper.ImageMapper;
+import com.growandpull.api.mapper.StartupDetailsMapper;
 import com.growandpull.api.mapper.StartupMapper;
 import com.growandpull.api.model.*;
 import com.growandpull.api.repository.*;
@@ -31,8 +32,10 @@ public class StartupServiceImpl implements StartupService {
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
     private final FinanceRepository financeRepository;
+    private final StartupDetailsRepository startupDetailsRepository;
     private final StartupMapper startupMapper;
     private final FinanceMapper financeMapper;
+    private final StartupDetailsMapper startupDetailsMapper;
     private final ImageMapper imageMapper;
 
 
@@ -54,16 +57,15 @@ public class StartupServiceImpl implements StartupService {
     public StartupView createStartup(StartupCreationRequest newStartup, String ownerLogin) throws IOException {
         Startup startup = startupMapper.newToStartup(newStartup);
         User user = findUserByLogin(ownerLogin);
-        Finance finance = financeMapper.dtoToFinance(newStartup.getFinance());
-        finance = financeRepository.save(finance);
 
+        startupDetailsRepository.save(startup.getStartupDetails());
         financeRepository.save(startup.getFinance());
         imageRepository.save(startup.getImage());
+
         startup.setOwner(user);
         startup.setAdStatus(AdStatus.ENABLED);
         startup.setCreatedAt(LocalDateTime.now());
         startup = startupRepository.save(startup);
-
 
         return startupMapper.startupToView(startup);
     }
@@ -91,12 +93,19 @@ public class StartupServiceImpl implements StartupService {
         return startupMapper.startupToView(startup);
     }
 
+    @Override
+    public void saveStartup(Startup startup) {
+        startupRepository.save(startup);
+    }
+
+
     private void copyUpdateFieldsToStartup(StartupUpdateRequest startupUpdateRequest, Startup startup) throws IOException {
         Category category = categoryRepository.findById(startupUpdateRequest.getCategoryId()).orElseThrow(() ->
                 new EntityNotExistsException(String.format("Category with id:%s not found", startupUpdateRequest.getCategoryId())));
         Image image = (startupUpdateRequest.getImage() != null) ?
                 imageMapper.multiPartFileToImage(startupUpdateRequest.getImage()) : null;
         Finance finance = financeMapper.dtoToFinance(startupUpdateRequest.getFinance());
+        StartupDetails startupDetails = startupDetailsMapper.dtoToStartupDetails(startupUpdateRequest.getStartupDetails());
 
         if (image != null) {
             image = imageRepository.save(image);
@@ -109,6 +118,7 @@ public class StartupServiceImpl implements StartupService {
         startup.setStatus(startupUpdateRequest.getStatus());
         startup.setCategory(category);
         startup.setFinance(finance);
+        startup.setStartupDetails(startupDetails);
     }
 
     private Startup findStartupById(String id) {

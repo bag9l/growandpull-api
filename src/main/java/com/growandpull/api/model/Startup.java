@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -50,6 +51,13 @@ public class Startup {
     @JsonBackReference
     private Finance finance;
 
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "startup_details_id", referencedColumnName = "id", nullable = false)
+    @ToString.Exclude
+    @JsonBackReference
+    private StartupDetails startupDetails;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "`ad_status`", nullable = false)
     private AdStatus adStatus;
@@ -58,6 +66,14 @@ public class Startup {
     @JoinColumn(name = "image_id", referencedColumnName = "id", nullable = true)
     @JsonManagedReference
     private Image image;
+
+    @ManyToMany
+    @JoinTable(
+            name = "membership",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "startup_id"))
+    @JsonBackReference
+    private Set<User> collaborators;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
