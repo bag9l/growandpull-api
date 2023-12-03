@@ -35,7 +35,7 @@ public class StartupController {
     }
 
     @GetMapping("creation-data")
-    public ResponseEntity<StartupCreateData> getCreationData(){
+    public ResponseEntity<StartupCreationData> getCreationData(){
         return ResponseEntity.status(HttpStatus.OK).body(
                 startupService.getCreationData());
     }

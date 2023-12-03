@@ -12,7 +12,7 @@ public interface StartupService {
 
     StartupView createStartup(StartupCreationRequest startup, String ownerLogin) throws IOException;
 
-    StartupCreateData getCreationData();
+    StartupCreationData getCreationData();
 
     StartupView updateStartup(String startupId, StartupUpdateRequest startupUpdateRequest, String userLogin) throws IOException;
 }

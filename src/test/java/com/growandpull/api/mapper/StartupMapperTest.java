@@ -3,6 +3,7 @@ package com.growandpull.api.mapper;
 import com.growandpull.api.dto.finance.FinanceDto;
 import com.growandpull.api.dto.startup.StartupCard;
 import com.growandpull.api.dto.startup.StartupCreationRequest;
+import com.growandpull.api.dto.startup.StartupDetailsDto;
 import com.growandpull.api.dto.startup.StartupView;
 import com.growandpull.api.dto.user.UserCard;
 import com.growandpull.api.model.*;
@@ -33,6 +34,8 @@ class StartupMapperTest {
     private CategoryRepository categoryRepository;
     @Mock
     private ImageMapper imageMapper;
+    @Mock
+    private StartupDetailsMapper startupDetailsMapper;
 
     @InjectMocks
     private StartupMapperImpl underTest;
@@ -127,6 +130,17 @@ class StartupMapperTest {
                 StartupStatus.IDEA,
                 categoryId,
                 financeDto,
+                new StartupDetailsDto("id",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla"),
                 image);
         Finance finance = financeMapper.dtoToFinance(financeDto);
         Category category = new Category("name");

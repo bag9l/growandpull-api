@@ -14,6 +14,7 @@ public record StartupView(
         StartupStatus status,
         String category,
         FinanceDto finance,
+        StartupDetailsDto details,
         LocalDateTime createdAt
 ) {
 }

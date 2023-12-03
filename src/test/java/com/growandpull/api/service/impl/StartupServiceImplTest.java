@@ -3,6 +3,7 @@ package com.growandpull.api.service.impl;
 import com.growandpull.api.dto.finance.FinanceDto;
 import com.growandpull.api.dto.startup.StartupCreationRequest;
 import com.growandpull.api.dto.startup.StartupCard;
+import com.growandpull.api.dto.startup.StartupDetailsDto;
 import com.growandpull.api.dto.startup.StartupView;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.mapper.FinanceMapper;
@@ -74,6 +75,17 @@ class StartupServiceImplTest {
                 StartupStatus.IDEA,
                 "category",
                 null,
+                new StartupDetailsDto("id",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla"),
                 LocalDateTime.now()
         );
 
@@ -149,6 +161,17 @@ class StartupServiceImplTest {
                 StartupStatus.IDEA,
                 categoryId,
                 financeDto,
+                new StartupDetailsDto("id",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla"),
                 image);
         String ownerLogin = "testUserLogin";
 
@@ -173,6 +196,17 @@ class StartupServiceImplTest {
                 StartupStatus.IDEA,
                 categoryId,
                 financeDto,
+                new StartupDetailsDto("id",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla",
+                        "blabla"),
                 LocalDateTime.now()
         );
 

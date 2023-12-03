@@ -6,7 +6,7 @@ import com.growandpull.api.model.StartupStatus;
 import java.util.List;
 
 //is used to send to client selection data
-public record StartupCreateData(
+public record StartupCreationData(
         List<StartupStatus> statuses,
         List<Category> categories
 ) {
