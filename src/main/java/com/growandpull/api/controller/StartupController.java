@@ -48,7 +48,7 @@ public class StartupController {
                                                      @AuthenticationPrincipal UserDetails user) throws IOException {
         startup.setImage(image);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                startupService.createStartup(startup, user.getUsername())
+                startupService.createStartupCheckingSubscription(startup, user.getUsername())
         );
     }
 

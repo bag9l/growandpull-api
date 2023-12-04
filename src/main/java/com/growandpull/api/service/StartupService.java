@@ -13,6 +13,7 @@ public interface StartupService {
     Page<StartupCard> findAllStartups(Integer pageNumber, Optional<UserDetails> authenticatedUser);
 
     StartupView createStartup(StartupCreationRequest startup, String ownerLogin) throws IOException;
+    StartupView createStartupCheckingSubscription(StartupCreationRequest startup, String ownerLogin) throws IOException;
 
     StartupCreationData getCreationData();
 

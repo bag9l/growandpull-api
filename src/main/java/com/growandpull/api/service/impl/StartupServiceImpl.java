@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -64,8 +65,8 @@ public class StartupServiceImpl implements StartupService {
     @Override
     public Page<StartupCard> findAllStartups(Integer pageNumber, Optional<UserDetails> authenticatedUser) {
         boolean userHasSubscription = authenticatedUser.isPresent()
-                && subscriptionService.getCurrentUserSubscriptions(authenticatedUser.get().getUsername()).stream()
-                .anyMatch(s -> s.equals(SubscriptionTypeIdentifier.INVESTOR_PACK) || s.equals(SubscriptionTypeIdentifier.TWO_IN_ONE_PACK));
+                && (hasUserSubscription(authenticatedUser.get().getUsername(), SubscriptionTypeIdentifier.INVESTOR_PACK)
+                || hasUserSubscription(authenticatedUser.get().getUsername(), SubscriptionTypeIdentifier.TWO_IN_ONE_PACK));
 
         if (!userHasSubscription && pageNumber > 0) {
             throw new PaymentRequiredException("Need to buy a subscription to get access");
@@ -73,6 +74,7 @@ public class StartupServiceImpl implements StartupService {
         return findAllStartups(pageNumber);
     }
 
+    @Transactional
     @Override
     public StartupView createStartup(StartupCreationRequest newStartup, String ownerLogin) throws IOException {
         Startup startup = startupMapper.newToStartup(newStartup);
@@ -87,6 +89,28 @@ public class StartupServiceImpl implements StartupService {
         return startupMapper.startupToView(startup);
     }
 
+    @Transactional
+    @Override
+    public StartupView createStartupCheckingSubscription(StartupCreationRequest newStartup, String userEmail) throws IOException{
+        boolean userHasSubscription = hasUserSubscription(userEmail, SubscriptionTypeIdentifier.STARTUP_PACK);
+
+        if(!userHasSubscription){
+            boolean haveUserBeenCreatedStartupLessThanThreeMonthsAgo = userRepository.haveUserBeenCreatedStartupAfterTime(
+                    userEmail, LocalDateTime.now().minusMonths(3));
+            if(haveUserBeenCreatedStartupLessThanThreeMonthsAgo){
+                throw new PaymentRequiredException(
+                        "User have been posted startup less than three months ago. Need a subscription to post it now.");
+            }
+        }
+
+        return createStartup(newStartup, userEmail);
+    }
+
+    private boolean hasUserSubscription(String email, SubscriptionTypeIdentifier subscription) {
+        return subscriptionService.getCurrentUserSubscriptions(email).stream()
+                .anyMatch(s -> s.equals(subscription));
+    }
+
     @Override
     public StartupCreationData getCreationData() {
         List<StartupStatus> statuses = List.of(StartupStatus.values());
@@ -95,6 +119,7 @@ public class StartupServiceImpl implements StartupService {
     }
 
     //    TODO: try loading
+    @Transactional
     @Override
     public StartupView updateStartup(String startupId, StartupUpdateRequest startupUpdateRequest, String userLogin) throws IOException {
         Startup startup = findStartupById(startupId);
