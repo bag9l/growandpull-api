@@ -2,6 +2,7 @@ package com.growandpull.api.exception.handler;
 
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.InvalidTokenException;
+import com.growandpull.api.exception.PaymentRequiredException;
 import com.growandpull.api.exception.PermissionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
-    private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
-        return new ResponseEntity<>(apiError, apiError.getStatus());
-    }
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleInvalidArgument(MethodArgumentNotValidException exception) {
@@ -34,32 +31,36 @@ public class ApiExceptionHandler {
     @ExceptionHandler(EntityNotExistsException.class)
     protected ResponseEntity<Object> handleEntityNotExists(
             EntityNotExistsException exception) {
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
-        apiError.setMessage(exception.getMessage());
-        return buildResponseEntity(apiError);
+        return buildResponseEntity(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
     @ExceptionHandler(PermissionException.class)
     protected ResponseEntity<Object> handlePermissionException(
             PermissionException exception) {
-        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN);
-        apiError.setMessage(exception.getMessage());
-        return buildResponseEntity(apiError);
+        return buildResponseEntity(HttpStatus.FORBIDDEN, exception.getMessage());
     }
 
     @ExceptionHandler(IOException.class)
     protected ResponseEntity<Object> handleIOException(
             IOException exception) {
-        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-        apiError.setMessage(exception.getMessage());
-        return buildResponseEntity(apiError);
+        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
     }
 
     @ExceptionHandler(InvalidTokenException.class)
     protected ResponseEntity<Object> handleInvalidTokenException(
             InvalidTokenException exception) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(exception.getMessage());
-        return buildResponseEntity(apiError);
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(PaymentRequiredException.class)
+    protected ResponseEntity<Object> handlePaymentRequiredException(
+            PaymentRequiredException exception) {
+        return buildResponseEntity(HttpStatus.PAYMENT_REQUIRED, exception.getMessage());
+    }
+
+    private ResponseEntity<Object> buildResponseEntity(HttpStatus paymentRequired, String exception) {
+        ApiError apiError = new ApiError(paymentRequired);
+        apiError.setMessage(exception);
+        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 }

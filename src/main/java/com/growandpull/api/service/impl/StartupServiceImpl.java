@@ -2,6 +2,7 @@ package com.growandpull.api.service.impl;
 
 import com.growandpull.api.dto.startup.*;
 import com.growandpull.api.exception.EntityNotExistsException;
+import com.growandpull.api.exception.PaymentRequiredException;
 import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.mapper.FileMapper;
 import com.growandpull.api.mapper.FinanceMapper;
@@ -10,17 +11,21 @@ import com.growandpull.api.mapper.StartupMapper;
 import com.growandpull.api.model.entity.*;
 import com.growandpull.api.model.enums.AdStatus;
 import com.growandpull.api.model.enums.StartupStatus;
+import com.growandpull.api.model.enums.SubscriptionTypeIdentifier;
 import com.growandpull.api.repository.*;
 import com.growandpull.api.service.StartupService;
+import com.growandpull.api.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -37,6 +42,7 @@ public class StartupServiceImpl implements StartupService {
     private final StartupMapper startupMapper;
     private final FinanceMapper financeMapper;
     private final FileMapper fileMapper;
+    private final SubscriptionService subscriptionService;
 
     private final StartupDetailsMapper startupDetailsMapper;
 
@@ -56,6 +62,18 @@ public class StartupServiceImpl implements StartupService {
     }
 
     @Override
+    public Page<StartupCard> findAllStartups(Integer pageNumber, Optional<UserDetails> authenticatedUser) {
+        boolean userHasSubscription = authenticatedUser.isPresent()
+                && subscriptionService.getCurrentUserSubscriptions(authenticatedUser.get().getUsername()).stream()
+                .anyMatch(s -> s.equals(SubscriptionTypeIdentifier.INVESTOR_PACK) || s.equals(SubscriptionTypeIdentifier.TWO_IN_ONE_PACK));
+
+        if (!userHasSubscription && pageNumber > 0) {
+            throw new PaymentRequiredException("Need to buy a subscription to get access");
+        }
+        return findAllStartups(pageNumber);
+    }
+
+    @Override
     public StartupView createStartup(StartupCreationRequest newStartup, String ownerLogin) throws IOException {
         Startup startup = startupMapper.newToStartup(newStartup);
         User user = findUserByLogin(ownerLogin);
@@ -66,7 +84,6 @@ public class StartupServiceImpl implements StartupService {
         startup.setAdStatus(AdStatus.ENABLED);
         startup.setCreatedAt(LocalDateTime.now());
         startup = startupRepository.save(startup);
-
         return startupMapper.startupToView(startup);
     }
 

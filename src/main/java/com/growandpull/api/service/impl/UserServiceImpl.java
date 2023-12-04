@@ -11,10 +11,9 @@ import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.mapper.FileMapper;
 import com.growandpull.api.mapper.UserMapper;
 import com.growandpull.api.model.entity.Avatar;
-import com.growandpull.api.model.entity.Subscription;
 import com.growandpull.api.model.entity.User;
+import com.growandpull.api.model.enums.SubscriptionTypeIdentifier;
 import com.growandpull.api.repository.AvatarRepository;
-import com.growandpull.api.repository.ImageRepository;
 import com.growandpull.api.repository.UserRepository;
 import com.growandpull.api.service.AuthenticationService;
 import com.growandpull.api.service.SubscriptionService;
@@ -67,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(passwordEncoder.encode(passwordUpdate.newPassword()));
 
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(user.getUsername(), passwordUpdate.newPassword());
         return authenticationService.authenticate(authenticationRequest);
@@ -92,8 +91,6 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
 
         return userMapper.userToProfileView(user);
-
-
     }
 
     @Override
@@ -105,10 +102,6 @@ public class UserServiceImpl implements UserService {
         } else {
             return userMapper.userToPublicProfile(user);
         }
-    }
-
-    public List<Subscription> getUnExpiredUserSubscriptions(String email){
-        return subscriptionService.findUnexpiredSubscriptionsForUserByEmail(email);
     }
 
     private void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {

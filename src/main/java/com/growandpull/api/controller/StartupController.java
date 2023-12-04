@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,9 +29,10 @@ public class StartupController {
 
     @GetMapping()
     public ResponseEntity<Page<StartupCard>> getStartups(
-            @RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber) {
+            @RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+            @AuthenticationPrincipal UserDetails user) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                startupService.findAllStartups(pageNumber)
+                startupService.findAllStartups(pageNumber, Optional.ofNullable(user))
         );
     }
 
