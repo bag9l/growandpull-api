@@ -35,14 +35,14 @@ public class Subscription {
     @Transient
     private Boolean isExpired;
 
-    public Subscription(String id, SubscriptionType type, LocalDate startedAt, LocalDate expiresAt) {
+    public Subscription(String id, SubscriptionType type) {
         this.id = id;
         this.type = type;
-        this.startedAt = startedAt;
-        this.expiresAt = expiresAt;
+        this.startedAt = LocalDate.now();
+        this.expiresAt = LocalDate.now().plus(type.getPeriod());
     }
 
-    public Boolean getExpired() {
+    public Boolean getIsExpired() {
         return !expiresAt.isAfter(LocalDate.now());
     }
 }
