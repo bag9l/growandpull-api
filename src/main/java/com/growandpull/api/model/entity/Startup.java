@@ -2,7 +2,6 @@ package com.growandpull.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.growandpull.api.model.StartupDetails;
 import com.growandpull.api.model.enums.AdStatus;
 import com.growandpull.api.model.ExistenceTime;
 import com.growandpull.api.model.enums.StartupStatus;

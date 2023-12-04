@@ -1,7 +1,7 @@
 package com.growandpull.api.mapper;
 
 import com.growandpull.api.dto.startup.StartupDetailsDto;
-import com.growandpull.api.model.StartupDetails;
+import com.growandpull.api.model.entity.StartupDetails;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
