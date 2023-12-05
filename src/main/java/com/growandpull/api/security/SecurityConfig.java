@@ -3,6 +3,7 @@ package com.growandpull.api.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,9 +36,17 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**",
+                .requestMatchers(HttpMethod.GET,
+                        "/api/v1/startups",
+                        "/api/v1/startups/{id}",
+                        "/api/v1/users/{id}")
+                .permitAll()
+                .requestMatchers(
+                        "/api/v1/auth/login",
+                        "/api/v1/auth/register/user",
+                        "/api/v1/startups/{id}",
                         "/v3/api-docs/**",
-                        "configuration/**",
+                        "/configuration/**",
                         "/swagger*/**",
                         "/webjars/**",
                         "/swagger-ui/**")
@@ -63,7 +72,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8000", "http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8000", "http://localhost:3000", "https://ui.growandpull.pp.ua"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH",
                 "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "content-type",

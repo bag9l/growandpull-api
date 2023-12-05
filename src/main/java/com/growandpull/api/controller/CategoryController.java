@@ -21,14 +21,14 @@ public class CategoryController {
 
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryDto request) throws Exception {
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryDto request){
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 categoryService.createCategory(request));
     }
 
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     @DeleteMapping("/{categoryId}")
-    public void deleteCategory(@PathVariable("categoryId") String categoryId) throws Exception {
+    public void deleteCategory(@PathVariable("categoryId") String categoryId){
         categoryService.delete(categoryId);
     }
 
