@@ -3,7 +3,6 @@ package com.growandpull.api.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-
 import java.math.BigDecimal;
 import java.util.Objects;
 

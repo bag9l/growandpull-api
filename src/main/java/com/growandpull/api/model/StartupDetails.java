@@ -22,6 +22,8 @@ public class StartupDetails {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
+    @Column(name = "`country`")
+    private String country;
 
     @Lob
     @Column(name = "`conceptualization_and_problem_identification`", length = 1000, nullable = false)
@@ -62,4 +64,5 @@ public class StartupDetails {
     @Lob
     @Column(name = "`achievements_and_recognition`", length = 1000, nullable = false)
     private String achievementsAndRecognition;
+
 }

@@ -57,7 +57,7 @@ public abstract class StartupMapper {
                 startup.getStatus(),
                 startup.getCategory().getName(),
                 finance,
-                startupDetailsMapper.startupDetailsToDto(startup.getStartupDetails()),
+                startupDetailsDto,
                 startup.getCreatedAt(),
                 startup.getCollaborators());
 

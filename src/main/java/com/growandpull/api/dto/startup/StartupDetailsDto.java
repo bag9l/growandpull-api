@@ -1,7 +1,8 @@
 package com.growandpull.api.dto.startup;
 
 public record StartupDetailsDto(
-        String id,
+
+        String country,
         String conceptualizationAndProblemIdentification,
         String solutionDevelopment,
         String competitiveAnalysis,

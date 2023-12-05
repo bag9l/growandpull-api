@@ -6,5 +6,6 @@ import com.growandpull.api.dto.payment.PaymentRequest;
 
 public interface PayPalService {
     PaymentOrder createPayment(PaymentRequest paymentRequest);
+
     CompletedOrder completePayment(String token);
 }
