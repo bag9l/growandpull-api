@@ -118,7 +118,7 @@ public class StartupServiceImpl implements StartupService {
         startup.setStatus(startupUpdateRequest.getStatus());
         startup.setCategory(category);
         startup.setFinance(finance);
-        startup.setStartupDetails(startupDetailsMapper.dtoToStartupDetails(startupUpdateRequest.getStartupDetails()));
+        startup.setStartupDetails(startupDetails);
     }
 
     private Startup findStartupById(String id) {

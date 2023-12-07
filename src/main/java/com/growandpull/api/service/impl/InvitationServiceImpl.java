@@ -1,5 +1,6 @@
 package com.growandpull.api.service.impl;
 
+import com.growandpull.api.exception.ConflictException;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.model.Invitation;
@@ -15,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -30,14 +32,17 @@ public class InvitationServiceImpl implements InvitationService {
         User sender = userService.findUserByEmail(senderEmail);
         User recipient = userService.findUserByEmail(recipientEmail);
         Startup startup = startupRepository.findById(startupId).orElseThrow(() -> new EntityNotExistsException("User not found"));
+        if (startup.getCollaborators().contains(recipient)) {
+            throw new ConflictException("This user is already collaborator");
+        }
         sendInvitation(sender, recipient, startup);
     }
 
-
+    @Transactional
     @Override
     public void acceptInvitation(String invitationId, String currentUserEmail) {
         Invitation invitation = invitationRepository.findById(invitationId)
-                .orElseThrow(() -> new RuntimeException("Invitation not found"));
+                .orElseThrow(() -> new EntityNotExistsException("Invitation not found"));
         if (!invitation.getRecipient().getEmail().equals(currentUserEmail)) {
             throw new PermissionException("You don't have permission to be collaborator");
         }
@@ -47,7 +52,7 @@ public class InvitationServiceImpl implements InvitationService {
         User recipient = invitation.getRecipient();
         startup.getCollaborators().add(recipient);
 
-        startupService.saveStartup(startup);
+        startupRepository.save(startup);
     }
 
 

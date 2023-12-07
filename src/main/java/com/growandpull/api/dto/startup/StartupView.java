@@ -17,11 +17,11 @@ public record StartupView(
         String category,
         FinanceDto finance,
 
-        StartupDetailsDto startupDetails,
+        StartupDetailsDto details,
 
         LocalDateTime createdAt,
 
-        Set<User> collaborators
+        Set<UserCard> collaborators
 
 ) {
 }

@@ -19,7 +19,7 @@ public class StartupUpdateRequest {
     private final String categoryId;
     private final FinanceDto finance;
 
-    private final StartupDetailsDto startupDetails;
+    private final StartupDetailsDto details;
 
     private MultipartFile image;
 
@@ -30,14 +30,14 @@ public class StartupUpdateRequest {
             @JsonProperty("status") StartupStatus status,
             @JsonProperty("categoryId") String categoryId,
             @JsonProperty("finance") FinanceDto finance,
-            @JsonProperty("startupDetails") StartupDetailsDto startupDetails) {
+            @JsonProperty("details") StartupDetailsDto details) {
 
         this.title = title;
         this.description = description;
         this.status = status;
         this.categoryId = categoryId;
         this.finance = finance;
-        this.startupDetails = startupDetails;
+        this.details = details;
 
     }
 
