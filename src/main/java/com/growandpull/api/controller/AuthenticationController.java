@@ -1,19 +1,13 @@
 package com.growandpull.api.controller;
 
-import com.growandpull.api.dto.auth.AuthenticationRequest;
-import com.growandpull.api.dto.auth.AuthenticationResponse;
-import com.growandpull.api.dto.auth.RefreshAuthenticationRequest;
-import com.growandpull.api.dto.auth.RegisterRequest;
+import com.growandpull.api.dto.auth.*;
 import com.growandpull.api.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,7 +25,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("register/user")
-    public ResponseEntity<AuthenticationResponse> registerUser(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<RegistrationResponse> registerUser(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 authenticationService.registerUser(request)
         );
@@ -39,7 +33,7 @@ public class AuthenticationController {
 
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping("register/admin")
-    public ResponseEntity<AuthenticationResponse> registerAdmin(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<RegistrationResponse> registerAdmin(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 authenticationService.registerAdmin(request)
         );
@@ -52,5 +46,9 @@ public class AuthenticationController {
         );
     }
 
+    @PostMapping("/confirm-account/{token}")
+    public AuthenticationResponse confirmUserAccount(@PathVariable("token") String confirmationToken) {
+        return authenticationService.confirmEmail(confirmationToken);
+    }
 
 }

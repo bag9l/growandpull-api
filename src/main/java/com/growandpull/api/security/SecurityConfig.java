@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .requestMatchers(
                         "/api/v1/auth/login",
                         "/api/v1/auth/register/user",
+                        "/api/v1/auth/confirm-account/{token}",
                         "/api/v1/startups/{id}",
                         "/v3/api-docs/**",
                         "/configuration/**",
