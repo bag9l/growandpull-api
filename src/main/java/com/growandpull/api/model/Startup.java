@@ -2,6 +2,7 @@ package com.growandpull.api.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.growandpull.api.dto.user.UserCard;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -70,7 +71,7 @@ public class Startup {
 
     @ManyToMany
     @JoinTable(
-            name = "membership",
+            name = "collaborators",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "startup_id"))
     @JsonBackReference

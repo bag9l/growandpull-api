@@ -105,7 +105,7 @@ public class StartupServiceImpl implements StartupService {
         Image image = (startupUpdateRequest.getImage() != null) ?
                 imageMapper.multiPartFileToImage(startupUpdateRequest.getImage()) : null;
         Finance finance = financeMapper.dtoToFinance(startupUpdateRequest.getFinance());
-        StartupDetails startupDetails = startupDetailsMapper.dtoToStartupDetails(startupUpdateRequest.getStartupDetails());
+        StartupDetails startupDetails = startupDetailsMapper.dtoToStartupDetails(startupUpdateRequest.getDetails());
 
         if (image != null) {
             image = imageRepository.save(image);
@@ -119,6 +119,7 @@ public class StartupServiceImpl implements StartupService {
         startup.setCategory(category);
         startup.setFinance(finance);
         startup.setStartupDetails(startupDetails);
+        startupRepository.save(startup);
     }
 
     private Startup findStartupById(String id) {
