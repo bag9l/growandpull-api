@@ -1,6 +1,6 @@
 package com.growandpull.api.config;
 
-import com.growandpull.api.model.*;
+import com.growandpull.api.model.entity.User;
 import com.growandpull.api.repository.CategoryRepository;
 import com.growandpull.api.repository.FinanceRepository;
 import com.growandpull.api.repository.StartupRepository;
@@ -16,11 +16,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration

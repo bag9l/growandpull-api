@@ -21,9 +21,9 @@ import java.util.NoSuchElementException;
 @Service
 public class PayPalServiceImpl implements PayPalService {
 
-    @Value("${paypal.url.return")
+    @Value("${paypal.url.return}")
     private String returnUrl;
-    @Value("${paypal.url.cancel")
+    @Value("${paypal.url.cancel}")
     private String cancelUrl;
 
     private final PayPalHttpClient payPalHttpClient;

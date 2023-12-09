@@ -2,8 +2,8 @@ package com.growandpull.api.mapper;
 
 import com.growandpull.api.dto.user.UserCard;
 import com.growandpull.api.dto.auth.AuthenticatedUser;
-import com.growandpull.api.model.Role;
-import com.growandpull.api.model.User;
+import com.growandpull.api.model.enums.Role;
+import com.growandpull.api.model.entity.User;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 

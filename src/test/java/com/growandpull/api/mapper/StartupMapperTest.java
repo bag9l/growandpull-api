@@ -6,13 +6,25 @@ import com.growandpull.api.dto.startup.StartupCreationRequest;
 import com.growandpull.api.dto.startup.StartupDetailsDto;
 import com.growandpull.api.dto.startup.StartupView;
 import com.growandpull.api.dto.user.UserCard;
-import com.growandpull.api.model.*;
+import com.growandpull.api.model.entity.Category;
+import com.growandpull.api.model.entity.Finance;
+import com.growandpull.api.model.entity.Startup;
+import com.growandpull.api.model.entity.User;
+import com.growandpull.api.model.enums.AdStatus;
+import com.growandpull.api.model.enums.Currency;
+import com.growandpull.api.model.enums.Role;
+import com.growandpull.api.model.enums.StartupStatus;
 import com.growandpull.api.repository.CategoryRepository;
+import com.growandpull.api.repository.SubscriptionRepository;
+import com.growandpull.api.service.SubscriptionService;
+import com.growandpull.api.service.impl.SubscriptionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +34,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class StartupMapperTest {
@@ -33,7 +46,7 @@ class StartupMapperTest {
     @Mock
     private CategoryRepository categoryRepository;
     @Mock
-    private ImageMapper imageMapper;
+    private FileMapper fileMapper;
     @Mock
     private StartupDetailsMapper startupDetailsMapper;
 

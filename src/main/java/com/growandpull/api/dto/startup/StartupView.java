@@ -2,7 +2,7 @@ package com.growandpull.api.dto.startup;
 
 import com.growandpull.api.dto.finance.FinanceDto;
 import com.growandpull.api.dto.user.UserCard;
-import com.growandpull.api.model.StartupStatus;
+import com.growandpull.api.model.enums.StartupStatus;
 
 import java.time.LocalDateTime;
 

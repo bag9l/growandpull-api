@@ -1,14 +1,20 @@
 package com.growandpull.api.service.impl;
 
 import com.growandpull.api.dto.finance.FinanceDto;
-import com.growandpull.api.dto.startup.StartupCreationRequest;
 import com.growandpull.api.dto.startup.StartupCard;
+import com.growandpull.api.dto.startup.StartupCreationRequest;
 import com.growandpull.api.dto.startup.StartupDetailsDto;
 import com.growandpull.api.dto.startup.StartupView;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.mapper.FinanceMapper;
 import com.growandpull.api.mapper.StartupMapper;
-import com.growandpull.api.model.*;
+import com.growandpull.api.model.entity.Category;
+import com.growandpull.api.model.entity.Startup;
+import com.growandpull.api.model.entity.User;
+import com.growandpull.api.model.enums.AdStatus;
+import com.growandpull.api.model.enums.Currency;
+import com.growandpull.api.model.enums.Role;
+import com.growandpull.api.model.enums.StartupStatus;
 import com.growandpull.api.repository.FinanceRepository;
 import com.growandpull.api.repository.ImageRepository;
 import com.growandpull.api.repository.StartupRepository;

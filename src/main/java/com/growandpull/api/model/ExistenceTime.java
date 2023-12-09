@@ -1,5 +1,6 @@
 package com.growandpull.api.model;
 
+import com.growandpull.api.model.enums.TimeUnit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

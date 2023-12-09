@@ -1,5 +1,6 @@
-package com.growandpull.api.model;
+package com.growandpull.api.model.entity;
 
+import com.growandpull.api.model.enums.Currency;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
