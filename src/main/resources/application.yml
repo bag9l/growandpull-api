@@ -1,9 +1,9 @@
 
 spring:
   datasource:
-    username: growandpull
-    password: Gkd73lisbfl9
-    url: jdbc:mysql://growandpull.ctegro5wnfvo.us-east-1.rds.amazonaws.com:3306/growandpull
+    username: root
+    password: 35440
+    url: jdbc:mysql://localhost:3306/grow_and_pull?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
@@ -15,14 +15,26 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         globally_quoted_identifiers: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: grow.and.pull@gmail.com
+    password: lmwa ugxz mtam nxvw
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 server:
   port: 8000
 jwt:
   secret: 7538782F413F4428472B4B6250655368566D5971337336763979244226452948
-  #  access_expiration: 10000
-  #  access_expiration: 3600000
+#  access_expiration: 10000
+#  access_expiration: 3600000
   access_expiration: 2629743000
   refresh_expiration: 86400000
+
 paypal:
   client:
     id: AYHyuPYGWqDVXIWrXymJ8qqOzzNw-qs8AXMMjpU__zArxYDfWItT5ErSvBpx3YxQhza3Ztp1K8bOuGVj
