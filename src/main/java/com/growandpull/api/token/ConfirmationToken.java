@@ -1,7 +1,7 @@
 package com.growandpull.api.token;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.growandpull.api.model.User;
+import com.growandpull.api.model.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +23,7 @@ public class ConfirmationToken {
     private Boolean isRevoked;
 
     private Boolean isExpired;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     @JsonBackReference

@@ -1,4 +1,4 @@
-package com.growandpull.api.model;
+package com.growandpull.api.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

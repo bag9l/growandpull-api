@@ -3,7 +3,7 @@ package com.growandpull.api.dto.startup;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.growandpull.api.dto.finance.FinanceDto;
-import com.growandpull.api.model.StartupStatus;
+import com.growandpull.api.model.enums.StartupStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

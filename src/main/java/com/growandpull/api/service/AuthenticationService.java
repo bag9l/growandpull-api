@@ -1,7 +1,7 @@
 package com.growandpull.api.service;
 
 import com.growandpull.api.dto.auth.*;
-import com.growandpull.api.model.User;
+import com.growandpull.api.model.entity.User;
 
 public interface AuthenticationService {
     RegistrationResponse registerUser(RegisterRequest request);

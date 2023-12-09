@@ -2,7 +2,7 @@ package com.growandpull.api.token;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.growandpull.api.model.User;
+import com.growandpull.api.model.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 

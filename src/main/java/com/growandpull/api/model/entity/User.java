@@ -1,7 +1,8 @@
-package com.growandpull.api.model;
+package com.growandpull.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.growandpull.api.model.enums.Role;
 import com.growandpull.api.token.Token;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -74,6 +75,10 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "startup_id"))
     @JsonBackReference
     private Set<Startup> favoriteStartups;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private List<Subscription> subscriptions;
 
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
