@@ -23,7 +23,7 @@ public class ConfirmationToken {
     private Boolean isRevoked;
 
     private Boolean isExpired;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     @JsonBackReference

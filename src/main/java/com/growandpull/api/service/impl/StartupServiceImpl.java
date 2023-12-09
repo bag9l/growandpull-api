@@ -109,6 +109,7 @@ public class StartupServiceImpl implements StartupService {
         startup.setCategory(category);
         startup.setFinance(finance);
         startup.setDetails(startupDetailsMapper.dtoToDetails(startupUpdateRequest.getDetails()));
+        startupRepository.save(startup);
     }
 
     private Startup findStartupById(String id) {

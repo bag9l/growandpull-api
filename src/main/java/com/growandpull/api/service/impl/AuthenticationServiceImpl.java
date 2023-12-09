@@ -31,7 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Value(value = "${jwt.access_expiration}")
     private long accessExpiration;
 
-    @Value(value = "${jwt.access_expiration}")
+    @Value(value = "${jwt.confirm_expiration}")
     private long confirmTokenExpiration;
     @Value(value = "${jwt.refresh_expiration}")
     private int refreshExpiration;
@@ -108,7 +108,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findUserByEmail(token.getUser().getEmail())
                 .orElseThrow(() -> new EntityNotExistsException("User not found"));
         user.setIsEnabled(true);
-        userRepository.save(user);
+        user = userRepository.save(user);
         return authenticate(user);
 
     }
@@ -137,8 +137,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 null
         );
 
-        userRepository.save(user);
-
+        user = userRepository.save(user);
         String confirmationToken = jwtService.generateToken(user, confirmTokenExpiration);
         saveUserConfirmationToken(user, confirmationToken);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
