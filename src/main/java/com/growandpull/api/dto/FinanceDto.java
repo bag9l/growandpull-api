@@ -1,4 +1,4 @@
-package com.growandpull.api.dto.finance;
+package com.growandpull.api.dto;
 
 import com.growandpull.api.model.enums.Currency;
 

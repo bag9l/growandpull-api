@@ -1,6 +1,6 @@
 package com.growandpull.api.mapper;
 
-import com.growandpull.api.dto.finance.FinanceDto;
+import com.growandpull.api.dto.FinanceDto;
 import com.growandpull.api.dto.startup.StartupCard;
 import com.growandpull.api.dto.startup.StartupCreationRequest;
 import com.growandpull.api.dto.startup.StartupView;
