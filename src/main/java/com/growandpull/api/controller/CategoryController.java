@@ -1,6 +1,6 @@
 package com.growandpull.api.controller;
 
-import com.growandpull.api.dto.category.CategoryDto;
+import com.growandpull.api.dto.CategoryDto;
 import com.growandpull.api.model.entity.Category;
 import com.growandpull.api.service.CategoryService;
 import jakarta.validation.Valid;

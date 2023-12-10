@@ -42,7 +42,7 @@ public class Startup {
     @JsonBackReference
     private Category category;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "details_id", referencedColumnName = "id")
     @ToString.Exclude
     private StartupDetails details;
@@ -53,7 +53,7 @@ public class Startup {
     @JsonBackReference
     private User owner;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(optional = false)
     @JoinColumn(name = "finance_id", referencedColumnName = "id", nullable = false)
     @ToString.Exclude
     @JsonBackReference

@@ -1,6 +1,6 @@
 package com.growandpull.api.mapper;
 
-import com.growandpull.api.dto.category.CategoryDto;
+import com.growandpull.api.dto.CategoryDto;
 import com.growandpull.api.model.entity.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

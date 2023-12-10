@@ -31,15 +31,17 @@ public class User implements UserDetails {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
+    @Column(name = "`about`")
+    private String about;
 
-    @Column(name = "`aboutUser`")
-    private String aboutUser;
-
-    @Column(name = "`birth`")
-    private LocalDate birth;
+    @Column(name = "`birthday`")
+    private LocalDate birthday;
 
     @Column(name = "`email`", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "`phone_number`", length = 10, unique = true)
+    private String phoneNumber;
 
     @Column(name = "`password`", nullable = false)
     private String password;
@@ -58,6 +60,23 @@ public class User implements UserDetails {
     @JoinColumn(name = "avatar_id", referencedColumnName = "id", nullable = true)
     @JsonManagedReference
     private Avatar avatar;
+
+    @Lob
+    @Column(name = "experience", length = 1000)
+    private String experience;
+
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    @JoinColumn(name = "city_id")
+    @ToString.Exclude
+    @JsonBackReference
+    private City city;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "education_id")
+    @ToString.Exclude
+    @JsonBackReference
+    private Education education;
 
     @OneToMany(
             mappedBy = "owner",
@@ -83,7 +102,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Token> tokens;
-
 
     private Boolean isExpired;
 

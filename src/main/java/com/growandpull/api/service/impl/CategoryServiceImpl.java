@@ -1,6 +1,6 @@
 package com.growandpull.api.service.impl;
 
-import com.growandpull.api.dto.category.CategoryDto;
+import com.growandpull.api.dto.CategoryDto;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.mapper.CategoryMapper;
 import com.growandpull.api.model.entity.Category;
