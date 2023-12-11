@@ -1,6 +1,6 @@
 package com.growandpull.api.mapper;
 
-import com.growandpull.api.dto.FinanceDto;
+import com.growandpull.api.dto.finance.FinanceDto;
 import com.growandpull.api.model.enums.Currency;
 import com.growandpull.api.model.entity.Finance;
 import org.junit.jupiter.api.Disabled;

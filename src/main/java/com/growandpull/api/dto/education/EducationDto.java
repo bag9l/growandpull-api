@@ -1,4 +1,4 @@
-package com.growandpull.api.dto;
+package com.growandpull.api.dto.education;
 
 import com.growandpull.api.model.enums.Degree;
 

@@ -2,11 +2,9 @@ package com.growandpull.api.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.growandpull.api.dto.EducationDto;
-import com.growandpull.api.dto.location.CityDto;
+import com.growandpull.api.dto.education.EducationDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 

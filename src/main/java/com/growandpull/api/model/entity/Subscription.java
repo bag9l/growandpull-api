@@ -1,6 +1,8 @@
 package com.growandpull.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.growandpull.api.converter.DateConverter;
+import com.growandpull.api.converter.PeriodConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +36,13 @@ public class Subscription {
 
     @Transient
     private Boolean isExpired;
+
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "owner_id")
+    @ToString.Exclude
+    @JsonBackReference
+    private User owner;
 
     public Subscription(String id, SubscriptionType type) {
         this.id = id;
