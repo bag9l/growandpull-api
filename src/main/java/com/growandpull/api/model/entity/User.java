@@ -95,8 +95,8 @@ public class User implements UserDetails {
     @JsonBackReference
     private Set<Startup> favoriteStartups;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @OneToMany(mappedBy = "owner")
+//    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Subscription> subscriptions;
 
     @OneToMany(mappedBy = "user")

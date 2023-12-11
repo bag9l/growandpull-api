@@ -9,8 +9,9 @@ import java.util.List;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, String> {
     @Query("""
-            SELECT s FROM Subscription s JOIN User u 
-            WHERE u.email =:email AND s.expiresAt <= current_date()
+            SELECT s FROM User u
+            JOIN u.subscriptions s
+            WHERE u.email =:email
             """)
     List<Subscription> findNotExpiredSubscriptionsByUserEmail(@Param("email") String email);
 }
