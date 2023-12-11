@@ -1,6 +1,6 @@
 package com.growandpull.api.dto.payment;
 
-import com.growandpull.api.model.Currency;
+import com.growandpull.api.model.enums.Currency;
 
 import java.math.BigDecimal;
 

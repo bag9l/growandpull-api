@@ -1,13 +1,10 @@
-package com.growandpull.api.model;
+package com.growandpull.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.growandpull.api.model.enums.Role;
 import com.growandpull.api.token.Token;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +15,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -77,6 +76,10 @@ public class User implements UserDetails {
     @JsonBackReference
     private Set<Startup> favoriteStartups;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private List<Subscription> subscriptions;
+
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Token> tokens;
@@ -118,7 +121,7 @@ public class User implements UserDetails {
         this.isExpired = false;
         this.isLocked = false;
         this.isCredentialsExpired = false;
-        this.isEnabled = true;
+        this.isEnabled = false;
     }
 
 

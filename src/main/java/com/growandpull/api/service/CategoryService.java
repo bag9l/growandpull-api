@@ -1,7 +1,7 @@
 package com.growandpull.api.service;
 
 import com.growandpull.api.dto.category.CategoryDto;
-import com.growandpull.api.model.Category;
+import com.growandpull.api.model.entity.Category;
 
 import java.util.List;
 

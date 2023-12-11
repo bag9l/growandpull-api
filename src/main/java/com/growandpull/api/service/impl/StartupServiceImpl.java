@@ -2,23 +2,31 @@ package com.growandpull.api.service.impl;
 
 import com.growandpull.api.dto.startup.*;
 import com.growandpull.api.exception.EntityNotExistsException;
+import com.growandpull.api.exception.PaymentRequiredException;
 import com.growandpull.api.exception.PermissionException;
+import com.growandpull.api.mapper.FileMapper;
 import com.growandpull.api.mapper.FinanceMapper;
-import com.growandpull.api.mapper.ImageMapper;
 import com.growandpull.api.mapper.StartupDetailsMapper;
 import com.growandpull.api.mapper.StartupMapper;
-import com.growandpull.api.model.*;
+import com.growandpull.api.model.entity.*;
+import com.growandpull.api.model.enums.AdStatus;
+import com.growandpull.api.model.enums.StartupStatus;
+import com.growandpull.api.model.enums.SubscriptionTypeIdentifier;
 import com.growandpull.api.repository.*;
 import com.growandpull.api.service.StartupService;
+import com.growandpull.api.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -35,8 +43,9 @@ public class StartupServiceImpl implements StartupService {
     private final StartupDetailsRepository startupDetailsRepository;
     private final StartupMapper startupMapper;
     private final FinanceMapper financeMapper;
+    private final FileMapper fileMapper;
+    private final SubscriptionService subscriptionService;
     private final StartupDetailsMapper startupDetailsMapper;
-    private final ImageMapper imageMapper;
 
 
     @Override
@@ -54,11 +63,23 @@ public class StartupServiceImpl implements StartupService {
     }
 
     @Override
+    public Page<StartupCard> findAllStartups(Integer pageNumber, Optional<UserDetails> authenticatedUser) {
+        boolean userHasSubscription = authenticatedUser.isPresent()
+                && (hasUserSubscription(authenticatedUser.get().getUsername(), SubscriptionTypeIdentifier.INVESTOR_PACK)
+                || hasUserSubscription(authenticatedUser.get().getUsername(), SubscriptionTypeIdentifier.TWO_IN_ONE_PACK));
+
+        if (!userHasSubscription && pageNumber > 0) {
+            throw new PaymentRequiredException("Need to buy a subscription to get access");
+        }
+        return findAllStartups(pageNumber);
+    }
+
+    @Transactional
+    @Override
     public StartupView createStartup(StartupCreationRequest newStartup, String ownerLogin) throws IOException {
         Startup startup = startupMapper.newToStartup(newStartup);
         User user = findUserByLogin(ownerLogin);
 
-        startupDetailsRepository.save(startup.getStartupDetails());
         financeRepository.save(startup.getFinance());
         imageRepository.save(startup.getImage());
 
@@ -66,8 +87,28 @@ public class StartupServiceImpl implements StartupService {
         startup.setAdStatus(AdStatus.ENABLED);
         startup.setCreatedAt(LocalDateTime.now());
         startup = startupRepository.save(startup);
-
         return startupMapper.startupToView(startup);
+    }
+
+    @Transactional
+    @Override
+    public StartupView createStartupCheckingSubscription(StartupCreationRequest newStartup, String userEmail) throws IOException{
+        boolean userHasSubscription = hasUserSubscription(userEmail, SubscriptionTypeIdentifier.STARTUP_PACK);
+
+        if(!userHasSubscription){
+            boolean haveUserBeenCreatedStartupLessThanThreeMonthsAgo = userRepository.haveUserBeenCreatedStartupAfterTime(
+                    userEmail, LocalDateTime.now().minusMonths(3));
+            if(haveUserBeenCreatedStartupLessThanThreeMonthsAgo){
+                throw new PaymentRequiredException(
+                        "User have been posted startup less than three months ago. Need a subscription to post it now.");
+            }
+        }
+        return createStartup(newStartup, userEmail);
+    }
+
+    private boolean hasUserSubscription(String email, SubscriptionTypeIdentifier subscription) {
+        return subscriptionService.getCurrentUserSubscriptions(email).stream()
+                .anyMatch(s -> s.equals(subscription));
     }
 
     @Override
@@ -78,6 +119,7 @@ public class StartupServiceImpl implements StartupService {
     }
 
     //    TODO: try loading
+    @Transactional
     @Override
     public StartupView updateStartup(String startupId, StartupUpdateRequest startupUpdateRequest, String userLogin) throws IOException {
         Startup startup = findStartupById(startupId);
@@ -103,7 +145,7 @@ public class StartupServiceImpl implements StartupService {
         Category category = categoryRepository.findById(startupUpdateRequest.getCategoryId()).orElseThrow(() ->
                 new EntityNotExistsException(String.format("Category with id:%s not found", startupUpdateRequest.getCategoryId())));
         Image image = (startupUpdateRequest.getImage() != null) ?
-                imageMapper.multiPartFileToImage(startupUpdateRequest.getImage()) : null;
+                fileMapper.multiPartFileToImage(startupUpdateRequest.getImage()) : null;
         Finance finance = financeMapper.dtoToFinance(startupUpdateRequest.getFinance());
         StartupDetails startupDetails = startupDetailsMapper.dtoToStartupDetails(startupUpdateRequest.getDetails());
 

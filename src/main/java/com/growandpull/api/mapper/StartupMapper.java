@@ -7,9 +7,9 @@ import com.growandpull.api.dto.startup.StartupDetailsDto;
 import com.growandpull.api.dto.startup.StartupView;
 import com.growandpull.api.dto.user.UserCard;
 import com.growandpull.api.exception.EntityNotExistsException;
-import com.growandpull.api.model.Category;
-import com.growandpull.api.model.Image;
-import com.growandpull.api.model.Startup;
+import com.growandpull.api.model.entity.Category;
+import com.growandpull.api.model.entity.Image;
+import com.growandpull.api.model.entity.Startup;
 import com.growandpull.api.repository.CategoryRepository;
 import com.growandpull.api.util.ImageUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +24,14 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
-        uses = {UserMapper.class, FinanceMapper.class, CategoryRepository.class, ImageMapper.class, StartupDetailsMapper.class})
+        uses = {UserMapper.class, FinanceMapper.class, CategoryRepository.class, FileMapper.class, StartupDetailsMapper.class})
 public abstract class StartupMapper {
 
     protected UserMapper userMapper;
     protected FinanceMapper financeMapper;
-    protected ImageMapper imageMapper;
-
-    protected StartupDetailsMapper startupDetailsMapper;
+    protected FileMapper fileMapper;
     protected CategoryRepository categoryRepository;
+    protected StartupDetailsMapper startupDetailsMapper;
 
 
     @Mapping(target = "finance", expression = "java(financeMapper.financeToDto(startup.getFinance()))")
@@ -72,7 +71,7 @@ public abstract class StartupMapper {
         Category category = categoryRepository.findById(newStartup.getCategoryId()).orElseThrow(() ->
                 new EntityNotExistsException(String.format("Category with id:%s not found", newStartup.getCategoryId())));
 
-        Image image = (newStartup.getImage() != null) ? imageMapper.multiPartFileToImage(newStartup.getImage()) : null;
+        Image image = (newStartup.getImage() != null) ? fileMapper.multiPartFileToImage(newStartup.getImage()) : null;
 
         startup.setTitle(newStartup.getTitle());
         startup.setDescription(newStartup.getDescription());
@@ -101,10 +100,9 @@ public abstract class StartupMapper {
     }
 
     @Autowired
-    public void setImageMapper(ImageMapper imageMapper) {
-        this.imageMapper = imageMapper;
+    public void setFileMapper(FileMapper fileMapper) {
+        this.fileMapper = fileMapper;
     }
-
     @Autowired
     public void setCategoryRepository(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;

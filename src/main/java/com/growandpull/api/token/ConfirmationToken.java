@@ -1,6 +1,5 @@
 package com.growandpull.api.token;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.growandpull.api.model.entity.User;
 import jakarta.persistence.*;
@@ -11,28 +10,28 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString()
-@Table(name = "`token`")
+@Table(name = "`confirmation_token`")
 @Entity
-public class Token {
+public class ConfirmationToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String token;
+    private String confirmationToken;
 
     private Boolean isRevoked;
 
     private Boolean isExpired;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     @JsonBackReference
     private User user;
 
-    public Token(String token, Boolean isRevoked, Boolean isExpired, User user) {
-        this.token = token;
+
+    public ConfirmationToken(String confirmationToken, Boolean isRevoked, Boolean isExpired, User user) {
+        this.confirmationToken = confirmationToken;
         this.isRevoked = isRevoked;
         this.isExpired = isExpired;
         this.user = user;

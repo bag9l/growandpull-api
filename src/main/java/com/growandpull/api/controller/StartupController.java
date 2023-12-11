@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -30,9 +31,10 @@ public class StartupController {
 
     @GetMapping()
     public ResponseEntity<Page<StartupCard>> getStartups(
-            @RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber) {
+            @RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+            @AuthenticationPrincipal UserDetails user) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                startupService.findAllStartups(pageNumber)
+                startupService.findAllStartups(pageNumber, Optional.ofNullable(user))
         );
     }
 
@@ -48,7 +50,7 @@ public class StartupController {
                                                      @AuthenticationPrincipal UserDetails user) throws IOException {
         startup.setImage(image);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                startupService.createStartup(startup, user.getUsername())
+                startupService.createStartupCheckingSubscription(startup, user.getUsername())
         );
     }
 

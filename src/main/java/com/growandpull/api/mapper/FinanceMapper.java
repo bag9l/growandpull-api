@@ -1,7 +1,7 @@
 package com.growandpull.api.mapper;
 
 import com.growandpull.api.dto.finance.FinanceDto;
-import com.growandpull.api.model.Finance;
+import com.growandpull.api.model.entity.Finance;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 

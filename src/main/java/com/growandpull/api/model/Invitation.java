@@ -1,5 +1,7 @@
 package com.growandpull.api.model;
 
+import com.growandpull.api.model.entity.Startup;
+import com.growandpull.api.model.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;

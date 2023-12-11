@@ -1,4 +1,4 @@
-package com.growandpull.api.model;
+package com.growandpull.api.model.enums;
 
 public enum TimeUnit {
     SECOND("sec"),

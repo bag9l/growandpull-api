@@ -1,12 +1,12 @@
 package com.growandpull.api.service.impl;
 
-import com.growandpull.api.exception.ConflictException;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
 import com.growandpull.api.model.Invitation;
 import com.growandpull.api.model.InvitationStatus;
-import com.growandpull.api.model.Startup;
-import com.growandpull.api.model.User;
+
+import com.growandpull.api.model.entity.Startup;
+import com.growandpull.api.model.entity.User;
 import com.growandpull.api.repository.InvitationRepository;
 import com.growandpull.api.repository.StartupRepository;
 import com.growandpull.api.service.InvitationService;
@@ -33,7 +33,8 @@ public class InvitationServiceImpl implements InvitationService {
         User recipient = userService.findUserByEmail(recipientEmail);
         Startup startup = startupRepository.findById(startupId).orElseThrow(() -> new EntityNotExistsException("User not found"));
         if (startup.getCollaborators().contains(recipient)) {
-            throw new ConflictException("This user is already collaborator");
+            throw new RuntimeException("This user is already collaborator");
+            //доробити есепшин
         }
         sendInvitation(sender, recipient, startup);
     }

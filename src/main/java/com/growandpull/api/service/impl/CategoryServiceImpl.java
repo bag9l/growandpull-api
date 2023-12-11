@@ -3,7 +3,7 @@ package com.growandpull.api.service.impl;
 import com.growandpull.api.dto.category.CategoryDto;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.mapper.CategoryMapper;
-import com.growandpull.api.model.Category;
+import com.growandpull.api.model.entity.Category;
 import com.growandpull.api.repository.CategoryRepository;
 import com.growandpull.api.service.CategoryService;
 import lombok.RequiredArgsConstructor;

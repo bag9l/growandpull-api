@@ -1,7 +1,7 @@
 package com.growandpull.api.service.impl;
 
-import com.growandpull.api.model.Avatar;
-import com.growandpull.api.model.User;
+import com.growandpull.api.model.entity.Avatar;
+import com.growandpull.api.model.entity.User;
 import com.growandpull.api.repository.AvatarRepository;
 import com.growandpull.api.service.AvatarService;
 import com.growandpull.api.service.UserService;

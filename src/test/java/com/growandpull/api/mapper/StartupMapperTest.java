@@ -6,7 +6,14 @@ import com.growandpull.api.dto.startup.StartupCreationRequest;
 import com.growandpull.api.dto.startup.StartupDetailsDto;
 import com.growandpull.api.dto.startup.StartupView;
 import com.growandpull.api.dto.user.UserCard;
-import com.growandpull.api.model.*;
+import com.growandpull.api.model.entity.Category;
+import com.growandpull.api.model.entity.Finance;
+import com.growandpull.api.model.entity.Startup;
+import com.growandpull.api.model.entity.User;
+import com.growandpull.api.model.enums.AdStatus;
+import com.growandpull.api.model.enums.Currency;
+import com.growandpull.api.model.enums.Role;
+import com.growandpull.api.model.enums.StartupStatus;
 import com.growandpull.api.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +40,7 @@ class StartupMapperTest {
     @Mock
     private CategoryRepository categoryRepository;
     @Mock
-    private ImageMapper imageMapper;
+    private FileMapper fileMapper;
     @Mock
     private StartupDetailsMapper startupDetailsMapper;
 
