@@ -1,6 +1,6 @@
 package com.growandpull.api.mapper;
 
-import com.growandpull.api.dto.EducationDto;
+import com.growandpull.api.dto.education.EducationDto;
 import com.growandpull.api.model.entity.Education;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
