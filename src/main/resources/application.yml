@@ -37,6 +37,7 @@ jwt:
 #  access_expiration: 3600000
   access_expiration: 2629743000
   confirm_expiration: 2629743000
+  invitation_expiration: 2629743000
   refresh_expiration: 86400000
 
 paypal:

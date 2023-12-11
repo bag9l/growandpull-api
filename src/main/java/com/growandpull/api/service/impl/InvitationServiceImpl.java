@@ -1,89 +1,78 @@
 package com.growandpull.api.service.impl;
 
 import com.growandpull.api.exception.EntityNotExistsException;
-import com.growandpull.api.exception.PermissionException;
-import com.growandpull.api.model.Invitation;
-import com.growandpull.api.model.InvitationStatus;
-
 import com.growandpull.api.model.entity.Startup;
 import com.growandpull.api.model.entity.User;
-import com.growandpull.api.repository.InvitationRepository;
 import com.growandpull.api.repository.StartupRepository;
+import com.growandpull.api.repository.UserRepository;
+import com.growandpull.api.service.EmailService;
 import com.growandpull.api.service.InvitationService;
-import com.growandpull.api.service.StartupService;
+import com.growandpull.api.service.JwtService;
 import com.growandpull.api.service.UserService;
+import com.growandpull.api.token.InvitationToken;
+import com.growandpull.api.token.InvitationTokenRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class InvitationServiceImpl implements InvitationService {
-    private final InvitationRepository invitationRepository;
-    private final JavaMailSender javaMailSender;
+    @Value(value = "${jwt.invitation_expiration}")
+    private long invitationTokenExpiration;
+
     private final StartupRepository startupRepository;
+    private final UserRepository userRepository;
+    private final InvitationTokenRepository invitationTokenRepository;
     private final UserService userService;
-    private final StartupService startupService;
+    private final JwtService jwtService;
+    private final EmailService emailService;
 
     @Override
-    public void sendInvitation(String senderEmail, String recipientEmail, String startupId) {
-        User sender = userService.findUserByEmail(senderEmail);
-        User recipient = userService.findUserByEmail(recipientEmail);
-        Startup startup = startupRepository.findById(startupId).orElseThrow(() -> new EntityNotExistsException("User not found"));
-        if (startup.getCollaborators().contains(recipient)) {
-            throw new RuntimeException("This user is already collaborator");
-            //доробити есепшин
-        }
-        sendInvitation(sender, recipient, startup);
+
+    public void sendInvitation(String sender, String recipient, String startupId) {
+        User userRecipient = userService.findUserByEmail(recipient);
+        User userSender = userService.findUserByEmail(sender);
+        Startup startup = startupRepository.findById(startupId).orElseThrow(() -> new EntityNotExistsException("Startup not found"));
+        String invitationToken = jwtService.generateToken(userRecipient, invitationTokenExpiration);
+        saveUserInvitationToken(userRecipient, startup, invitationToken);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(userRecipient.getUsername());
+        mailMessage.setSubject("Invitation to join startup");
+        mailMessage.setText("Dear " + userRecipient.getFirstName() + ",\n\n"
+                + userSender.getFirstName() + " " + userSender.getLastName()
+                + " invites you to join the startup: " +
+                "https://growandpull.pp.ua/api/v1/startups/" + startup.getId()
+                + ". \n\nClick the link below to accept the invitation:\n"
+                + "http://localhost:8000/accept-invite/" + invitationToken
+                + "Best regards,\n" + "The Grow&Pull Team" + "To confirm your account, please click here : ");
+        emailService.sendEmail(mailMessage);
+        System.out.println("invitation token " + invitationToken);
+
     }
 
     @Transactional
     @Override
-    public void acceptInvitation(String invitationId, String currentUserEmail) {
-        Invitation invitation = invitationRepository.findById(invitationId)
+    public void acceptInvitation(String invitationToken) {
+        InvitationToken token = invitationTokenRepository.findByToken(invitationToken)
                 .orElseThrow(() -> new EntityNotExistsException("Invitation not found"));
-        if (!invitation.getRecipient().getEmail().equals(currentUserEmail)) {
-            throw new PermissionException("You don't have permission to be collaborator");
-        }
-        invitation.setStatus(InvitationStatus.ACCEPTED);
-        invitationRepository.save(invitation);
-        Startup startup = invitation.getStartup();
-        User recipient = invitation.getRecipient();
+        User user = userRepository.findUserByEmail(token.getUser().getEmail())
+                .orElseThrow(() -> new EntityNotExistsException("User not found"));
+        invitationTokenRepository.save(token);
+        Startup startup = token.getStartup();
+        User recipient = token.getUser();
         startup.getCollaborators().add(recipient);
-
         startupRepository.save(startup);
     }
 
-
-    private void sendEmail(String to, String subject, String body) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(body);
-        message.setFrom("grow.and.pull@gmail.com");
-        javaMailSender.send(message);
+    private void saveUserInvitationToken(User user, Startup startup, String jwtToken) {
+        InvitationToken invitationToken = new InvitationToken(jwtToken, false, false, user, startup);
+        invitationTokenRepository.save(invitationToken);
     }
 
-    private void sendInvitation(User sender, User recipient, Startup startup) {
-        Invitation invitation = new Invitation();
-        invitation.setSender(sender);
-        invitation.setRecipient(recipient);
-        invitation.setStartup(startup);
-        invitation.setStatus(InvitationStatus.PENDING);
-        invitationRepository.save(invitation);
 
-        String invitationLink = "https://growandpull.pp.ua/api/v1/startups/accept/" + invitation.getId();
-        String subject = "Invitation to join startup " + startup.getTitle();
-        String body = "Dear " + recipient.getFirstName() + ",\n\n"
-                + sender.getFirstName() + " " + sender.getLastName()
-                + " invites you to join the startup: " +
-                "https://growandpull.pp.ua/api/v1/startups/" + startup.getId()
-                + ". \n\nClick the link below to accept the invitation:\n"
-                + invitationLink + "\n\n" + "Best regards,\n" + "The Grow&Pull Team";
-
-        sendEmail(recipient.getEmail(), subject, body);
-    }
 }
 

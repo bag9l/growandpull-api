@@ -1,8 +1,7 @@
 package com.growandpull.api.service;
 
 public interface InvitationService {
-    void sendInvitation(String senderId, String recipientId, String startupId);
-
-    void acceptInvitation(String invitationId, String currentUserEmail);
+    void sendInvitation(String sender, String recipient, String startupId);
+    void acceptInvitation(String invitationToken);
 
 }

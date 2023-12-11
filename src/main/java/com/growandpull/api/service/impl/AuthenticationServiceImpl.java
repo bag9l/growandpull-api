@@ -4,16 +4,13 @@ import com.growandpull.api.dto.auth.*;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.InvalidTokenException;
 import com.growandpull.api.mapper.UserMapper;
-import com.growandpull.api.model.enums.Role;
 import com.growandpull.api.model.entity.User;
+import com.growandpull.api.model.enums.Role;
 import com.growandpull.api.repository.UserRepository;
 import com.growandpull.api.service.AuthenticationService;
 import com.growandpull.api.service.JwtService;
 import com.growandpull.api.service.UserService;
-import com.growandpull.api.token.ConfirmationToken;
-import com.growandpull.api.token.ConfirmationTokenRepository;
-import com.growandpull.api.token.Token;
-import com.growandpull.api.token.TokenRepository;
+import com.growandpull.api.token.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,11 +30,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Value(value = "${jwt.confirm_expiration}")
     private long confirmTokenExpiration;
+
     @Value(value = "${jwt.refresh_expiration}")
     private int refreshExpiration;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
-
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final UserMapper userMapper;
 
@@ -104,7 +101,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse confirmEmail(String confirmationToken) {
-        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
+        ConfirmationToken token = confirmationTokenRepository.findByToken(confirmationToken);
         User user = userRepository.findUserByEmail(token.getUser().getEmail())
                 .orElseThrow(() -> new EntityNotExistsException("User not found"));
         user.setIsEnabled(true);

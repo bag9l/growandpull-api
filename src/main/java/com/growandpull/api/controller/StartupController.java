@@ -74,10 +74,9 @@ public class StartupController {
         return ResponseEntity.ok("Invitation sent successfully!");
     }
 
-    @PostMapping("/accept/{invitationId}")
-    public ResponseEntity<String> acceptInvitation(@AuthenticationPrincipal UserDetails userDetails,
-                                                   @PathVariable("invitationId") String invitationId) {
-        invitationService.acceptInvitation(invitationId, userDetails.getUsername());
+    @PostMapping("/accept/{token}")
+    public ResponseEntity<String> acceptInvitation(@PathVariable("token") String invitationToken) {
+        invitationService.acceptInvitation(invitationToken);
         return ResponseEntity.ok("Invitation accepted successfully!");
     }
 }
