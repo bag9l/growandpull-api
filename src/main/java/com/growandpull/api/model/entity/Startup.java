@@ -37,11 +37,12 @@ public class Startup {
     @Column(name = "`status`", nullable = false)
     private StartupStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     @ToString.Exclude
     @JsonBackReference
     private Category category;
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "owner_id", referencedColumnName = "id", nullable = false)
@@ -49,7 +50,7 @@ public class Startup {
     @JsonBackReference
     private User owner;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "finance_id", referencedColumnName = "id", nullable = false)
     @ToString.Exclude
     @JsonBackReference

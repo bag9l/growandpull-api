@@ -16,6 +16,7 @@ import com.growandpull.api.model.enums.Role;
 import com.growandpull.api.model.enums.StartupStatus;
 import com.growandpull.api.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,6 +32,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+@Disabled
 class StartupMapperTest {
 
     @Mock

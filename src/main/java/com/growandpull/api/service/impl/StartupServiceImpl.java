@@ -44,8 +44,8 @@ public class StartupServiceImpl implements StartupService {
     private final StartupMapper startupMapper;
     private final FinanceMapper financeMapper;
     private final FileMapper fileMapper;
-    private final SubscriptionService subscriptionService;
     private final StartupDetailsMapper startupDetailsMapper;
+    private final SubscriptionService subscriptionService;
 
 
     @Override
@@ -80,9 +80,6 @@ public class StartupServiceImpl implements StartupService {
         Startup startup = startupMapper.newToStartup(newStartup);
         User user = findUserByLogin(ownerLogin);
 
-        financeRepository.save(startup.getFinance());
-        imageRepository.save(startup.getImage());
-
         startup.setOwner(user);
         startup.setAdStatus(AdStatus.ENABLED);
         startup.setCreatedAt(LocalDateTime.now());
@@ -92,13 +89,13 @@ public class StartupServiceImpl implements StartupService {
 
     @Transactional
     @Override
-    public StartupView createStartupCheckingSubscription(StartupCreationRequest newStartup, String userEmail) throws IOException{
+    public StartupView createStartupCheckingSubscription(StartupCreationRequest newStartup, String userEmail) throws IOException {
         boolean userHasSubscription = hasUserSubscription(userEmail, SubscriptionTypeIdentifier.STARTUP_PACK);
 
-        if(!userHasSubscription){
+        if (!userHasSubscription) {
             boolean haveUserBeenCreatedStartupLessThanThreeMonthsAgo = userRepository.haveUserBeenCreatedStartupAfterTime(
                     userEmail, LocalDateTime.now().minusMonths(3));
-            if(haveUserBeenCreatedStartupLessThanThreeMonthsAgo){
+            if (haveUserBeenCreatedStartupLessThanThreeMonthsAgo) {
                 throw new PaymentRequiredException(
                         "User have been posted startup less than three months ago. Need a subscription to post it now.");
             }
