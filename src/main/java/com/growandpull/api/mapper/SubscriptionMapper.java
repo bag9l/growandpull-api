@@ -13,11 +13,12 @@ public abstract class SubscriptionMapper {
 
     protected FinanceMapper financeMapper;
 
-    @Mapping(target = "type", source = "id")
+    @Mapping(target = "type", source = "appIdentifier")
     @Mapping(target = "price",
     expression = "java(financeMapper.financeToDto(subscription.getPrice()))")
     public abstract SubscriptionDto subscriptionTypeToDto(SubscriptionType subscription);
 
+    @Mapping(target = "id", source = "appIdentifier")
     @Mapping(target = "price",
             expression = "java(financeMapper.financeToDto(subscription.getPrice()))")
     public abstract SubscriptionCard subscriptionTypeTOCard(SubscriptionType subscription);

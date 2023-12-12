@@ -27,8 +27,9 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.OK).body(subscriptionService.findAllSubscriptions());
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<SubscriptionDto> getSubscriptionById(@PathVariable("id")SubscriptionTypeIdentifier id){
-        return ResponseEntity.status(HttpStatus.OK).body(subscriptionService.findSubscriptionById(id));
+    @GetMapping("{type}")
+    public ResponseEntity<SubscriptionDto> getSubscriptionByType(@PathVariable("type")SubscriptionTypeIdentifier type){
+        System.out.println(type);
+        return ResponseEntity.status(HttpStatus.OK).body(subscriptionService.findSubscriptionByType(type));
     }
 }

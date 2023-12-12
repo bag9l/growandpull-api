@@ -2,8 +2,8 @@ package com.growandpull.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.growandpull.api.model.enums.AdStatus;
 import com.growandpull.api.model.ExistenceTime;
+import com.growandpull.api.model.enums.AdStatus;
 import com.growandpull.api.model.enums.StartupStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -82,8 +82,7 @@ public class Startup {
                    Category category,
                    Finance finance,
                    AdStatus adStatus,
-                   Image image,
-                   LocalDateTime createdAt) {
+                   Image image) {
         this.id = id;
         this.title = title;
         this.owner = owner;
@@ -93,7 +92,7 @@ public class Startup {
         this.finance = finance;
         this.adStatus = adStatus;
         this.image = image;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDateTime.now();
     }
 
     public Startup(String title,
@@ -103,8 +102,7 @@ public class Startup {
                    Category category,
                    Finance finance,
                    AdStatus adStatus,
-                   Image image,
-                   LocalDateTime createdAt) {
+                   Image image) {
         this.title = title;
         this.owner = owner;
         this.description = description;
@@ -113,7 +111,20 @@ public class Startup {
         this.finance = finance;
         this.adStatus = adStatus;
         this.image = image;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public Startup(String title, String description, StartupStatus status, Category category, StartupDetails details, User owner, Finance finance, AdStatus adStatus, Image image) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.category = category;
+        this.details = details;
+        this.owner = owner;
+        this.finance = finance;
+        this.adStatus = adStatus;
+        this.image = image;
+        this.createdAt = LocalDateTime.now();
     }
 
     public ExistenceTime getExistenceTime() {

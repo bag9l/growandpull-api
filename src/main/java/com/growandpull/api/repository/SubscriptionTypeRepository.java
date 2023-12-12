@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface SubscriptionTypeRepository extends JpaRepository<SubscriptionType, SubscriptionTypeIdentifier> {
 
-    Optional<SubscriptionType> findSubscriptionTypeById(SubscriptionTypeIdentifier id);
+    Optional<SubscriptionType> findSubscriptionTypeByAppIdentifier(SubscriptionTypeIdentifier id);
 }

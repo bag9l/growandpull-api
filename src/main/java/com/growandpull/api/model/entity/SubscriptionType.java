@@ -1,13 +1,14 @@
 package com.growandpull.api.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.growandpull.api.converter.PeriodConverter;
 import com.growandpull.api.model.enums.SubscriptionTypeIdentifier;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.math.BigDecimal;
 import java.time.Period;
 
 @Getter
@@ -19,12 +20,18 @@ import java.time.Period;
 public class SubscriptionType {
 
     @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    private String id;
+
     @Enumerated(EnumType.STRING)
-    private SubscriptionTypeIdentifier id;
+    private SubscriptionTypeIdentifier appIdentifier;
 
     @Column(name = "`name`", nullable = false)
     private String name;
 
+    @Lob
+    @Column(name = "description", length = 5000)
     private String description;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

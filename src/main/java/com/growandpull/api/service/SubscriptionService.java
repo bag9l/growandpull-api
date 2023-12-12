@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface SubscriptionService {
-    SubscriptionDto findSubscriptionById(SubscriptionTypeIdentifier type);
+    SubscriptionDto findSubscriptionByType(SubscriptionTypeIdentifier type);
 
     List<SubscriptionCard> findAllSubscriptions();
 

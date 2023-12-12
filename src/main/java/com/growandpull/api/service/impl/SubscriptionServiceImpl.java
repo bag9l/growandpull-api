@@ -28,9 +28,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 
     @Override
-    public SubscriptionDto findSubscriptionById(SubscriptionTypeIdentifier id) {
-        SubscriptionType subscription = subscriptionTypeRepository.findSubscriptionTypeById(id).orElseThrow(() ->
-                new EntityNotExistsException("Subscription:" + id + " not found"));
+    public SubscriptionDto findSubscriptionByType(SubscriptionTypeIdentifier type) {
+        SubscriptionType subscription = subscriptionTypeRepository.findSubscriptionTypeByAppIdentifier(type).orElseThrow(() ->
+                new EntityNotExistsException("Subscription:" + type + " not found"));
         return subscriptionMapper.subscriptionTypeToDto(subscription);
     }
 
@@ -50,7 +50,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public List<SubscriptionTypeIdentifier> getCurrentUserSubscriptions(String email) {
         return findUnexpiredSubscriptionsForUserByEmail(email).stream()
-                .map((s) -> s.getType().getId())
+                .map((s) -> s.getType().getAppIdentifier())
                 .toList();
     }
 }
