@@ -19,5 +19,7 @@ public interface UserService {
     Profile getProfile(String userId, String currentUserEmail);
 
     User findUserByEmail(String email);
+
+    String getUserIdByEmail(String email);
 }
 
