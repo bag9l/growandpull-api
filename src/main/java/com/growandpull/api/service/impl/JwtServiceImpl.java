@@ -2,11 +2,13 @@ package com.growandpull.api.service.impl;
 
 import com.growandpull.api.exception.InvalidTokenException;
 import com.growandpull.api.service.JwtService;
+import com.growandpull.api.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +19,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class JwtServiceImpl implements JwtService {
     @Value(value = "${jwt.secret}")
@@ -24,6 +27,8 @@ public class JwtServiceImpl implements JwtService {
 
     @Value(value = "${jwt.access_expiration}")
     private long defaultTokenExpiration;
+
+    private final UserService userService;
 
     @Override
     public Optional<String> extractUsername(String token) {
@@ -42,7 +47,11 @@ public class JwtServiceImpl implements JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
+        String id = userService.getUserIdByEmail(userDetails.getUsername());
+
         claims.put("roles", roles);
+        claims.put("id", id);
+
         return generateToken(claims, userDetails, period);
     }
 
