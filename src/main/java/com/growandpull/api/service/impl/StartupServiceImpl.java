@@ -93,8 +93,9 @@ public class StartupServiceImpl implements StartupService {
         boolean userHasSubscription = hasUserSubscription(userEmail, SubscriptionTypeIdentifier.STARTUP_PACK);
 
         if (!userHasSubscription) {
-            boolean haveUserBeenCreatedStartupLessThanThreeMonthsAgo = userRepository.haveUserBeenCreatedStartupAfterTime(
-                    userEmail, LocalDateTime.now().minusMonths(3));
+            boolean haveUserBeenCreatedStartupLessThanThreeMonthsAgo =
+                    startupRepository.findAllByOwnerEmailAndCreatedAtAfter(
+                            userEmail, LocalDateTime.now().minusMonths(3)).size() > 0;
             if (haveUserBeenCreatedStartupLessThanThreeMonthsAgo) {
                 throw new PaymentRequiredException(
                         "User have been posted startup less than three months ago. Need a subscription to post it now.");
