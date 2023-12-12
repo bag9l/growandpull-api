@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public List<Subscription> findUnexpiredSubscriptionsForUserByEmail(String email) {
-        return subscriptionRepository.findNotExpiredSubscriptionsByUserEmail(email);
+        return subscriptionRepository.findAllByOwnerEmailAndExpiresAtAfter(email, LocalDate.now());
     }
 
     @Transactional

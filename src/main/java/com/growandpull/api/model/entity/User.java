@@ -15,7 +15,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -29,15 +31,17 @@ public class User implements UserDetails {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
+    @Column(name = "`about`")
+    private String about;
 
-    @Column(name = "`aboutUser`")
-    private String aboutUser;
-
-    @Column(name = "`birth`")
-    private LocalDate birth;
+    @Column(name = "`birthday`")
+    private LocalDate birthday;
 
     @Column(name = "`email`", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "`phone_number`", length = 10, unique = true)
+    private String phoneNumber;
 
     @Column(name = "`password`", nullable = false)
     private String password;
@@ -57,6 +61,23 @@ public class User implements UserDetails {
     @JsonManagedReference
     private Avatar avatar;
 
+    @Lob
+    @Column(name = "experience", length = 1000)
+    private String experience;
+
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    @JoinColumn(name = "city_id")
+    @ToString.Exclude
+    @JsonBackReference
+    private City city;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "education_id")
+    @ToString.Exclude
+    @JsonBackReference
+    private Education education;
+
     @OneToMany(
             mappedBy = "owner",
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
@@ -74,14 +95,13 @@ public class User implements UserDetails {
     @JsonBackReference
     private Set<Startup> favoriteStartups;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @OneToMany(mappedBy = "owner")
+//    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Subscription> subscriptions;
 
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Token> tokens;
-
 
     private Boolean isExpired;
 
@@ -119,7 +139,7 @@ public class User implements UserDetails {
         this.isExpired = false;
         this.isLocked = false;
         this.isCredentialsExpired = false;
-        this.isEnabled = true;
+        this.isEnabled = false;
     }
 
 

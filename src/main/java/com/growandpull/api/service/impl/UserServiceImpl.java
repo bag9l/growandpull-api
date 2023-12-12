@@ -2,18 +2,22 @@ package com.growandpull.api.service.impl;
 
 import com.growandpull.api.dto.auth.AuthenticationRequest;
 import com.growandpull.api.dto.auth.AuthenticationResponse;
-import com.growandpull.api.dto.profile.Profile;
-import com.growandpull.api.dto.profile.ProfileView;
-import com.growandpull.api.dto.user.PasswordUpdateRequest;
-import com.growandpull.api.dto.user.UserUpdateRequest;
+import com.growandpull.api.dto.location.CityDto;
+import com.growandpull.api.dto.user.*;
 import com.growandpull.api.exception.EntityNotExistsException;
 import com.growandpull.api.exception.PermissionException;
+import com.growandpull.api.mapper.CityMapper;
+import com.growandpull.api.mapper.EducationMapper;
 import com.growandpull.api.mapper.FileMapper;
 import com.growandpull.api.mapper.UserMapper;
 import com.growandpull.api.model.entity.Avatar;
+import com.growandpull.api.model.entity.City;
+import com.growandpull.api.model.entity.Education;
 import com.growandpull.api.model.entity.User;
-import com.growandpull.api.model.enums.SubscriptionTypeIdentifier;
+import com.growandpull.api.model.enums.Degree;
 import com.growandpull.api.repository.AvatarRepository;
+import com.growandpull.api.repository.CityRepository;
+import com.growandpull.api.repository.EducationRepository;
 import com.growandpull.api.repository.UserRepository;
 import com.growandpull.api.service.AuthenticationService;
 import com.growandpull.api.service.SubscriptionService;
@@ -26,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,6 +43,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final AvatarRepository avatarRepository;
+    private final CityRepository cityRepository;
+    private final EducationRepository educationRepository;
 
     @Lazy
     private final AuthenticationService authenticationService;
@@ -46,12 +53,23 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final FileMapper fileMapper;
+    private final EducationMapper educationMapper;
+    private final CityMapper cityMapper;
 
 
     @Override
     public User findUserById(String id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new EntityNotExistsException(String.format(USER_WITH_ID_NOT_EXISTS, id)));
+    }
+
+    @Override
+    public UserUpdateData getUserUpdateData() {
+        List<Degree> degrees = Arrays.asList(Degree.values());
+        List<CityDto> cities = cityRepository.findAll().stream()
+                .map(cityMapper::cityToDto)
+                .toList();
+        return new UserUpdateData(degrees, cities);
     }
 
 
@@ -79,7 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileView updateUser(String userId, UserUpdateRequest userUpdateRequest, String email) throws IOException {
+    public PrivateProfile updateUser(String userId, UserUpdateRequest userUpdateRequest, String email) throws IOException {
         User user = findUserByEmail(email);
         if (!user.getId().equals(userId)) {
             throw new PermissionException("Only the owner can edit the profile");
@@ -90,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
         user = userRepository.save(user);
 
-        return userMapper.userToProfileView(user);
+        return userMapper.userToPrivateProfile(user);
     }
 
     @Override
@@ -104,19 +122,31 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void copyUpdateFieldsToUser(UserUpdateRequest userUpdateRequest, User user) throws IOException {
-        Avatar avatar = (userUpdateRequest.getAvatar() != null) ?
-                fileMapper.multiPartFileToAvatar(userUpdateRequest.getAvatar()) : null;
+    private void copyUpdateFieldsToUser(UserUpdateRequest updateRequest, User user) throws IOException {
+        Avatar avatar = (updateRequest.getAvatar() != null) ?
+                fileMapper.multiPartFileToAvatar(updateRequest.getAvatar()) : null;
+        City city = cityRepository.findById(updateRequest.getCityId()).orElseThrow(() ->
+                new EntityNotExistsException("City with id:" + updateRequest.getCityId() + " not found"));
+        Education education = new Education();
+
+        if (user.getEducation() != null) {
+            education = educationRepository.findById(user.getEducation().getId()).get();
+        }
+        educationMapper.dtoToEducation(updateRequest.getEducation(), education);
 
         if (avatar != null) {
             avatar = avatarRepository.save(avatar);
         }
 
-        user.setEmail(userUpdateRequest.getEmail());
-        user.setFirstName(userUpdateRequest.getFirstName());
-        user.setLastName(userUpdateRequest.getLastName());
-        user.setBirth(userUpdateRequest.getBirth());
-        user.setAboutUser(userUpdateRequest.getAboutUser());
+        user.setEmail(updateRequest.getEmail());
+        user.setFirstName(updateRequest.getFirstName());
+        user.setLastName(updateRequest.getLastName());
+        user.setBirthday(updateRequest.getBirthday());
+        user.setAbout(updateRequest.getAbout());
         user.setAvatar(avatar);
+        user.setPhoneNumber(updateRequest.getPhoneNumber());
+        user.setCity(city);
+        user.setEducation(education);
+        user.setExperience(updateRequest.getExperience());
     }
 }
