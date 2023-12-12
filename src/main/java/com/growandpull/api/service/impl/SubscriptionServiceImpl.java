@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -20,16 +19,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 
     @Override
-    public List<Subscription> findUnexpiredSubscriptionsForUserByEmail(String email){
-        List<Subscription> subscriptions = subscriptionRepository.findNotExpiredSubscriptionsByUserEmail(email);
-        return subscriptions.stream()
-                .filter((s)-> !s.getIsExpired())
-                .collect(Collectors.toList());
+    public List<Subscription> findUnexpiredSubscriptionsForUserByEmail(String email) {
+        return subscriptionRepository.findAllByOwnerEmailAndExpiresAtAfter(email, LocalDate.now());
     }
 
     @Transactional
     @Override
-    public List<SubscriptionTypeIdentifier> getCurrentUserSubscriptions(String email){
+    public List<SubscriptionTypeIdentifier> getCurrentUserSubscriptions(String email) {
         return findUnexpiredSubscriptionsForUserByEmail(email).stream()
                 .map((s) -> s.getType().getAppIdentifier())
                 .toList();
