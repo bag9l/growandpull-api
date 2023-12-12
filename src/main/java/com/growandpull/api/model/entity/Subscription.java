@@ -1,8 +1,6 @@
 package com.growandpull.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.growandpull.api.converter.DateConverter;
-import com.growandpull.api.converter.PeriodConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
