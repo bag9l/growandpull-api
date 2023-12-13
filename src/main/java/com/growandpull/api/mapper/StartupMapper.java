@@ -18,6 +18,10 @@ import org.mapstruct.MappingConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
@@ -42,6 +46,11 @@ public abstract class StartupMapper {
                 ImageUtil.decompressImage(startup.getImage().getImageData())
                 : null;
         FinanceDto finance = financeMapper.financeToDto(startup.getFinance());
+        Set<UserCard> collaborators = Optional.ofNullable(startup.getCollaborators())
+                .orElse(Collections.emptySet())
+                .stream()
+                .map(userMapper::userToCard)
+                .collect(Collectors.toSet());
 
         return new StartupView(
                 startup.getTitle(),
@@ -52,7 +61,8 @@ public abstract class StartupMapper {
                 startup.getCategory().getName(),
                 finance,
                 startupDetailsMapper.detailsToDto(startup.getDetails()),
-                startup.getCreatedAt());
+                startup.getCreatedAt(),
+                collaborators);
     }
 
     public Startup newToStartup(StartupCreationRequest newStartup) throws IOException {

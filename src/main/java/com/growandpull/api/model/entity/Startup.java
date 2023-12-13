@@ -57,11 +57,11 @@ public class Startup {
     private Finance finance;
 
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "startup_details_id", referencedColumnName = "id", nullable = false)
     @ToString.Exclude
     @JsonBackReference
-    private StartupDetails startupDetails;
+    private StartupDetails details;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "`ad_status`", nullable = false)
