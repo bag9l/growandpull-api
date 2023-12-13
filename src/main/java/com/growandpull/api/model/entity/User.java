@@ -31,7 +31,8 @@ public class User implements UserDetails {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @Column(name = "`about`")
+    @Lob
+    @Column(name = "`about`",length = 5000)
     private String about;
 
     @Column(name = "`birthday`")

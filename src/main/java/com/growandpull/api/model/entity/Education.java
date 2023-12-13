@@ -27,7 +27,7 @@ public class Education {
     @Column(name = "specialty")
     private String specialty;
 
-    @Column(name = "university", nullable = false)
+    @Column(name = "degree", nullable = false)
     @Enumerated(EnumType.STRING)
     private Degree degree;
 
