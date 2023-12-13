@@ -122,6 +122,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public String getUserIdByEmail(String email){
+        return findUserByEmail(email).getId();
+    }
+
     private void copyUpdateFieldsToUser(UserUpdateRequest updateRequest, User user) throws IOException {
         Avatar avatar = (updateRequest.getAvatar() != null) ?
                 fileMapper.multiPartFileToAvatar(updateRequest.getAvatar()) : null;

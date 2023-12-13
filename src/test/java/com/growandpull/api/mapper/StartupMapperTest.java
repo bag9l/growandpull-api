@@ -61,16 +61,16 @@ class StartupMapperTest {
         Category category = new Category("category");
 
         Startup startup = new Startup(
-                "id",
-                "title",
-                null,
-                "description",
-                StartupStatus.IDEA,
-                category,
-                null,
-                AdStatus.ENABLED,
-                null,
-                LocalDateTime.now()
+//                "id",
+//                "title",
+//                null,
+//                "description",
+//                StartupStatus.IDEA,
+//                category,
+//                null,
+//                AdStatus.ENABLED,
+//                null,
+//                LocalDateTime.now()
         );
 
         // Act
@@ -100,16 +100,16 @@ class StartupMapperTest {
         Finance finance = new Finance(BigDecimal.TEN, Currency.EUR);
 
         Startup startup = new Startup(
-                "id",
-                "title",
-                user,
-                "description",
-                StartupStatus.IDEA,
-                category,
-                finance,
-                AdStatus.ENABLED,
-                null,
-                LocalDateTime.now()
+//                "id",
+//                "title",
+//                user,
+//                "description",
+//                StartupStatus.IDEA,
+//                category,
+//                finance,
+//                AdStatus.ENABLED,
+//                null,
+//                LocalDateTime.now()
         );
         UserCard userCard = userMapper.userToCard(user);
         FinanceDto financeDto = financeMapper.financeToDto(finance);
@@ -139,7 +139,7 @@ class StartupMapperTest {
                 StartupStatus.IDEA,
                 categoryId,
                 financeDto,
-                new StartupDetailsDto("id",
+                new StartupDetailsDto(
                         "blabla",
                         "blabla",
                         "blabla",

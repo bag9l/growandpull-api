@@ -83,7 +83,7 @@ class StartupServiceImplTest {
                 StartupStatus.IDEA,
                 "category",
                 null,
-                new StartupDetailsDto("id",
+                new StartupDetailsDto(
                         "blabla",
                         "blabla",
                         "blabla",
@@ -125,16 +125,16 @@ class StartupServiceImplTest {
     void shouldReturnPageOfStartups_WhenFindAllStartups() {
         // Arrange
         Startup startup = new Startup(
-                "id",
-                "title",
-                null,
-                "description",
-                StartupStatus.IDEA,
-                new Category("category"),
-                null,
-                AdStatus.ENABLED,
-                null,
-                LocalDateTime.now()
+//                "id",
+//                "title",
+//                null,
+//                "description",
+//                StartupStatus.IDEA,
+//                new Category("category"),
+//                null,
+//                AdStatus.ENABLED,
+//                null,
+//                LocalDateTime.now()
         );
 
         List<Startup> startups = new ArrayList<>();
@@ -169,7 +169,7 @@ class StartupServiceImplTest {
                 StartupStatus.IDEA,
                 categoryId,
                 financeDto,
-                new StartupDetailsDto("id",
+                new StartupDetailsDto(
                         "blabla",
                         "blabla",
                         "blabla",
@@ -204,7 +204,7 @@ class StartupServiceImplTest {
                 StartupStatus.IDEA,
                 categoryId,
                 financeDto,
-                new StartupDetailsDto("id",
+                new StartupDetailsDto(
                         "blabla",
                         "blabla",
                         "blabla",
