@@ -1,5 +1,9 @@
 package com.growandpull.api.model.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -17,6 +21,9 @@ public class StartupDetails {
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
+
+    @Column(name = "`country`")
+    private String country;
 
     @Lob
     @Column(name = "`conceptualization_and_problem_identification`", length = 1000, nullable = false)
@@ -58,16 +65,4 @@ public class StartupDetails {
     @Column(name = "`achievements_and_recognition`", length = 1000, nullable = false)
     private String achievementsAndRecognition;
 
-    public StartupDetails(String conceptualizationAndProblemIdentification, String solutionDevelopment, String competitiveAnalysis, String financialStrategy, String businessModelAndInvestmentPurpose, String investorProposition, String teamAndLeadership, String mentorshipAndAdvisorySupport, String investmentPartnership, String achievementsAndRecognition) {
-        this.conceptualizationAndProblemIdentification = conceptualizationAndProblemIdentification;
-        this.solutionDevelopment = solutionDevelopment;
-        this.competitiveAnalysis = competitiveAnalysis;
-        this.financialStrategy = financialStrategy;
-        this.businessModelAndInvestmentPurpose = businessModelAndInvestmentPurpose;
-        this.investorProposition = investorProposition;
-        this.teamAndLeadership = teamAndLeadership;
-        this.mentorshipAndAdvisorySupport = mentorshipAndAdvisorySupport;
-        this.investmentPartnership = investmentPartnership;
-        this.achievementsAndRecognition = achievementsAndRecognition;
-    }
 }

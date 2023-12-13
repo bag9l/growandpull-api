@@ -1,6 +1,7 @@
 package com.growandpull.api.service;
 
 import com.growandpull.api.dto.startup.*;
+import com.growandpull.api.model.entity.Startup;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,4 +19,6 @@ public interface StartupService {
     StartupCreationData getCreationData();
 
     StartupView updateStartup(String startupId, StartupUpdateRequest startupUpdateRequest, String userLogin) throws IOException;
+
+    void saveStartup(Startup startup);
 }

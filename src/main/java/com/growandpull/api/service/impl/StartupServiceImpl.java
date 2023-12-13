@@ -40,6 +40,7 @@ public class StartupServiceImpl implements StartupService {
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
     private final FinanceRepository financeRepository;
+    private final StartupDetailsRepository startupDetailsRepository;
     private final StartupMapper startupMapper;
     private final FinanceMapper financeMapper;
     private final FileMapper fileMapper;
@@ -100,7 +101,6 @@ public class StartupServiceImpl implements StartupService {
                         "User have been posted startup less than three months ago. Need a subscription to post it now.");
             }
         }
-
         return createStartup(newStartup, userEmail);
     }
 
@@ -132,6 +132,12 @@ public class StartupServiceImpl implements StartupService {
 
         return startupMapper.startupToView(startup);
     }
+
+    @Override
+    public void saveStartup(Startup startup) {
+        startupRepository.save(startup);
+    }
+
 
     private void copyUpdateFieldsToStartup(StartupUpdateRequest startupUpdateRequest, Startup startup) throws IOException {
         Category category = categoryRepository.findById(startupUpdateRequest.getCategoryId()).orElseThrow(() ->

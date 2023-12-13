@@ -9,4 +9,6 @@ import org.mapstruct.MappingConstants;
 public abstract class StartupDetailsMapper {
     public abstract StartupDetailsDto detailsToDto(StartupDetails details);
     public abstract StartupDetails dtoToDetails(StartupDetailsDto dto);
+
+
 }

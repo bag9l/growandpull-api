@@ -18,7 +18,9 @@ public class StartupUpdateRequest {
     private final StartupStatus status;
     private final String categoryId;
     private final FinanceDto finance;
+
     private final StartupDetailsDto details;
+
     private MultipartFile image;
 
     @JsonCreator
@@ -29,12 +31,14 @@ public class StartupUpdateRequest {
             @JsonProperty("categoryId") String categoryId,
             @JsonProperty("finance") FinanceDto finance,
             @JsonProperty("details") StartupDetailsDto details) {
+
         this.title = title;
         this.description = description;
         this.status = status;
         this.categoryId = categoryId;
         this.finance = finance;
         this.details = details;
+
     }
 
     public void setImage(MultipartFile image) {

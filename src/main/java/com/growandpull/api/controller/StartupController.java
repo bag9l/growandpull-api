@@ -1,6 +1,7 @@
 package com.growandpull.api.controller;
 
 import com.growandpull.api.dto.startup.*;
+import com.growandpull.api.service.InvitationService;
 import com.growandpull.api.service.StartupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/startups")
 public class StartupController {
+    private final InvitationService invitationService;
 
     private final StartupService startupService;
 
@@ -37,7 +39,7 @@ public class StartupController {
     }
 
     @GetMapping("creation-data")
-    public ResponseEntity<StartupCreationData> getCreationData(){
+    public ResponseEntity<StartupCreationData> getCreationData() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 startupService.getCreationData());
     }
@@ -61,5 +63,20 @@ public class StartupController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 startupService.updateStartup(id, startupUpdateRequest, user.getUsername())
         );
+    }
+
+
+    @PostMapping("{startupId}/sendInvite")
+    public ResponseEntity<String> sendInvitation(@AuthenticationPrincipal UserDetails userDetails,
+                                                 @RequestParam("recipientEmail") String recipientEmail,
+                                                 @PathVariable("startupId") String startupId) {
+        invitationService.sendInvitation(userDetails.getUsername(), recipientEmail, startupId);
+        return ResponseEntity.ok("Invitation sent successfully!");
+    }
+
+    @PostMapping("/accept/{token}")
+    public ResponseEntity<String> acceptInvitation(@PathVariable("token") String invitationToken) {
+        invitationService.acceptInvitation(invitationToken);
+        return ResponseEntity.ok("Invitation accepted successfully!");
     }
 }
