@@ -59,8 +59,6 @@ public class InvitationServiceImpl implements InvitationService {
     public void acceptInvitation(String invitationToken) {
         InvitationToken token = invitationTokenRepository.findByToken(invitationToken)
                 .orElseThrow(() -> new EntityNotExistsException("Invitation not found"));
-        User user = userRepository.findUserByEmail(token.getUser().getEmail())
-                .orElseThrow(() -> new EntityNotExistsException("User not found"));
         invitationTokenRepository.save(token);
         Startup startup = token.getStartup();
         User recipient = token.getUser();
