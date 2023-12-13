@@ -9,7 +9,6 @@ import org.hibernate.annotations.GenericGenerator;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString()
 @Table(name = "`avatar`")
 @Entity
 public class Avatar {
