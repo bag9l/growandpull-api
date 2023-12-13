@@ -25,7 +25,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("register/user")
-    public ResponseEntity<Response> registerUser(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<ResponseMessage> registerUser(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 authenticationService.registerUser(request)
         );
@@ -33,7 +33,7 @@ public class AuthenticationController {
 
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping("register/admin")
-    public ResponseEntity<Response> registerAdmin(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<ResponseMessage> registerAdmin(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 authenticationService.registerAdmin(request)
         );
@@ -51,8 +51,8 @@ public class AuthenticationController {
         return authenticationService.confirmEmail(confirmationToken);
     }
 
-    @PostMapping("reset-password")
-    public ResponseEntity<Response> sendResetPasswordEmail(@RequestParam("email") String email) {
+    @PostMapping("password/reset")
+    public ResponseEntity<ResponseMessage> sendResetPasswordEmail(@RequestParam("email") String email) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 authenticationService.sendResetPasswordEmail(email)
         );

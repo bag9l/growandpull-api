@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
@@ -53,13 +55,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     // TODO: check transactionality
     @Transactional
     @Override
-    public Response registerUser(RegisterRequest request) {
+    public ResponseMessage registerUser(RegisterRequest request) {
         return register(request, Role.USER);
     }
 
     @Transactional
     @Override
-    public Response registerAdmin(RegisterRequest request) {
+    public ResponseMessage registerAdmin(RegisterRequest request) {
         return register(request, Role.ADMIN);
     }
 
@@ -127,7 +129,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new AuthenticationResponse(accessToken, refreshToken);
     }
 
-    private Response register(RegisterRequest request, Role role) {
+    private ResponseMessage register(RegisterRequest request, Role role) {
         User user = new User(
                 request.email(),
                 passwordEncoder.encode(request.password()),
@@ -142,6 +144,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user = userRepository.save(user);
         String confirmationToken = jwtService.generateToken(user, confirmTokenExpiration);
         saveUserConfirmationToken(user, confirmationToken);
+
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(user.getUsername());
         mailMessage.setSubject("Complete registration!");
@@ -149,7 +152,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 + "https://growandpull.pp.ua/api/auth/confirm-account/" + confirmationToken);
         emailService.sendEmail(mailMessage);
         System.out.println("confirmation token" + confirmationToken);
-        return new Response("Please check your email for confirmation.");
+
+        return new ResponseMessage("Please check your email for confirmation.");
 
     }
 
@@ -160,13 +164,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Response sendResetPasswordEmail(String email) {
+    public ResponseMessage sendResetPasswordEmail(String email) {
         User user = userService.findUserByEmail(email);
-        if (user == null) {
-            throw new EntityNotExistsException("User not found");
-        }
         String resetPasswordToken = jwtService.generateToken(user, resetTokenExpiration);
         saveUserResetPasswordToken(user, resetPasswordToken);
+
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(user.getUsername());
         mailMessage.setSubject("Reset password");
@@ -174,27 +176,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 + "https://growandpull.pp.ua/api/auth/reset-password/" + resetPasswordToken);
         emailService.sendEmail(mailMessage);
         System.out.println("reset password token" + resetPasswordToken);
-        return new Response("Please check your email.");
+
+        return new ResponseMessage("Please check your email.");
 
     }
 
     @Override
     public AuthenticationResponse resetPassword(String token, String newPassword) {
-        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token);
+        Optional<PasswordResetToken> optionalResetToken = passwordResetTokenRepository.findByToken(token);
 
-        if (resetToken == null) {
-            throw new InvalidTokenException("Invalid or expired reset password token");
-        }
+        PasswordResetToken resetToken = optionalResetToken.orElseThrow(() ->
+                new InvalidTokenException("Invalid or expired reset password token"));
 
         if (resetToken.getIsExpired() || resetToken.getIsRevoked()) {
             throw new InvalidTokenException("Reset password token is expired or revoked");
         }
+
         User user = resetToken.getUser();
         updateResetPassword(user, newPassword);
+
         resetToken.setIsRevoked(true);
         passwordResetTokenRepository.save(resetToken);
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest(user.getUsername(), newPassword);
-        return authenticate(authenticationRequest);
+
+        return authenticate(new AuthenticationRequest(user.getUsername(), newPassword));
     }
 
 
@@ -227,9 +231,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private void updateResetPassword(UserDetails userDetails, String newPassword) {
         User user = userService.findUserByEmail(userDetails.getUsername());
         user.setPassword(passwordEncoder.encode(newPassword));
-        user = userRepository.save(user);
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest(user.getUsername(), newPassword);
-        authenticate(authenticationRequest);
+        userRepository.save(user);
+
     }
 
 }
