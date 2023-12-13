@@ -4,9 +4,9 @@ import com.growandpull.api.dto.auth.*;
 import com.growandpull.api.model.entity.User;
 
 public interface AuthenticationService {
-    RegistrationResponse registerUser(RegisterRequest request);
+    ResponseMessage registerUser(RegisterRequest request);
 
-    RegistrationResponse registerAdmin(RegisterRequest request);
+    ResponseMessage registerAdmin(RegisterRequest request);
 
     AuthenticationResponse authenticate(AuthenticationRequest request);
 
@@ -17,5 +17,7 @@ public interface AuthenticationService {
     AuthenticationResponse confirmEmail(String confirmationToken);
 
     AuthenticationResponse authenticate(User user);
+    AuthenticationResponse resetPassword(String token, String newPassword);
+    ResponseMessage sendResetPasswordEmail(String email);
 
 }

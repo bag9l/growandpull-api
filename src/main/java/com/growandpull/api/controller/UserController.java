@@ -27,7 +27,7 @@ public class UserController {
 
     }
 
-    @PutMapping("/updatePassword")
+    @PutMapping("password/update")
     public ResponseEntity<AuthenticationResponse> updatePassword(@Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest,
                                                                  @AuthenticationPrincipal UserDetails userDetails) {
         AuthenticationResponse updatedAuthentication = userService.updatePassword(userDetails, passwordUpdateRequest);
