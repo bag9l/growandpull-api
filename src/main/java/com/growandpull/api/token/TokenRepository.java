@@ -3,6 +3,7 @@ package com.growandpull.api.token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,9 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
             WHERE u.email = :email AND (t.isExpired = false OR t.isRevoked = false)
             """)
     List<Token> findAllValidTokensForUser(@Param("email") String email);
+
+    @Transactional
+    void deleteByIsExpiredTrueOrIsRevokedTrue();
 
     Optional<Token> findByToken(String token);
 }
