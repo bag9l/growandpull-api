@@ -6,9 +6,10 @@ import com.growandpull.api.model.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @ToString()
 @Table(name = "`invitation_token`")
@@ -23,6 +24,8 @@ public class InvitationToken {
     private Boolean isRevoked;
 
     private Boolean isExpired;
+
+    private LocalDate createdAt;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
@@ -43,7 +46,20 @@ public class InvitationToken {
         this.isExpired = isExpired;
         this.user = user;
         this.startup = startup;
+        this.createdAt = LocalDate.now();
     }
 
+    public InvitationToken(Integer id, String token, Boolean isRevoked, Boolean isExpired, User user, Startup startup) {
+        this.id = id;
+        this.token = token;
+        this.isRevoked = isRevoked;
+        this.isExpired = isExpired;
+        this.user = user;
+        this.startup = startup;
+        this.createdAt = LocalDate.now();
+    }
 
+    public InvitationToken() {
+        this.createdAt = LocalDate.now();
+    }
 }
