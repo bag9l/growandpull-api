@@ -58,7 +58,7 @@ public class Startup {
 
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "startup_details_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "details_id", referencedColumnName = "id", nullable = false)
     @ToString.Exclude
     @JsonBackReference
     private StartupDetails details;
@@ -83,6 +83,13 @@ public class Startup {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    @JoinColumn(name = "city_id")
+    @ToString.Exclude
+    @JsonBackReference
+    private City city;
+
     @Transient
     private ExistenceTime existenceTime;
 
@@ -94,7 +101,8 @@ public class Startup {
                    Category category,
                    Finance finance,
                    AdStatus adStatus,
-                   Image image) {
+                   Image image,
+                   City city) {
         this.id = id;
         this.title = title;
         this.owner = owner;
@@ -104,6 +112,7 @@ public class Startup {
         this.finance = finance;
         this.adStatus = adStatus;
         this.image = image;
+        this.city = city;
         this.createdAt = LocalDateTime.now();
     }
 
@@ -114,7 +123,8 @@ public class Startup {
                    Category category,
                    Finance finance,
                    AdStatus adStatus,
-                   Image image) {
+                   Image image,
+                   City city) {
         this.title = title;
         this.owner = owner;
         this.description = description;
@@ -123,10 +133,12 @@ public class Startup {
         this.finance = finance;
         this.adStatus = adStatus;
         this.image = image;
+        this.city = city;
         this.createdAt = LocalDateTime.now();
     }
 
-    public Startup(String title, String description, StartupStatus status, Category category, StartupDetails details, User owner, Finance finance, AdStatus adStatus, Image image) {
+    public Startup(String title, String description, StartupStatus status, Category category, StartupDetails details,
+                   User owner, Finance finance, AdStatus adStatus, Image image, City city) {
         this.title = title;
         this.description = description;
         this.status = status;
@@ -136,6 +148,7 @@ public class Startup {
         this.finance = finance;
         this.adStatus = adStatus;
         this.image = image;
+        this.city = city;
         this.createdAt = LocalDateTime.now();
     }
 
