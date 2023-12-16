@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,8 +21,10 @@ public class UserController {
 
     @PutMapping("{userId}")
     public ResponseEntity<PrivateProfile> updateUser(@PathVariable("userId") String userId,
-                                                     @Valid @RequestBody UserUpdateRequest userUpdateRequest,
+                                                     @Valid @RequestPart("user") UserUpdateRequest userUpdateRequest,
+                                                     @RequestPart("avatar") MultipartFile avatar,
                                                      @AuthenticationPrincipal UserDetails user) throws java.io.IOException {
+        userUpdateRequest.setAvatar(avatar);
         return ResponseEntity.status(HttpStatus.OK).body(
                 userService.updateUser(userId, userUpdateRequest, user.getUsername()));
 
